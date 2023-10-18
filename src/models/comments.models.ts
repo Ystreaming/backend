@@ -12,7 +12,7 @@ const Comment = new Schema<Comment>({
     id: {
       type:  Number,
       required: true,
-      unique: true
+      unique: true,
     },
     name: {
       type: String,
