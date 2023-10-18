@@ -1,0 +1,46 @@
+openapi: 3.0.3
+info:
+  title: "YStream API"
+  description: "YStream API is a RESTful API for our streaming video service."
+  contact:
+    name: "YStream"
+    email: "dev@ystream.com"
+  version: "1.0.0"
+servers:
+  - url: "http://localhost:3000/api/prod"
+    description: "Production server"
+    variables:
+      protocol:
+        enum:
+          - "http"
+        default: "http"
+  - url: "https://dev.ystream.com/api/dev"
+    description: "Development server"
+    variables:
+      protocol:
+        enum:
+          - "https"
+        default: "https"
+
+paths:
+  /:
+    get:
+      summary: "Get API information"
+      description: "Returns information about the API."
+      responses:
+        200:
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: "YStream API"
+                  description:
+                    type: string
+                    example: "YStream API is a RESTful API for our streaming video service."
+                  version:
+                    type: string
+                    example: "1.0.0"
