@@ -1,6 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-// Interface pour le modèle d'utilisateur
 interface User extends Document {
   id: number;
   firstName: string;
@@ -15,7 +14,6 @@ interface User extends Document {
   profileImage: Buffer;
 }
 
-// Créez le schéma de l'utilisateur
 const userSchema = new Schema<User>({
   id: {
     type: Number,
