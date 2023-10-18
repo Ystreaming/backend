@@ -1,0 +1,14 @@
+name: Ne pas toucher
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Vérifier le code
+      run: echo "Je suis un message"
