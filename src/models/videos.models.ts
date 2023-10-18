@@ -10,6 +10,7 @@ interface VideoModel extends Document {
   time: Date;
   img: Buffer;
   url: string;
+  idComment: mongoose.Types.ObjectId; 
 }
 const videoSchema = new Schema<VideoModel>({
     title: {
