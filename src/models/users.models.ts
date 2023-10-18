@@ -1,5 +1,6 @@
-import mongoose, { Schema, Document } from 'mongoose';
-interface User extends Document {
+import { Model, DataTypes } from 'sequelize';
+
+interface User extends Model {
     id: string;
     firstName: string;
     lastName: string;
@@ -12,20 +13,21 @@ interface User extends Document {
     language: string;
     profileImage: string;
 }
-const userSchema = new Schema<User>({
-    id: { type: String, required: true },
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    email: { type: String, required: true },
-    dateOfBirth: { type: Date, required: true },
-    username: { type: String, required: true },
-    password: { type: String, required: true },
-    createdAt: { type: Date, default: Date.now },
-    status: { type: Boolean, default: true },
-    language: { type: String, required: true },
-    profileImage: { type: String, required: true }
-});
-
-const UserModel = mongoose.model<User>('User', userSchema);
-
-export default UserModel;
+User.init(
+    {
+      id: {
+        type: DataTypes.STRING,
+        primaryKey: true,
+      },
+      firstName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      lastName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
