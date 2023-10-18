@@ -12,6 +12,7 @@ const Channel = new Schema<Channel>({
     id: {
       type:  Number,
       required: true,
+      unique: true,
     },
     name: {
       type: String,

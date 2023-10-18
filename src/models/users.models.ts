@@ -18,6 +18,7 @@ const UserSchema = new Schema<User>({
   id: {
     type: Number,
     required: true,
+    unique: true,
   },
   firstName: {
     type: String,

@@ -1,6 +1,7 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 interface VideoModel extends Document {
+  id: number;
   title: string;
   createdAt: Date;
   like: number;
@@ -15,6 +16,11 @@ interface VideoModel extends Document {
   idCategorie: mongoose.Types.ObjectId;
 }
 const videoSchema = new Schema<VideoModel>({
+    id: {
+      type: Number,
+      required: true,
+      unique: true,
+    },
     title: {
       type: String,
       required: true,
