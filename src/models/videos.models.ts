@@ -1,4 +1,3 @@
-import mongoose, { Schema, Document } from 'mongoose';
 interface User extends Document {
     id: string;
     firstName: string;
