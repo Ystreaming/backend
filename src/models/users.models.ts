@@ -63,7 +63,6 @@ const userSchema = new Schema<User>({
   },
 });
 
-// Créez le modèle utilisateur à partir du schéma
 const UserModel = mongoose.model<User>('User', userSchema);
 
 export default UserModel;
