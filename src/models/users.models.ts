@@ -14,7 +14,7 @@ interface User extends Document {
   profileImage: Buffer;
 }
 
-const userSchema = new Schema<User>({
+const UserSchema = new Schema<User>({
   id: {
     type: Number,
     required: true,
@@ -61,6 +61,6 @@ const userSchema = new Schema<User>({
   },
 });
 
-const UserModel = mongoose.model<User>('User', userSchema);
+const UserModel = mongoose.model<User>('Users', UserSchema);
 
 export default UserModel;
