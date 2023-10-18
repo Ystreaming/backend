@@ -16,4 +16,10 @@ app.get('/', (req: Request, res: Response) => {
   res.json({ message: 'Hello, World!' });
 });
 
-module.exports = app;
+app.use((err: Error, req: Request, res: Response, next: Function) => {
+  res.status(500).json({
+    message: err.message
+  });
+});
+
+export default app;
