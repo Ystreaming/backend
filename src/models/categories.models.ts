@@ -5,10 +5,11 @@ interface Categorie extends Document {
     nom: string;
     image: Buffer;
   }
-  const categoriesSchema = new Schema<Categorie>({
+  const CategoriesSchema = new Schema<Categorie>({
     id: {
       type: Number,
       required: true,
+      unique: true, 
     },
     nom: {
         type: String,
@@ -19,7 +20,6 @@ interface Categorie extends Document {
         required: true,
     },
 });
+const CategorieModel = mongoose.model<Categorie>('Categories', CategoriesSchema);
 
-const UserModel = mongoose.model<Categorie>('Categorie', categoriesSchema);
-
-export default UserModel;
+export default CategorieModel;
