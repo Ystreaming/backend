@@ -1,0 +1,15 @@
+version: '3.1'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: ystream-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: YStream
+    volumes:
+      - mongodb-data:/data/db
+
+volumes:
+  mongodb-data:
