@@ -11,6 +11,8 @@ interface VideoModel extends Document {
   img: Buffer;
   url: string;
   idComment: mongoose.Types.ObjectId; 
+  idChannel: mongoose.Types.ObjectId;
+  idCategorie: mongoose.Types.ObjectId;
 }
 const videoSchema = new Schema<VideoModel>({
     title: {
