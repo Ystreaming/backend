@@ -13,7 +13,6 @@ const mongoOptions = {
 export const connectToDatabase = async () => {
   try {
     await mongoose.connect(mongoURI, mongoOptions);
-    console.log('Connection to MongoDB has been established successfully.');
   } catch (error) {
     console.error('Unable to connect to MongoDB:', error);
     throw error;
