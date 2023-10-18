@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
-dotenv.config();
+dotenv.config({ path: './.env/.env.developpement' });
 
 const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/YStream';
 
