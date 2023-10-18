@@ -48,6 +48,18 @@ const videoSchema = new Schema<VideoModel>({
       type: String,
       required: true,
     },
+    idComment: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Comment',
+      },
+      idChannel: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Channel',
+      },
+      idCategorie: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Categorie',
+      },
   });
   const Video = mongoose.model<VideoModel>('Video', videoSchema);
   
