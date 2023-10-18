@@ -1,10 +1,17 @@
-import express from 'express';
-const app = express();
-const port = 3000;
+const app = require('./app');
+const dotenv = require('dotenv');
+import { connectToDatabase } from './database/database';
 
-app.get('/', (req, res) => {
-  res.send('Bienvenue sur mon serveur Node.js en TypeScript !');
-});
-app.listen(port, () => {
-  console.log(`Le serveur est en cours d'exécution sur le port ${port}`);
+dotenv.config();
+
+const port = process.env.PORT || 3000;
+
+connectToDatabase()
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`Server started on port ${port}`);
+    });
+  })
+  .catch((err: Error) => {
+    console.log('Error with the server : ', err);
 });
