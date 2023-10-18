@@ -38,4 +38,4 @@ const Channel = new Schema<Channel>({
 
   const ChannelModel = mongoose.model<Channel>('Channels', Channel);
   
-  export default Channel;
+  export default ChannelModel;

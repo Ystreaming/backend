@@ -67,6 +67,6 @@ const videoSchema = new Schema<VideoModel>({
         ref: 'Categories',
       },
   });
-  const Video = mongoose.model<VideoModel>('Videos', videoSchema);
+  const VideoModel = mongoose.model<VideoModel>('Videos', videoSchema);
   
-  export default Video;
+  export default VideoModel;

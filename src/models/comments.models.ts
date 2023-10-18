@@ -35,7 +35,6 @@ const Comment = new Schema<Comment>({
         ref: 'Videos',
       },
   });
-
   const CommentModel = mongoose.model<Comment>('Comments', Comment);
   
-  export default Comment;
+  export default CommentModel;
