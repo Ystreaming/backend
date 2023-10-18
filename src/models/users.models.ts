@@ -1,70 +1,69 @@
-import { Model, DataTypes } from 'sequelize';
-import sequelize from 'sequelize/types/sequelize';
-import UserModel from './roles.models';
+import mongoose, { Schema, Document } from 'mongoose';
 
-interface User extends Model {
-    id: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-    dateOfBirth: Date;
-    username: string;
-    password: string;
-    createdAt: Date;
-    status: boolean;
-    language: string;
-    profileImage: Buffer;
+// Interface pour le modèle d'utilisateur
+interface User extends Document {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  dateOfBirth: Date;
+  username: string;
+  password: string;
+  createdAt: Date;
+  status: boolean;
+  language: string;
+  profileImage: Buffer;
 }
-UserModel.init(
-    {
-      id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-      },
-      firstName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      lastName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },username: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      dateOfBirth: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
-      password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      createdAt: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-      },
-      status: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true,
-      },
-      language: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      profileImage: {
-        type: DataTypes.BLOB,
-        allowNull: false,
-      },
-    },
-    {
-      sequelize,
-      modelName: 'User',
-    }
-  );
-  
-  export { User };
+
+// Créez le schéma de l'utilisateur
+const userSchema = new Schema<User>({
+  id: {
+    type: Number,
+    required: true,
+  },
+  firstName: {
+    type: String,
+    required: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  dateOfBirth: {
+    type: Date,
+    required: true,
+  },
+  username: {
+    type: String,
+    required: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  status: {
+    type: Boolean,
+    default: true,
+  },
+  language: {
+    type: String,
+    required: true,
+  },
+  profileImage: {
+    type: Buffer,
+    required: true,
+  },
+});
+
+// Créez le modèle utilisateur à partir du schéma
+const UserModel = mongoose.model<User>('User', userSchema);
+
+export default UserModel;
