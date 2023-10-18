@@ -50,17 +50,17 @@ const videoSchema = new Schema<VideoModel>({
     },
     idComment: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Comment',
+        ref: 'Comments',
       },
       idChannel: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Channel',
+        ref: 'Channels',
       },
       idCategorie: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Categorie',
+        ref: 'Categories',
       },
   });
-  const Video = mongoose.model<VideoModel>('Video', videoSchema);
+  const Video = mongoose.model<VideoModel>('Videos', videoSchema);
   
   export default Video;
