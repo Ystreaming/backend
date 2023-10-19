@@ -1,5 +1,5 @@
 const CommentsModel = require('../models/comments.model');
-const VideosModel = require('../models/videos.model');
+const VideosCommentModel = require('../models/videos.model');
 const UsersModel = require('../models/users.model');
 
 function getAllComments() {
