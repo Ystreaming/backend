@@ -14,7 +14,7 @@ interface VideoModel extends Document {
   urllocal: string;
   idComment: mongoose.Types.ObjectId; 
   idChannel: mongoose.Types.ObjectId;
-  idCategorie: mongoose.Types.ObjectId;
+  idCategory: mongoose.Types.ObjectId;
 }
 const videoSchema = new Schema<VideoModel>({
     id: {
@@ -68,9 +68,9 @@ const videoSchema = new Schema<VideoModel>({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Channels',
       },
-      idCategorie: {
+      idCategory: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Categories',
+        ref: 'Category',
       },
   });
   const VideoModel = mongoose.model<VideoModel>('Videos', videoSchema);

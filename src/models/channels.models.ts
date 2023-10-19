@@ -5,7 +5,7 @@ interface Channel extends Document {
   name: string;
   image: {type: Schema.Types.ObjectId, ref:'Files'};
   description: string;
-  idCategories: mongoose.Types.ObjectId; 
+  idCategory: mongoose.Types.ObjectId; 
   idVideos: mongoose.Types.ObjectId;
 }
 const Channel = new Schema<Channel>({
@@ -27,9 +27,9 @@ const Channel = new Schema<Channel>({
       ref: 'Files',
       required: true,
       },
-      idCategories: {
+      idCategory: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Categories',
+        ref: 'Category',
       },
       idVideos: {
         type: mongoose.Schema.Types.ObjectId,

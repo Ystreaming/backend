@@ -17,7 +17,7 @@ const HistoricSchema = new Schema<HistoricModel>({
     },
     idVideo: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Categories',
+    ref: 'Videos',
     },
   });
   
