@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 interface Channel extends Document {
   id: number;
   name: string;
-  image: Buffer;
+  image: {type: Schema.Types.ObjectId, ref:'Files'};
   description: string;
   idCategories: mongoose.Types.ObjectId; 
   idVideos: mongoose.Types.ObjectId;
@@ -23,7 +23,8 @@ const Channel = new Schema<Channel>({
         required: true,
       },
     image: {
-      type: Buffer,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Files',
       required: true,
       },
       idCategories: {
@@ -38,4 +39,4 @@ const Channel = new Schema<Channel>({
 
   const ChannelModel = mongoose.model<Channel>('Channels', Channel);
   
-  export default Channel;
+  export default ChannelModel;
