@@ -8,13 +8,26 @@ const swaggerDocument = YAML.load(yamlFilePath);
 
 const app: Application = express();
 
+const UsersRoute = require('./routes/users.route');
+const RolesRoute = require('./routes/roles.route');
+const CategoriesRoute = require('./routes/categories.route');
+const VideosRoute = require('./routes/videos.route');
+const ChannelsRoute = require('./routes/channels.route');
+const CommentsRoute = require('./routes/comments.route');
+const HistoricsRoute = require('./routes/historics.route');
+
+
 app.use(bodyParser.json());
 app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.get('/', (req: Request, res: Response) => {
-  res.json({ message: 'Hello, World!' });
-});
+app.use('/users', UsersRoute);
+app.use('/roles', RolesRoute);
+app.use('/categories', CategoriesRoute);
+app.use('/videos', VideosRoute);
+app.use('/channels', ChannelsRoute);
+app.use('/comments', CommentsRoute);
+app.use('/historics', HistoricsRoute);
 
 app.use((err: Error, req: Request, res: Response, next: Function) => {
   res.status(500).json({
