@@ -27,15 +27,18 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "GridFS": "^0.3.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.6.3",
     "multer": "^1.4.5-lts.1",
     "nodemon": "^3.0.1",
     "passport": "^0.6.0",
+    "passport-local": "^1.0.0",
     "sequelize": "^6.33.0",
     "socket.io": "^4.7.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.19",
+    "@types/jsonwebtoken": "^9.0.4",
     "ts-node": "^10.9.1"
   }
 }

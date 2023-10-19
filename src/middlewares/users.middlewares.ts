@@ -1,39 +1,25 @@
 import { Request, Response, NextFunction } from 'express';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 const express = require('express');
 const router = express.Router();
-const { Request, Response } = require('express');
+const secretKey = 'votre_secret_key'; 
 
-
-function isAuthenticated(req: Request, res: Response, next: NextFunction) {
-    if (req.isAuthenticated()) {
-        return next();
-    } else {
-        res.status(401).json({ message: 'Non authentifié' });
-    }
+export interface CustomRequest extends Request {
+    token: string | JwtPayload;
 }
 
-router.get('/', isAuthenticated, (req: Request, res: Response) => {
-    console.log('GET /users');
-});
+function isAuthenticated(req: Request, res: Response, next: NextFunction) {
+    const token = req.headers.authorization; 
+    if (!token) {
+        return res.status(401).json({ message: 'Non authentifié' });
+    }
 
-router.get('/:id', isAuthenticated, (req: Request, res: Response) => {
-    console.log('GET /users/:id');
-});
-
-router.get('/username/:username', isAuthenticated, (req: Request, res: Response) => {
-    console.log('GET /users/username/:username');
-});
-
-router.post('/', isAuthenticated, (req: Request, res: Response) => {
-    console.log('POST /users');
-});
-
-router.put('/:id', isAuthenticated, (req: Request, res: Response) => {
-    console.log('PUT /users/:id');
-});
-
-router.delete('/:id', isAuthenticated, (req: Request, res: Response) => {
-    console.log('DELETE /users/:id');
-});
-
-module.exports = router;
+    jwt.verify(token, secretKey, (err: any, decoded: any) => {
+        if (err) {
+            return res.status(401).json({ message: 'Non authentifié' });
+        } else {
+            (req as CustomRequest).token = decoded;
+            next();
+        }
+    });
+}
