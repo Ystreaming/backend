@@ -3,27 +3,27 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', (req: Request, res: Response) => {
-    console.log('GET /users');
+    console.log('GET /channels');
 });
 
 router.get('/:id', (req: Request, res: Response) => {
-    console.log('GET /users/:id');
+    console.log('GET /channels/:id');
 });
 
-router.get('/username/:username:', (req: Request, res: Response) => {
-    console.log('GET /users/username/:username');
+router.get('/:name', (req: Request, res: Response) => {
+    console.log('GET /channels/:name');
 });
 
 router.post('/', (req: Request, res: Response) => {
-    console.log('POST /users');
+    console.log('POST /channels');
 });
 
 router.put('/:id', (req: Request, res: Response) => {
-    console.log('PUT /users/:id');
+    console.log('PUT /channels/:id');
 });
 
 router.delete('/:id', (req: Request, res: Response) => {
-    console.log('DELETE /users/:id');
+    console.log('DELETE /channels/:id');
 });
 
 module.exports = router;
