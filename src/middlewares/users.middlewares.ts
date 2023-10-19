@@ -1,9 +1,10 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 const express = require('express');
 const router = express.Router();
 const { Request, Response } = require('express');
 
-function isAuthenticated(req: Request, res: Response, next) {
+
+function isAuthenticated(req: Request, res: Response, next: NextFunction) {
     if (req.isAuthenticated()) {
         return next();
     } else {
