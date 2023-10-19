@@ -11,6 +11,7 @@ interface VideoModel extends Document {
   time: Date;
   img: Buffer;
   url: string;
+  urllocal: string;
   idComment: mongoose.Types.ObjectId; 
   idChannel: mongoose.Types.ObjectId;
   idCategorie: mongoose.Types.ObjectId;
@@ -51,6 +52,10 @@ const videoSchema = new Schema<VideoModel>({
       required: true,
     },
     url: {
+      type: String,
+      required: true,
+    },
+    urllocal: {
       type: String,
       required: true,
     },
