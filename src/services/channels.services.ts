@@ -12,6 +12,14 @@ function getChannelByName(name: string) {
     return ChannelModel.ChannelModel.findOne({ name: name });
 }
 
+function getChannelByUserId(id: number) {
+    return ChannelModel.ChannelModel.find({ user_id: id });
+}
+
+function getChannelByCategoryId(id: number) {
+    return ChannelModel.ChannelModel.find({ category_id: id });
+}
+
 function createChannel(channel: typeof ChannelModel) {
     const newChannel = new ChannelModel.ChannelModel({
         name: channel.name,
