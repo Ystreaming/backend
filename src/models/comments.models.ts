@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 interface Comment extends Document {
   id: number;
   name: string;
-  image: Buffer;
+  image: {type: Schema.Types.ObjectId, ref:'Files'};
   description: string;
   idCategories: mongoose.Types.ObjectId; 
   idVideos: mongoose.Types.ObjectId;
@@ -23,7 +23,8 @@ const Comment = new Schema<Comment>({
         required: true,
       },
     image: {
-      type: Buffer,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Files',
       required: true,
       },
       idCategories: {

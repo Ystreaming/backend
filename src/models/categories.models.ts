@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 interface Categorie extends Document {
     id: number;
     nom: string;
-    image: Buffer;
+    image: {type: Schema.Types.ObjectId, ref:'Files'};
   }
   const CategoriesSchema = new Schema<Categorie>({
     id: {
@@ -16,7 +16,8 @@ interface Categorie extends Document {
         required: true,
     },
     image: {
-        type: Buffer,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Files',
         required: true,
     },
 });
