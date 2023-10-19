@@ -11,12 +11,12 @@ function authenticateJWT(req: Request, res: Response, next: NextFunction ) {
         return res.status(401).json({ message: 'Non authentifié' });
     }
 
-    jwt.verify(token, secretKey, (err, user) => {
+    jwt.verify(token, secretKey, (err, video) => {
         if (err) {
             return res.status(401).json({ message: 'Non authentifié' });
         }
 
-        req.user = user;
+        req.body = video;
         next();
     });
 }
