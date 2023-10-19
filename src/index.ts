@@ -1,17 +1,25 @@
-const app = require('./app');
-const dotenv = require('dotenv');
-import { connectToDatabase } from './database/database';
+import app from './app';
+import dotenv from 'dotenv';
+import { connectToDatabase } from './tools/database';
+import { connectToRabbitMQ } from './tools/rabbitMQ';
 
-dotenv.config();
+dotenv.config({ path: './.env/.env.developpement' });
 
-const port = process.env.PORT || 3000;
+async function startServer() {
+  try {
+    await connectToDatabase();
+    console.log("Connexion à la base de données établie");
 
-connectToDatabase()
-  .then(() => {
+    const { connection: rabbitMQConnection, channel: rabbitMQChannel } = await connectToRabbitMQ();
+    console.log("Connexion à RabbitMQ établie");
+
+    const port = process.env.PORT || 3000;
     app.listen(port, () => {
-      console.log(`Server started on port ${port}`);
+      console.log(`Serveur démarré sur le port ${port}`);
     });
-  })
-  .catch((err: Error) => {
-    console.log('Error with the server : ', err);
-});
+  } catch (error) {
+    console.error('Erreur lors du démarrage de l\'application :', error);
+  }
+}
+
+startServer();
