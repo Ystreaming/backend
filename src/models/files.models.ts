@@ -1,5 +1,4 @@
 import mongoose, { Schema, Document } from 'mongoose';
-const { createModel } = require ('mangoose-gridfs');
 
 const FileSchema = new Schema({
     filename: {
