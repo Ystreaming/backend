@@ -1,17 +1,17 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-interface Categorie extends Document {
+interface Category extends Document {
     id: number;
-    nom: string;
+    name: string;
     image: {type: Schema.Types.ObjectId, ref:'Files'};
   }
-  const CategoriesSchema = new Schema<Categorie>({
+  const CategorySchema = new Schema<Category>({
     id: {
       type: Number,
       required: true,
       unique: true, 
     },
-    nom: {
+    name: {
         type: String,
         required: true,
     },
@@ -21,6 +21,6 @@ interface Categorie extends Document {
         required: true,
     },
 });
-const CategorieModel = mongoose.model<Categorie>('Categories', CategoriesSchema);
+const CategoryModel = mongoose.model<Category>('Category', CategorySchema);
 
-export default CategorieModel;
+export default CategoryModel;
