@@ -6,7 +6,6 @@ interface Comment extends Document {
   dislike: number;
   texte: string;
   createdAt: Date;
-  idCategories: mongoose.Types.ObjectId; 
   idUser: mongoose.Types.ObjectId;
 }
 const Comment = new Schema<Comment>({
