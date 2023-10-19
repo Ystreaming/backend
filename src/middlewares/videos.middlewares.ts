@@ -1,25 +1,37 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-const express = require('express');
-const router = express.Router();
-const secretKey = 'votre_secret_key'; 
+const jwt = require('jsonwebtoken');
+const secretKey = 'votre_secret_key';
 
-export interface CustomRequest extends Request {
-    token: string | JwtPayload;
-}
 
-function isAuthenticated(req: Request, res: Response, next: NextFunction) {
-    const token = req.headers.authorization; 
+
+function authenticateJWT(req: Request, res: Response, next: NextFunction ) {
+    const token = req.headers.authorization;
+
     if (!token) {
         return res.status(401).json({ message: 'Non authentifié' });
     }
 
-    jwt.verify(token, secretKey, (err: any, decoded: any) => {
+    jwt.verify(token, secretKey, (err, user) => {
         if (err) {
             return res.status(401).json({ message: 'Non authentifié' });
-        } else {
-            (req as CustomRequest).token = decoded;
-            next();
         }
+
+        req.user = user;
+        next();
     });
 }
+
+function getAllVideosMiddleware(req, res, next) {
+    VideosModel.getAllVideos()
+        .then(videos => {
+            res.json(videos);
+        })
+        .catch(error => {
+            res.status(500).json({ message: 'Erreur lors de la récupération des vidéos' });
+        });
+    }
+
+module.exports = {
+    authenticateJWT,
+    getAllVideosMiddleware,
+};
