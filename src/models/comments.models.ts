@@ -2,11 +2,12 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 interface Comment extends Document {
   id: number;
-  name: string;
-  image: Buffer;
-  description: string;
+  like: number;
+  dislike: number;
+  texte: string;
+  createdAt: Date;
   idCategories: mongoose.Types.ObjectId; 
-  idVideos: mongoose.Types.ObjectId;
+  idUser: mongoose.Types.ObjectId;
 }
 const Comment = new Schema<Comment>({
     id: {
@@ -14,28 +15,27 @@ const Comment = new Schema<Comment>({
       required: true,
       unique: true,
     },
-    name: {
-      type: String,
-      required: true,
-    },
-    description: {
+    texte: {
         type: String,
         required: true,
-      },
-    image: {
-      type: Buffer,
+    },
+    like: {
+      type: Number,
+      default: 0,
+    },
+    dislike: {
+      type: Number,
+      default: 0,
+    },
+    createdAt: {
+      type: Date,
       required: true,
-      },
-      idCategories: {
+    },
+      idUser: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Categories',
-      },
-      idVideos: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Videos',
-      },
+        ref: 'Users',
+    },
   });
-
   const CommentModel = mongoose.model<Comment>('Comments', Comment);
   
-  export default Comment;
+  export default CommentModel;

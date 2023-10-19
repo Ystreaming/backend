@@ -11,7 +11,7 @@ interface User extends Document {
   createdAt: Date;
   status: boolean;
   language: string;
-  profileImage: Buffer;
+  profileImage: {type: Schema.Types.ObjectId, ref:'Files'};
 }
 
 const UserSchema = new Schema<User>({
@@ -57,7 +57,8 @@ const UserSchema = new Schema<User>({
     required: true,
   },
   profileImage: {
-    type: Buffer,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Files',
     required: true,
   },
 });

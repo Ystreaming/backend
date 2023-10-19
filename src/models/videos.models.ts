@@ -9,8 +9,9 @@ interface VideoModel extends Document {
   description: string;
   language: string;
   time: Date;
-  img: Buffer;
+  image: {type: Schema.Types.ObjectId, ref:'Files'};
   url: string;
+  urllocal: string;
   idComment: mongoose.Types.ObjectId; 
   idChannel: mongoose.Types.ObjectId;
   idCategorie: mongoose.Types.ObjectId;
@@ -46,11 +47,16 @@ const videoSchema = new Schema<VideoModel>({
       type: Date,
       required: true,
     },
-    img: {
-      type: Buffer,
+    image: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Files',
       required: true,
     },
     url: {
+      type: String,
+      required: true,
+    },
+    urllocal: {
       type: String,
       required: true,
     },
@@ -67,6 +73,6 @@ const videoSchema = new Schema<VideoModel>({
         ref: 'Categories',
       },
   });
-  const Video = mongoose.model<VideoModel>('Videos', videoSchema);
+  const VideoModel = mongoose.model<VideoModel>('Videos', videoSchema);
   
-  export default Video;
+  export default VideoModel;
