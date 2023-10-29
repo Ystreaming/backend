@@ -2,16 +2,20 @@ import { Request, Response } from 'express';
 const express = require('express');
 const router = express.Router();
 
+// => /historic
+
 router.get('/', (req: Request, res: Response) => {
     console.log('GET /historics');
 });
 
-router.get('/:id', (req: Request, res: Response) => {
-    console.log('GET /historics/:id');
+router.post('/', (req: Request, res: Response) => {
+    console.log('POST /historics');
 });
 
-router.get('/user/:id', (req: Request, res: Response) => {
-    console.log('GET /historics/user/:id');
+// => /historic/id
+
+router.get('/:id', (req: Request, res: Response) => {
+    console.log('GET /historics/:id');
 });
 
 router.put('/:id', (req: Request, res: Response) => {
@@ -20,6 +24,12 @@ router.put('/:id', (req: Request, res: Response) => {
 
 router.delete('/:id', (req: Request, res: Response) => {
     console.log('DELETE /historics/:id');
+});
+
+// => /historic/user/id
+
+router.get('/user/:id', (req: Request, res: Response) => {
+    console.log('GET /historics/user/:id');
 });
 
 module.exports = router;
