@@ -11,7 +11,7 @@ const app: Application = express();
 
 const UsersRoute = require('./routes/users.route');
 const RolesRoute = require('./routes/roles.route');
-const CategoriesRoute = require('./routes/categories.route');
+const CategoryRoute = require('./routes/category.route');
 const VideosRoute = require('./routes/videos.route');
 const ChannelsRoute = require('./routes/channels.route');
 const CommentsRoute = require('./routes/comments.route');
@@ -31,7 +31,7 @@ app.use(
 
 app.use('/users', UsersRoute);
 app.use('/roles', RolesRoute);
-app.use('/categories', CategoriesRoute);
+app.use('/Category', CategoryRoute);
 app.use('/videos', VideosRoute);
 app.use('/channels', ChannelsRoute);
 app.use('/comments', CommentsRoute);
