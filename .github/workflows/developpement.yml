@@ -1,14 +1,71 @@
-name: Ne pas toucher
+name: CI/CD Pipeline
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    branches: [ main, dev ]
+
+permissions:
+  contents: write
+  pages: write
 
 jobs:
-  notify:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Vérifier le code
-      run: echo "Je suis un message"
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Docker Compose
+      run: |
+        sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
+
+    - name: Create .env.development file
+      run: |
+       mkdir -p .env
+        echo "MONGO_URI=mongodb://localhost:27017/YStream" >> .env/.env.developpement
+        echo "RABBITMQ_HOST=localhost" >> .env/.env.developpement
+        echo "RABBITMQ_USERNAME=YStream" >> .env/.env.developpement
+        echo "RABBITMQ_PASSWORD=Ystream1234" >> .env/.env.developpement
+        echo "PORT=3000" >> .env/.env.developpement
+      shell: bash
+
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v1
+
+    - name: Start services with Docker Compose
+      run: docker-compose up -d
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build the project
+      run: npx tsc
+
+    - name: Start application
+      run: npm start &
+      shell: bash
+
+    - name: Wait for the application to start
+      run: sleep 10
+
+    - name: Run tests
+      run: npm test
+
+    - name: Generate Swagger UI
+      run: |
+        npm install -g swagger-cli redoc-cli
+        swagger-cli bundle ./documentation/openapi.yaml --outfile ./public/swagger.json --type json
+        redoc-cli build ./public/swagger.json --output ./public/index.html
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./public
