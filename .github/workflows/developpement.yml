@@ -23,7 +23,7 @@ jobs:
 
     - name: Create .env.development file
       run: |
-       mkdir -p .env
+        mkdir -p .env
         echo "MONGO_URI=mongodb://localhost:27017/YStream" >> .env/.env.developpement
         echo "RABBITMQ_HOST=localhost" >> .env/.env.developpement
         echo "RABBITMQ_USERNAME=YStream" >> .env/.env.developpement
@@ -43,20 +43,13 @@ jobs:
         node-version: '18'
 
     - name: Install dependencies
-      run: npm install
-
-    - name: Build the project
-      run: npx tsc
-
-    - name: Start application
-      run: npm start &
-      shell: bash
-
-    - name: Wait for the application to start
-      run: sleep 10
+      run: npm ci
 
     - name: Run tests
       run: npm run test:cov
+
+    - name: Test to Build the project
+      run: npm run build
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1

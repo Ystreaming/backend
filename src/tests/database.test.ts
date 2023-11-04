@@ -78,4 +78,8 @@ describe('connectToDatabase', () => {
     jest.restoreAllMocks();
     consoleSpy.mockRestore();
   });
+
+  afterAll(async () => {
+    jest.unmock('mongoose');
+  });
 });
