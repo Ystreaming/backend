@@ -56,7 +56,16 @@ jobs:
       run: sleep 10
 
     - name: Run tests
-      run: npm test
+      run: npm run test:cov
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ./coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: true
 
     - name: Generate Swagger UI
       run: |
