@@ -32,7 +32,7 @@ const videoSchema = new Schema<Video>({
       type: Date,
       required: true,
     },
-    image: {
+    img: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Files',
       required: true,

@@ -11,7 +11,7 @@ interface Video extends Document {
     description: string;
     language: string;
     time: Date;
-    image: {type: Schema.Types.ObjectId, ref:'Files'};
+    img: {type: Schema.Types.ObjectId, ref:'Files'};
     url: string;
     urllocal: string;
     idComment: mongoose.Types.ObjectId;

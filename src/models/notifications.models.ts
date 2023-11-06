@@ -11,7 +11,7 @@ const NotificationSchema = new Schema<Notification>({
         type: String,
         required: true,
       },
-    desc: {
+    description: {
         type: String,
         required: true,
     },
