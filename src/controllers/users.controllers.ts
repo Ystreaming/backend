@@ -60,20 +60,20 @@ async function updateUser(req: Request, res: Response) {
 async function deleteUser(req: Request, res: Response) {
     if (!Number.isInteger(parseInt(req.params.id))) {
         return res.status(400).json({ message: 'Id must be an integer' });
-    } else if (!req.body.firstName || !req.body.firstName || !req.body.email || !req.body.password) {
-        return res.status(400).json({ message: 'firstName, lastName, email and password are required' });
     } else {
-        const user = await UsersService.updateUser(req.params.id, req.body);
+        const user = await UsersService.deleteUser(req.params.id);
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         } else {
-            return res.status(200).json(user);
+            return res.status(200).json({ message: 'User deleted' });
         }
     }
 }
   module.exports = {
     getAllUsers,
     getUserById,
-    loginUser
+    loginUser,
+    updateUser,
+    deleteUser
 };
