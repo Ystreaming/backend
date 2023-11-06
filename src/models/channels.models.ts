@@ -1,13 +1,6 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
+import Channel from '../interfaces/channels.interface';
 
-interface Channel extends Document {
-  id: number;
-  name: string;
-  image: {type: Schema.Types.ObjectId, ref:'Files'};
-  description: string;
-  idCategory: mongoose.Types.ObjectId; 
-  idVideos: mongoose.Types.ObjectId;
-}
 const Channel = new Schema<Channel>({
     id: {
       type:  Number,
@@ -35,8 +28,8 @@ const Channel = new Schema<Channel>({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Videos',
       },
-  });
+});
 
-  const ChannelModel = mongoose.model<Channel>('Channels', Channel);
-  
-  export default ChannelModel;
+const ChannelModel = mongoose.model<Channel>('Channels', Channel);
+
+export default ChannelModel;

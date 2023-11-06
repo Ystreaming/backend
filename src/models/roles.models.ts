@@ -1,11 +1,6 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
+import Role from '../interfaces/roles.interface';
 
-interface Role extends Document {
-  id: number;
-  name: string;
-  permission: string;
-  idUsers: mongoose.Types.ObjectId; 
-}
 const Role = new Schema<Role>({
     id: {
       type:  Number,
@@ -24,7 +19,8 @@ const Role = new Schema<Role>({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Users',
     },
-  });
-  const RoleModel = mongoose.model<Role>('Roles', Role);
-  
-  export default RoleModel;
+});
+
+const RoleModel = mongoose.model<Role>('Roles', Role);
+
+export default RoleModel;
