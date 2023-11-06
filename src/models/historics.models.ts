@@ -1,11 +1,7 @@
 import mongoose, { Document, Schema } from 'mongoose';
+import Historics from '../interfaces/historics.interface';
 
-interface HistoricModel extends Document {
-  id: number;
-  idUser: mongoose.Types.ObjectId; 
-  idVideo: mongoose.Types.ObjectId;
-}
-const HistoricSchema = new Schema<HistoricModel>({
+const HistoricSchema = new Schema<Historics>({
     id: {
       type: Number,
       required: true,
@@ -19,8 +15,8 @@ const HistoricSchema = new Schema<HistoricModel>({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Videos',
     },
-  });
-  
-  const HistoricModel = mongoose.model<HistoricModel>('Historics', HistoricSchema);
-  
-  export default HistoricModel;
+});
+
+const HistoricModel = mongoose.model<Historics>('Historics', HistoricSchema);
+
+export default HistoricModel;

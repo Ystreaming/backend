@@ -1,13 +1,6 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
+import Comment from '../interfaces/comments.interface';
 
-interface Comment extends Document {
-  id: number;
-  like: number;
-  dislike: number;
-  texte: string;
-  createdAt: Date;
-  idUser: mongoose.Types.ObjectId;
-}
 const Comment = new Schema<Comment>({
     id: {
       type:  Number,
@@ -34,7 +27,8 @@ const Comment = new Schema<Comment>({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Users',
     },
-  });
-  const CommentModel = mongoose.model<Comment>('Comments', Comment);
-  
-  export default CommentModel;
+});
+
+const CommentModel = mongoose.model<Comment>('Comments', Comment);
+
+export default CommentModel;

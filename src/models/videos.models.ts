@@ -1,22 +1,7 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
+import Video from '../interfaces/videos.interface';
 
-interface VideoModel extends Document {
-  id: number;
-  title: string;
-  createdAt: Date;
-  like: number;
-  dislike: number;
-  description: string;
-  language: string;
-  time: Date;
-  image: {type: Schema.Types.ObjectId, ref:'Files'};
-  url: string;
-  urllocal: string;
-  idComment: mongoose.Types.ObjectId; 
-  idChannel: mongoose.Types.ObjectId;
-  idCategory: mongoose.Types.ObjectId;
-}
-const videoSchema = new Schema<VideoModel>({
+const videoSchema = new Schema<Video>({
     id: {
       type: Number,
       required: true,
@@ -47,7 +32,7 @@ const videoSchema = new Schema<VideoModel>({
       type: Date,
       required: true,
     },
-    image: {
+    img: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Files',
       required: true,
@@ -73,6 +58,7 @@ const videoSchema = new Schema<VideoModel>({
         ref: 'Category',
       },
   });
-  const VideoModel = mongoose.model<VideoModel>('Videos', videoSchema);
-  
-  export default VideoModel;
+
+const VideoModel = mongoose.model<Video>('Videos', videoSchema);
+
+export default VideoModel;

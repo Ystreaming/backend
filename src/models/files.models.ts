@@ -1,6 +1,7 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
+import file from '../interfaces/files.interface';
 
-const FileSchema = new Schema({
+const FileSchema = new Schema<file>({
     filename: {
         type: String,
         required: true
@@ -30,4 +31,5 @@ const FileSchema = new Schema({
 });
 
 const File = mongoose.model('Files', FileSchema);
-module.exports = File;
+
+export default File;

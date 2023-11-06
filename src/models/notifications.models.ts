@@ -1,14 +1,7 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
+import Notification from '../interfaces/notifications.interface';
 
-interface NotificationModel extends Document {
-  id: number;
-  title: string;
-  desc: string;
-  url: string;
-  type: string;
-  idUser: mongoose.Types.ObjectId; 
-}
-const NotificationSchema = new Schema<NotificationModel>({
+const NotificationSchema = new Schema<Notification>({
     id: {
       type: Number,
       required: true,
@@ -18,7 +11,7 @@ const NotificationSchema = new Schema<NotificationModel>({
         type: String,
         required: true,
       },
-    desc: {
+    description: {
         type: String,
         required: true,
     },
@@ -34,8 +27,8 @@ const NotificationSchema = new Schema<NotificationModel>({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
     },
-  });
-  
-  const NotificationModel = mongoose.model<NotificationModel>('Notifications', NotificationSchema);
-  
-  export default NotificationModel;
+});
+
+const NotificationModel = mongoose.model<Notification>('Notifications', NotificationSchema);
+
+export default NotificationModel;
