@@ -1,15 +1,11 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
+import Category from '../interfaces/categories.interface';
 
-interface Category extends Document {
-    id: number;
-    name: string;
-    image: {type: Schema.Types.ObjectId, ref:'Files'};
-  }
   const CategorySchema = new Schema<Category>({
     id: {
       type: Number,
       required: true,
-      unique: true, 
+      unique: true,
     },
     name: {
         type: String,
@@ -21,6 +17,7 @@ interface Category extends Document {
         required: true,
     },
 });
+
 const CategoryModel = mongoose.model<Category>('Category', CategorySchema);
 
 export default CategoryModel;
