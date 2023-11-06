@@ -1,0 +1,29 @@
+name: Swagger Deploy
+
+on:
+  pull_request:
+    branches: main
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  generate-swagger-ui:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Generate Swagger UI
+      run: |
+        npm install -g swagger-cli redoc-cli
+        swagger-cli bundle ./documentation/openapi.yaml --outfile ./public/swagger.json --type json
+        redoc-cli build ./public/swagger.json --output ./public/index.html
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./public

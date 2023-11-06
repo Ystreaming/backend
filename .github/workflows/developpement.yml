@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: Development CI
 
 on:
   pull_request:
@@ -23,7 +23,7 @@ jobs:
 
     - name: Create .env.development file
       run: |
-       mkdir -p .env
+        mkdir -p .env
         echo "MONGO_URI=mongodb://localhost:27017/YStream" >> .env/.env.developpement
         echo "RABBITMQ_HOST=localhost" >> .env/.env.developpement
         echo "RABBITMQ_USERNAME=YStream" >> .env/.env.developpement
@@ -40,32 +40,22 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '14'
+        node-version: '18'
 
     - name: Install dependencies
-      run: npm install
-
-    - name: Build the project
-      run: npx tsc
-
-    - name: Start application
-      run: npm start &
-      shell: bash
-
-    - name: Wait for the application to start
-      run: sleep 10
+      run: npm ci
 
     - name: Run tests
-      run: npm test
+      run: npm run test:cov
 
-    - name: Generate Swagger UI
-      run: |
-        npm install -g swagger-cli redoc-cli
-        swagger-cli bundle ./documentation/openapi.yaml --outfile ./public/swagger.json --type json
-        redoc-cli build ./public/swagger.json --output ./public/index.html
+    - name: Test to Build the project
+      run: npm run build
 
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./public
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ./coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: true
