@@ -2544,6 +2544,11 @@
             "format": "url",
             "description": "Video url"
           },
+          "urllocal": {
+            "type": "string",
+            "format": "url",
+            "description": "Video url local"
+          },
           "idComment": {
             "type": "array",
             "format": "int64",
