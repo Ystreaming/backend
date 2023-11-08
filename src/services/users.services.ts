@@ -1,19 +1,20 @@
-const UserModel = require('../models/users.models');
+import UserModel from '../models/users.models';
 const bcrypt = require('bcrypt');
+const mongoose = require('mongoose');
 
 const SALT_ROUND:number = 10;
 
-async function createUser(user: typeof UserModel) {
+async function createUser(user: any) {
     const hashPassword = await bcrypt.hash(user.password, SALT_ROUND);
-    const newUser = new UserModel.UserModel({
-        firstname: user.firstname,
-        lastname: user.lastname,
+    const newUser = new UserModel({
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         dateOfBirth: user.dateOfBirth,
         username: user.username,
         password: hashPassword,
-        createdAt: new Date(),
-        status: true,
+        status: user.status,
         language: user.language,
         profileImage: user.profileImage,
     });
@@ -21,7 +22,7 @@ async function createUser(user: typeof UserModel) {
 }
 
 async function loginUser(email: string, password: string) {
-    const user = await UserModel.UserModel.findOne({ email: email });
+    const user = await UserModel.findOne({ email: email });
     if (!user) {
         throw new Error('User not found');
     }
@@ -33,33 +34,33 @@ async function loginUser(email: string, password: string) {
 }
 
 function getAllUsers() {
-    return UserModel.UserModel.find();
+    return UserModel.find();
 }
 
-function getUserById(id: number) {
-    return UserModel.UserModel.findOne({ id: id });
+function getUserById(id: string) {
+    return UserModel.findOne({ _id: id });
 }
 
 function getUserByUsername(username: string) {
-    return UserModel.UserModel.findOne({ username: username });
+    return UserModel.findOne({ username: username });
 }
 
-async function updateUser(id: number, user: typeof UserModel) {
-    const hashPassword = await bcrypt.hash(user.password, SALT_ROUND);
-    return UserModel.UserModel.findOneAndUpdate({ id: id }, {
-        firstname: user.firstname,
-        lastname: user.lastname,
-        email: user.email,
-        dateOfBirth: user.dateOfBirth,
-        username: user.username,
-        password: hashPassword,
-        language: user.language,
-        profileImage: user.profileImage,
+async function updateUser(id: string, userData: any) {
+    const hashPassword = await bcrypt.hash(userData.password, SALT_ROUND);
+    return UserModel.findOneAndUpdate({ _id: id }, {
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      email: userData.email,
+      dateOfBirth: userData.dateOfBirth,
+      username: userData.username,
+      password: hashPassword,
+      language: userData.language,
+      profileImage: userData.profileImage,
     });
-}
+  }
 
-function deleteUser(id: number) {
-    return UserModel.UserModel.findOneAndDelete({ id: id });
+function deleteUser(id: string) {
+    return UserModel.findOneAndDelete({ _id: id });
 }
 
 module.exports = {
