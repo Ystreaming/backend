@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
-const NotificationService = require('../services/notifications.service');
+import { validationResult } from 'express-validator';
+const NotificationService = require('../services/notifications.services');
 
     async function getAllNotification(req: Request, res: Response) {
         try {
@@ -14,6 +15,33 @@ const NotificationService = require('../services/notifications.service');
         res.status(500).json({ message: 'Internal Server Error' });
         }
 }
+    async function createNotification(req: Request, res: Response) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ error: 'Validation failed', details: errors.array() });
+        }
+
+        try {
+            const newNotification = await NotificationService.createNotification(req.body);
+            return res.status(201).json(newNotification);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+    }
+    async function getNotificationById(req: Request, res: Response) {
+        if (!Number.isInteger(parseInt(req.params.id))) {
+            return res.status(400).json({ message: 'Id must be an integer' });
+        } else  {
+            const notification = await NotificationService.getNotificationById(req.params.id);
+
+            if (!notification) {
+                return res.status(404).json({ message: 'Notification not found' });
+            } else {
+                return res.status(200).json(notification);
+            }
+        }
+    }
     async function updateNotification(req: Request, res: Response) {
         if (!Number.isInteger(parseInt(req.params.id))) {
             return res.status(400).json({ message: 'Id must be an integer' });
@@ -42,6 +70,8 @@ const NotificationService = require('../services/notifications.service');
 }
   module.exports = {
     getAllNotification,
+    createNotification,
+    getNotificationById,
     updateNotification,
     deleteNotification
 };

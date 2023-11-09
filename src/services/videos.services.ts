@@ -1,23 +1,24 @@
-const VideosModel = require('../models/videos.model');
+import VideosModel from '../models/videos.models';
+import Videos from '../interfaces/videos.interface';
 
 function getAllVideos() {
-    return VideosModel.VideosModel.find();
+    return VideosModel.find();
 }
 
 function getVideoById(id: string) {
-    return VideosModel.VideosModel.findById(id);
+    return VideosModel.findById({ _id: id });
 }
 
 function getVideoByChannelId(id: string) {
-    return VideosModel.VideosModel.find({channel_id: id});
+    return VideosModel.find({channel_id: id});
 }
 
 function getVideoByCategoryId(id: string) {
-    return VideosModel.VideosModel.find({category_id: id});
+    return VideosModel.find({category_id: id});
 }
 
-function addVideo(video: typeof VideosModel) {
-    const newVideo = new VideosModel.VideosModel({
+function addVideo(video: Videos) {
+    const newVideo = new VideosModel({
         title: video.title,
         created_at: new Date(),
         like: 0,
@@ -27,15 +28,16 @@ function addVideo(video: typeof VideosModel) {
         time: video.time,
         img: video.img,
         url: video.id,
+        urllocal: video.urllocal,
         idComment: null,
         idChannel: video.idChannel,
-        idCategorie: video.idCategorie,
+        idCategory: video.idCategory,
     });
     return newVideo.save();
 }
 
-function updateVideo(id: string, video: typeof VideosModel) {
-    return VideosModel.VideosModel.findOneAndUpdate({ id: id }, {
+function updateVideo(id: string, video: Videos) {
+    return VideosModel.findOneAndUpdate({ _id: id }, {
         title: video.title,
         created_at: new Date(),
         like: video.like,
@@ -45,14 +47,15 @@ function updateVideo(id: string, video: typeof VideosModel) {
         time: video.time,
         img: video.img,
         url: video.url,
+        urllocal: video.urllocal,
         idComment: video.idComment,
         idChannel: video.idChannel,
-        idCategorie: video.idCategorie,
+        idCategory: video.idCategory,
     });
 }
 
 function deleteVideo(id: string) {
-    return VideosModel.VideosModel.findOneAndDelete({ id: id });
+    return VideosModel.findOneAndDelete({ _id: id });
 }
 
 module.exports = {

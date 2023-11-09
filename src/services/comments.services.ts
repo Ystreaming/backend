@@ -1,36 +1,45 @@
-const CommentsModel = require('../models/comments.model');
-const VideosCommentModel = require('../models/videos.model');
-const UsersModel = require('../models/users.model');
+import CommentsModel from '../models/comments.models';
+import Comment from '../interfaces/comments.interface';
 
 function getAllComments() {
-    return CommentsModel.CommentsModel.find();
+    return CommentsModel.find();
 }
 
 function getCommentsById(id: string) {
-    return CommentsModel.CommentsModel.findById(id);
+    return CommentsModel.findById({ _id: id });
 }
 
 function getCommentsByUserId(id: string) {
-    return CommentsModel.CommentsModel.find({user_id: id});
+    return CommentsModel.find({user_id: id});
 }
 
 function getCommentsByVideoId(id: string) {
-    return CommentsModel.CommentsModel.find({video_id: id});
+    return CommentsModel.find({video_id: id});
 }
 
-function addComment(comment: typeof CommentsModel) {
-    const newComment = new CommentsModel.CommentsModel({
+function addComment(comment: Comment) {
+    const newComment = new CommentsModel({
+        texte: comment.texte,
+        like: comment.like,
+        dislike: comment.dislike,
+        createdAt: comment.createdAt,
+        idUser: comment.idUser,
     });
     return newComment.save();
 }
 
-function updateComment(id: string, comment: typeof CommentsModel) {
-    return CommentsModel.CommentsModel.findOneAndUpdate({ id: id }, {
-    });
+function updateComment(id: string, comment: Comment) {
+    return CommentsModel.findByIdAndUpdate(id, {
+        texte: comment.texte,
+        like: comment.like,
+        dislike: comment.dislike,
+        createdAt: comment.createdAt,
+        idUser: comment.idUser,
+    }, { new: true });
 }
 
 function deleteComment(id: string) {
-    return CommentsModel.CommentsModel.findOneAndDelete({ id: id });
+    return CommentsModel.findOneAndDelete({ _id: id });
 }
 
 module.exports = {

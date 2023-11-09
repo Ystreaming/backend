@@ -1,39 +1,40 @@
-const RolesModel = require('../models/roles.model');
+import RoleModel from '../models/roles.models';
+import Role from '../interfaces/roles.interface';
 
 function getAllRoles() {
-    return RolesModel.RolesModel.find();
+    return RoleModel.find();
 }
 
 function getRoleById(id: String) {
-    return RolesModel.RolesModel.findOne({ id: id });
+    return RoleModel.findOne({ _id: id });
 }
 
 function getRoleByName(name: string) {
-    return RolesModel.RolesModel.findOne({ name: name });
+    return RoleModel.findOne({ name: name });
 }
 
-function createRole(role: typeof RolesModel) {
-    const newRole = new RolesModel.RolesModel({
+function createRole(role: Role) {
+    const newRole = new RoleModel({
         name: role.name,
         permission: role.permission,
-        idUser: role.idUser,
+        idUsers: role.idUsers,
     });
     return newRole.save();
 }
 
-function updateRole(id: String, role: typeof RolesModel) {
-    return RolesModel.RolesModel.findOneAndUpdate({ id: id }, {
+function updateRole(id: String, role: Role) {
+    return RoleModel.findByIdAndUpdate(id, {
         name: role.name,
         permission: role.permission,
-        idUser: role.idUser,
-    });
+        idUsers: role.idUsers,
+    }, { new: true });
 }
 
 function deleteRole(id: String) {
-    return RolesModel.RolesModel.findOneAndDelete({ id: id });
+    return RoleModel.findByIdAndDelete(id);
 }
 
-module.exports = {
+export {
     getAllRoles,
     getRoleById,
     getRoleByName,

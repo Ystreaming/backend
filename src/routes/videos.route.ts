@@ -6,9 +6,9 @@ const videoController = require('../controllers/videos.controllers');
 
 // => /Video
 
-router.get('/', videoController.getAllVideos);
+router.get('/', videoController.getAllVideo);
 
-router.post('/', videoValidator, videoController.createVideo);
+// router.post('/', videoValidator, videoController.createVideo);
 
 // => /Video/id
 

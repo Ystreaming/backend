@@ -1,21 +1,21 @@
 import { Request, Response } from 'express';
 const express = require('express');
 const router = express.Router();
-const { roleValidator } = require('../validators/roles.validator');
-const roleController = require('../controllers/roles.controllers');
+const { rolesValidator } = require('../validators/roles.validator');
+const rolesController = require('../controllers/roles.controllers');
 
 // => /Role
 
-router.get('/', roleController.getAllRoles);
+router.get('/', rolesController.getAllRoles);
 
-router.post('/', roleValidator, roleController.createRole);
+router.post('/', rolesValidator, rolesController.createRoles);
 
 // => /Role/id
 
-router.get('/:id', roleController.getRoleById);
+router.get('/:id', rolesController.getRolesById);
 
-router.put('/:id', roleValidator, roleController.updateRole);
+router.put('/:id', rolesValidator, rolesController.updateRoles);
 
-router.delete('/:id', roleController.deleteRole);
+router.delete('/:id', rolesController.deleteRoles);
 
 module.exports = router;

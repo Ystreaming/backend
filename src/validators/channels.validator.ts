@@ -1,6 +1,6 @@
 import { body } from 'express-validator';
 
-export const categoryValidator = [
+export const channelValidator = [
 
     body('name')
         .isString()

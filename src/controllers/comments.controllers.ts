@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
-const CommentsService = require('../services/historics.service');
-const UserService = require('../services/users.services');
-const VideoService = require('../services/videos.services')
+import { validationResult } from 'express-validator';
+const CommentsService = require('../services/historics.services');
 
     async function getAllComment(req: Request, res: Response) {
         try {
@@ -14,6 +13,33 @@ const VideoService = require('../services/videos.services')
             } catch (error) {
                 console.error(error);
                 res.status(500).json({ message: 'Internal Server Error' });
+        }
+}
+    async function createComment(req: Request, res: Response) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ error: 'Validation failed', details: errors.array() });
+        }
+
+        try {
+            const newComment = await CommentsService.createComment(req.body);
+            return res.status(201).json(newComment);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+    }
+    async function getCommentById(req: Request, res: Response) {
+        if (!Number.isInteger(parseInt(req.params.id))) {
+            return res.status(400).json({ message: 'Id must be an integer' });
+        } else  {
+            const comment = await CommentsService.getCommentById(req.params.id);
+
+            if (!comment) {
+                return res.status(404).json({ message: 'Comment not found' });
+            } else {
+                return res.status(200).json(comment);
+            }
         }
 }
     async function updateComment(req: Request, res: Response) {
@@ -42,34 +68,11 @@ const VideoService = require('../services/videos.services')
             }
         }
 }
-    async function getUserById(req: Request, res: Response) {
-        if (!Number.isInteger(parseInt(req.params.id))) {
-            return res.status(400).json({ message: 'Id must be an integer' });
-        } else  {
-            const user = await UserService.getUserById(req.params.id);
 
-            if (!user) {
-                return res.status(404).json({ message: 'User not found' });
-            } else {
-                return res.status(200).json(user);
-            }
-        }
-}
-    async function getVideoById(req: Request, res: Response) {
-        if (!Number.isInteger(parseInt(req.params.id))) {
-            return res.status(400).json({ message: 'Id must be an integer' });
-        } else  {
-            const video = await VideoService.getVideoById(req.params.id);
-
-            if (!video) {
-                return res.status(404).json({ message: 'Video not found' });
-            } else {
-                return res.status(200).json(video);
-            }
-        }
-}
   module.exports = {
     getAllComment,
+    createComment,
     updateComment,
+    getCommentById,
     deleteComment
 };

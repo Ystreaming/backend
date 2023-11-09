@@ -19,7 +19,7 @@ router.delete('/:id', userController.deleteUser);
 
 // => /User/username/:username
 
-router.get('/username/:username:', userController.getUserByUsername);
+// router.get('/username/:username:', userController.getUserByUsername);
 
 // => /User/login
 router.get('/login', userController.loginUser);

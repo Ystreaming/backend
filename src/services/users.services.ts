@@ -1,6 +1,5 @@
 import UserModel from '../models/users.models';
 const bcrypt = require('bcrypt');
-const mongoose = require('mongoose');
 
 const SALT_ROUND:number = 10;
 

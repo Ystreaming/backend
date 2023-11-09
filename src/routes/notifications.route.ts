@@ -6,7 +6,7 @@ const notificationController = require('../controllers/notifications.controllers
 
 // => /Notification
 
-router.get('/', notificationController.getAllNotifications);
+router.get('/', notificationController.getAllNotification);
 
 router.post('/', notificationValidator, notificationController.createNotification);
 
