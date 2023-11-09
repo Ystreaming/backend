@@ -2,14 +2,13 @@ import { Request, Response } from 'express';
 const userController = require('../controllers/users.controllers');
 const express = require('express');
 const router = express.Router();
+const { userValidator } = require('../validators/users.validator');
 
 // => /User
 
-router.get('/', (req: Request, res: Response) => {
-    console.log('GET /users');
-});
+router.get('/', userController.getAllUsers);
 
-router.post('/', userController.createUser);
+router.post('/', userValidator, userController.createUser);
 
 // => /User/id
 
@@ -17,9 +16,7 @@ router.get('/:id', userController.getUserById);
 
 router.put('/:id', userController.updateUser);
 
-router.delete('/:id', (req: Request, res: Response) => {
-    console.log('DELETE /users/:id');
-});
+router.delete('/:id', userController.deleteUser);
 
 // => /User/username/:username
 

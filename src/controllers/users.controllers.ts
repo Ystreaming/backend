@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 const UsersService = require('../services/users.services');
-import * as Validators from '../validators/users.validator';
+const { validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 
 async function getAllUsers(req: Request, res: Response) {
@@ -14,6 +14,21 @@ async function getAllUsers(req: Request, res: Response) {
         } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+async function createUser(req: Request, res: Response) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+        const newUser = await UsersService.createUser(req.body);
+        return res.status(201).json(newUser);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
@@ -46,22 +61,9 @@ async function loginUser(req: Request, res: Response) {
 }
 
 async function updateUser(req: Request, res: Response) {
-    const errors = [];
-
-    const firstnameError = Validators.firstnameValidator(req.body.firstName);
-    if (firstnameError) errors.push({ firstName: firstnameError });
-
-    const lastnameError = Validators.lastnameValidator(req.body.lastName);
-    if (lastnameError) errors.push({ lastName: lastnameError });
-
-    const emailError = Validators.emailValidator(req.body.email);
-    if (emailError) errors.push({ email: emailError });
-
-    const passwordError = Validators.passwordValidator(req.body.password);
-    if (passwordError) errors.push({ password: passwordError });
-
-    if (errors.length > 0) {
-        return res.status(400).json({ errors });
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
     }
 
     try {
@@ -87,16 +89,6 @@ async function deleteUser(req: Request, res: Response) {
         } else {
             return res.status(200).json({ message: 'User deleted' });
         }
-    }
-}
-
-async function createUser(req: Request, res: Response) {
-    try {
-        const newUser = await UsersService.createUser(req.body);
-        return res.status(201).json(newUser);
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
