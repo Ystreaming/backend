@@ -1,27 +1,19 @@
 import { Request, Response } from 'express';
 const express = require('express');
 const router = express.Router();
+const { categoryValidator } = require('../validators/categories.validator');
+const categoryController = require('../controllers/categories.controllers');
 
 // => /Categories
-router.get('/', (req: Request, res: Response) => {
-    console.log('GET /categories');
-});
+router.get('/', categoryController.getAllCategories);
 
-router.post('/', (req: Request, res: Response) => {
-    console.log('POST /categories');
-});
+router.post('/', categoryValidator, categoryController.createCategory);
 
 // => /Categories/id
-router.get('/:id', (req: Request, res: Response) => {
-    console.log('GET /categories/id');
-});
+router.get('/:id', categoryController.getCategoryById);
 
-router.put('/:id', (req: Request, res: Response) => {
-    console.log('PUT /categories/id');
-});
+router.put('/:id', categoryValidator, categoryController.updateCategory);
 
-router.delete('/:id', (req: Request, res: Response) => {
-    console.log('DELETE /categories/id');
-});
+router.delete('/:id', categoryController.deleteCategory);
 
 module.exports = router;

@@ -1,30 +1,22 @@
 import { Request, Response } from 'express';
 const express = require('express');
 const router = express.Router();
+const { commentValidator } = require('../validators/comments.validator');
+const commentController = require('../controllers/comments.controllers');
 
 // => /Comment
 
-router.get('/', (req: Request, res: Response) => {
-    console.log('GET /comments');
-});
+router.get('/', commentController.getAllComments);
 
-router.post('/', (req: Request, res: Response) => {
-    console.log('POST /comments');
-});
+router.post('/', commentValidator, commentController.createComment);
 
 // => /Comment/id
 
-router.get('/:id', (req: Request, res: Response) => {
-    console.log('GET /comments/:id');
-});
+router.get('/:id', commentController.getCommentById);
 
-router.put('/:id', (req: Request, res: Response) => {
-    console.log('PUT /comments/:id');
-});
+router.put('/:id', commentValidator, commentController.updateComment);
 
-router.delete('/:id', (req: Request, res: Response) => {
-    console.log('DELETE /comments/:id');
-});
+router.delete('/:id', commentController.deleteComment);
 
 // => /Comment/user/id
 
