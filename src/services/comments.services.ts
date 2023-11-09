@@ -6,15 +6,15 @@ function getAllComments() {
     return CommentsModel.CommentsModel.find();
 }
 
-function getCommentsById(id: number) {
+function getCommentsById(id: string) {
     return CommentsModel.CommentsModel.findById(id);
 }
 
-function getCommentsByUserId(id: number) {
+function getCommentsByUserId(id: string) {
     return CommentsModel.CommentsModel.find({user_id: id});
 }
 
-function getCommentsByVideoId(id: number) {
+function getCommentsByVideoId(id: string) {
     return CommentsModel.CommentsModel.find({video_id: id});
 }
 
@@ -24,12 +24,12 @@ function addComment(comment: typeof CommentsModel) {
     return newComment.save();
 }
 
-function updateComment(id: number, comment: typeof CommentsModel) {
+function updateComment(id: string, comment: typeof CommentsModel) {
     return CommentsModel.CommentsModel.findOneAndUpdate({ id: id }, {
     });
 }
 
-function deleteComment(id: number) {
+function deleteComment(id: string) {
     return CommentsModel.CommentsModel.findOneAndDelete({ id: id });
 }
 

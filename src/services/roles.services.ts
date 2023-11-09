@@ -4,7 +4,7 @@ function getAllRoles() {
     return RolesModel.RolesModel.find();
 }
 
-function getRoleById(id: number) {
+function getRoleById(id: String) {
     return RolesModel.RolesModel.findOne({ id: id });
 }
 
@@ -21,7 +21,7 @@ function createRole(role: typeof RolesModel) {
     return newRole.save();
 }
 
-function updateRole(id: number, role: typeof RolesModel) {
+function updateRole(id: String, role: typeof RolesModel) {
     return RolesModel.RolesModel.findOneAndUpdate({ id: id }, {
         name: role.name,
         permission: role.permission,
@@ -29,7 +29,7 @@ function updateRole(id: number, role: typeof RolesModel) {
     });
 }
 
-function deleteRole(id: number) {
+function deleteRole(id: String) {
     return RolesModel.RolesModel.findOneAndDelete({ id: id });
 }
 

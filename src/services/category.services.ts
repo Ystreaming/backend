@@ -4,7 +4,7 @@ function getAllCategories() {
     return CategoriesModel.CategoriesModel.find();
 }
 
-function getCategoryById(id: number) {
+function getCategoryById(id: string) {
     return CategoriesModel.CategoriesModel.findOne({ id: id });
 }
 
@@ -20,14 +20,14 @@ function createCategory(category: typeof CategoriesModel) {
     return newCategory.save();
 }
 
-function updateCategory(id: number, category: typeof CategoriesModel) {
+function updateCategory(id: string, category: typeof CategoriesModel) {
     return CategoriesModel.CategoriesModel.findOneAndUpdate({ id: id }, {
         name: category.name,
         image: category.image,
     });
 }
 
-function deleteCategory(id: number) {
+function deleteCategory(id: string) {
     return CategoriesModel.CategoriesModel.findOneAndDelete({ id: id });
 }
 

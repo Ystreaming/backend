@@ -16,6 +16,7 @@ async function createUser(user: any) {
         password: hashPassword,
         status: user.status,
         language: user.language,
+        sub: user.string,
         profileImage: user.profileImage,
     });
     return await newUser.save();
@@ -54,6 +55,7 @@ async function updateUser(id: string, userData: any) {
       dateOfBirth: userData.dateOfBirth,
       username: userData.username,
       password: hashPassword,
+      sub: userData.sub,
       language: userData.language,
       profileImage: userData.profileImage,
     });
