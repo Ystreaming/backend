@@ -1,34 +1,35 @@
-const CategoriesModel = require('../models/categories.models');
+import CategoriesModel from '../models/categories.models';
+import Categories from '../interfaces/categories.interface';
 
 function getAllCategories() {
-    return CategoriesModel.CategoriesModel.find();
+    return CategoriesModel.find();
 }
 
 function getCategoryById(id: string) {
-    return CategoriesModel.CategoriesModel.findOne({ id: id });
+    return CategoriesModel.findOne({ _id: id });
 }
 
 function getCategoryByName(name: string) {
-    return CategoriesModel.CategoriesModel.findOne({ name: name });
+    return CategoriesModel.findOne({ name: name });
 }
 
-function createCategory(category: typeof CategoriesModel) {
-    const newCategory = new CategoriesModel.CategoriesModel({
+function createCategory(category: Categories) {
+    const newCategory = new CategoriesModel({
         name: category.name,
         image: category.image,
     });
     return newCategory.save();
 }
 
-function updateCategory(id: string, category: typeof CategoriesModel) {
-    return CategoriesModel.CategoriesModel.findOneAndUpdate({ id: id }, {
+function updateCategory(id: string, category: Categories) {
+    return CategoriesModel.findOneAndUpdate({ _id: id }, {
         name: category.name,
         image: category.image,
     });
 }
 
 function deleteCategory(id: string) {
-    return CategoriesModel.CategoriesModel.findOneAndDelete({ id: id });
+    return CategoriesModel.findOneAndDelete({ _id: id });
 }
 
 module.exports = {
