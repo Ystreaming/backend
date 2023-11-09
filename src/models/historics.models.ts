@@ -2,11 +2,6 @@ import mongoose, { Document, Schema } from 'mongoose';
 import Historics from '../interfaces/historics.interface';
 
 const HistoricSchema = new Schema<Historics>({
-    id: {
-      type: Number,
-      required: true,
-      unique: true,
-    },
     idUser: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Channels',

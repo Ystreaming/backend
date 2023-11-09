@@ -2,11 +2,6 @@ import mongoose, { Schema } from 'mongoose';
 import Video from '../interfaces/videos.interface';
 
 const videoSchema = new Schema<Video>({
-    id: {
-      type: Number,
-      required: true,
-      unique: true,
-    },
     title: {
       type: String,
       required: true,
