@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-const HistoricsService = require('../services/Historics.service');
+const HistoricService = require('../services/historics.service');
 
     async function getAllHistoric(req: Request, res: Response) {
         try {
-        const historic = await HistoricsService.getAllHistoric();
+        const historic = await HistoricService.getAllHistoric();
         if (!historic) {
             res.status(404).json({ message: 'Historic not found' });
         } else {
@@ -18,7 +18,7 @@ const HistoricsService = require('../services/Historics.service');
         if (!Number.isInteger(parseInt(req.params.id))) {
             return res.status(400).json({ message: 'Id must be an integer' });
         } else {
-            const historic = await HistoricsService.updateHistoric(req.params.id, req.body);
+            const historic = await HistoricService.updateHistoric(req.params.id, req.body);
 
             if (!historic) {
                 return res.status(404).json({ message: 'historic not found' });
@@ -31,7 +31,7 @@ const HistoricsService = require('../services/Historics.service');
         if (!Number.isInteger(parseInt(req.params.id))) {
             return res.status(400).json({ message: 'Id must be an integer' });
         } else {
-            const historic = await HistoricsService.deleteHistoric(req.params.id);
+            const historic = await HistoricService.deleteHistoric(req.params.id);
 
             if (!historic) {
                 return res.status(404).json({ message: 'Historic not found' });
