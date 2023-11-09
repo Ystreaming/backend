@@ -2,11 +2,6 @@ import mongoose, { Schema } from 'mongoose';
 import Category from '../interfaces/categories.interface';
 
   const CategorySchema = new Schema<Category>({
-    id: {
-      type: Number,
-      required: true,
-      unique: true,
-    },
     name: {
         type: String,
         required: true,

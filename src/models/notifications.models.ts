@@ -2,11 +2,6 @@ import mongoose, { Schema } from 'mongoose';
 import Notification from '../interfaces/notifications.interface';
 
 const NotificationSchema = new Schema<Notification>({
-    id: {
-      type: Number,
-      required: true,
-      unique: true,
-    },
     title: {
         type: String,
         required: true,
