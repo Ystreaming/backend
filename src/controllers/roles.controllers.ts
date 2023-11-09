@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 const RolesService = require('../services/roles.service');
 const { validationResult } = require('express-validator');
+const RoleService = require('../services/roles.service');
 
 async function getAllRoles(req: Request, res: Response) {
     try {
@@ -8,7 +9,7 @@ async function getAllRoles(req: Request, res: Response) {
         if (!roles) {
             res.status(404).json({ message: 'Role not found' });
         } else {
-            res.status(200).json(roles);
+            res.status(200).json(role);
         }
         } catch (error) {
         console.error(error);
@@ -49,7 +50,7 @@ async function deleteRoles(req: Request, res: Response) {
 }
 
   module.exports = {
-    getAllRoles,
-    updateRoles,
-    deleteRoles
+    getAllRole,
+    updateRole,
+    deleteRole
 };

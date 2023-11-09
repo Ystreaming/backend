@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 const express = require('express');
 const router = express.Router();
 
-// => /Category
+// => /Categories
 router.get('/', (req: Request, res: Response) => {
     console.log('GET /categories');
 });
@@ -11,7 +11,7 @@ router.post('/', (req: Request, res: Response) => {
     console.log('POST /categories');
 });
 
-// => /Category/id
+// => /Categories/id
 router.get('/:id', (req: Request, res: Response) => {
     console.log('GET /categories/id');
 });
