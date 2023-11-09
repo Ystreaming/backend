@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-const NotificationService = require('../services/notifications.service');
+const NotificationService = require('../services/notifications.services');
 
     async function getAllNotification(req: Request, res: Response) {
         try {

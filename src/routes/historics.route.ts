@@ -6,13 +6,13 @@ const historicController = require('../controllers/historics.controllers');
 
 // => /historic
 
-router.get('/', historicController.getAllHistorics);
+router.get('/', historicController.getAllHistoric);
 
-router.post('/', historicValidator, historicController.createHistoric);
+// router.post('/', historicValidator, historicController.createHistoric);
 
 // => /historic/id
 
-router.get('/:id', historicController.getHistoricById);
+// router.get('/:id', historicController.getHistoricById);
 
 router.put('/:id', historicValidator, historicController.updateHistoric);
 

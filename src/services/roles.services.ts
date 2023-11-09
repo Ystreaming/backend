@@ -1,4 +1,4 @@
-const RolesModel = require('../models/roles.model');
+const RolesModel = require('../models/roles.models');
 
 function getAllRoles() {
     return RolesModel.RolesModel.find();
@@ -29,7 +29,7 @@ function updateRole(id: String, role: typeof RolesModel) {
     });
 }
 
-function deleteRole(id: String) {
+function deleteRoles(id: String) {
     return RolesModel.RolesModel.findOneAndDelete({ id: id });
 }
 
@@ -39,5 +39,5 @@ module.exports = {
     getRoleByName,
     createRole,
     updateRole,
-    deleteRole,
+    deleteRoles,
 };

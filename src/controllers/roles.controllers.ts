@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-const RolesService = require('../services/roles.service');
 const { validationResult } = require('express-validator');
+const RolesService = require('../services/roles.services');
 
 async function getAllRoles(req: Request, res: Response) {
     try {
@@ -38,7 +38,7 @@ async function deleteRoles(req: Request, res: Response) {
     if (!Number.isInteger(parseInt(req.params.id))) {
         return res.status(400).json({ message: 'Id must be an integer' });
     } else {
-        const roles = await RolesService.deleteUser(req.params.id);
+        const roles = await RolesService.deleteRoles(req.params.id);
 
         if (!roles) {
             return res.status(404).json({ message: 'Role not found' });
@@ -50,6 +50,6 @@ async function deleteRoles(req: Request, res: Response) {
 
   module.exports = {
     getAllRoles,
-    updateRole,
-    deleteRole
+    updateRoles,
+    deleteRoles,
 };

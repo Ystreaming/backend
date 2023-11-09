@@ -1,4 +1,4 @@
-const CategoriesModel = require('../models/categories.model');
+const CategoriesModel = require('../models/categories.models');
 
 function getAllCategories() {
     return CategoriesModel.CategoriesModel.find();

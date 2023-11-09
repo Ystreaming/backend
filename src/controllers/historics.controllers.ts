@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-const HistoricService = require('../services/historics.service');
+const HistoricService = require('../services/historics.services');
 
     async function getAllHistoric(req: Request, res: Response) {
         try {

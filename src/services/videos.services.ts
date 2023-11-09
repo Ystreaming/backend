@@ -1,4 +1,4 @@
-const VideosModel = require('../models/videos.model');
+const VideosModel = require('../models/videos.models');
 
 function getAllVideos() {
     return VideosModel.VideosModel.find();

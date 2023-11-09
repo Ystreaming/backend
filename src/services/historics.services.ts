@@ -1,4 +1,4 @@
-const HistoricsModel = require('../models/historics.model')
+const HistoricsModel = require('../models/historics.models')
 
 function getAllHistorics() {
     return HistoricsModel.HistoricsModel.find();

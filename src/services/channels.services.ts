@@ -1,4 +1,4 @@
-const ChannelModel = require('../models/channel.model');
+const ChannelModel = require('../models/channels.models');
 
 function getAllChannels() {
     return ChannelModel.ChannelModel.find();

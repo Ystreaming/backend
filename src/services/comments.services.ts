@@ -1,6 +1,6 @@
-const CommentsModel = require('../models/comments.model');
-const VideosCommentModel = require('../models/videos.model');
-const UsersModel = require('../models/users.model');
+const CommentsModel = require('../models/comments.models');
+const VideosCommentModel = require('../models/videos.models');
+const UsersModel = require('../models/users.models');
 
 function getAllComments() {
     return CommentsModel.CommentsModel.find();

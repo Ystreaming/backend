@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-const VideoService = require('../services/videos.service');
+const VideoService = require('../services/videos.services');
 
     async function getAllVideo (req: Request, res: Response) {
         try {

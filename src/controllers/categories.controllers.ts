@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-const CategoryService = require('../services/categories.service');
+const CategoryService = require('../services/categories.services');
 
     async function getAllCategory(req: Request, res: Response) {
         try {

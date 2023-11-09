@@ -1,6 +1,6 @@
 import { body } from 'express-validator';
 
-export const videoValidator = [
+export const commentsValidator = [
 
     body('texte')
         .isString()
@@ -22,7 +22,7 @@ export const videoValidator = [
         .isDate().withMessage('Invalid date')
         .exists()
         .notEmpty().withMessage('Date of birth is required'),
-        
+
     body('idUser')
         .isString()
         .isLength({ min: 3 }).withMessage('IdUser should be at least 5 characters')

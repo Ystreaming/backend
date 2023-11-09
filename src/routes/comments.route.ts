@@ -1,20 +1,20 @@
 import { Request, Response } from 'express';
 const express = require('express');
 const router = express.Router();
-const { commentValidator } = require('../validators/comments.validator');
+const { commentsValidator } = require('../validators/comments.validator');
 const commentController = require('../controllers/comments.controllers');
 
 // => /Comment
 
-router.get('/', commentController.getAllComments);
+router.get('/', commentController.getAllComment);
 
-router.post('/', commentValidator, commentController.createComment);
+// router.post('/', commentValidator, commentController.createComment);
 
 // => /Comment/id
 
-router.get('/:id', commentController.getCommentById);
+// router.get('/:id', commentController.getCommentById);
 
-router.put('/:id', commentValidator, commentController.updateComment);
+router.put('/:id', commentsValidator, commentController.updateComment);
 
 router.delete('/:id', commentController.deleteComment);
 
