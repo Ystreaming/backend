@@ -5,7 +5,7 @@ const NotificationService = require('../services/notifications.service');
         try {
         const notification = await NotificationService.getAllNotifications();
         if (!notification) {
-            res.status(404).json({ message: 'Notification not found' });
+            res.status(204).json({ message: 'Notification not found' });
         } else {
             res.status(200).json(notification);
         }

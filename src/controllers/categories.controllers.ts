@@ -5,7 +5,7 @@ const CategoryService = require('../services/categories.service');
         try {
         const category = await CategoryService.getAllCategory();
         if (!category) {
-            res.status(404).json({ message: 'Category not found' });
+            res.status(204).json({ message: 'Category not found' });
         } else {
             res.status(200).json(category);
         }
