@@ -8,11 +8,11 @@ const rolesController = require('../controllers/roles.controllers');
 
 router.get('/', rolesController.getAllRoles);
 
-// router.post('/', roleValidator, roleController.createRoles);
+router.post('/', rolesValidator, rolesController.createRoles);
 
 // => /Role/id
 
-// router.get('/:id', roleController.getRolesById);
+router.get('/:id', rolesController.getRolesById);
 
 router.put('/:id', rolesValidator, rolesController.updateRoles);
 

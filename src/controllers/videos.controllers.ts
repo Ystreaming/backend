@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { validationResult } from 'express-validator';
 const VideoService = require('../services/videos.services');
 
     async function getAllVideo (req: Request, res: Response) {
@@ -14,6 +15,20 @@ const VideoService = require('../services/videos.services');
         res.status(500).json({ message: 'Internal Server Error' });
         }
 }
+    async function createVideo(req: Request, res: Response) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ error: 'Validation failed', details: errors.array() });
+        }
+
+        try {
+            const newVideo = await VideoService.createVideo(req.body);
+            return res.status(201).json(newVideo);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+    }
     async function getVideoById(req: Request, res: Response) {
         if (!Number.isInteger(parseInt(req.params.id))) {
             return res.status(400).json({ message: 'Id must be an integer' });
@@ -52,6 +67,7 @@ const VideoService = require('../services/videos.services');
 }
   module.exports = {
     getAllVideo,
+    createVideo,
     getVideoById,
     updateVideo,
     deleteVideo

@@ -11,7 +11,7 @@ router.post('/', channelValidator, channelController.createChannel);
 
 // => /Channel/id
 
-// router.get('/:id', channelController.getChannelById);
+router.get('/:id', channelController.getChannelById);
 
 router.put('/:id', channelValidator, channelController.updateChannel);
 

@@ -8,11 +8,11 @@ const notificationController = require('../controllers/notifications.controllers
 
 router.get('/', notificationController.getAllNotification);
 
-// router.post('/', notificationValidator, notificationController.createNotification);
+router.post('/', notificationValidator, notificationController.createNotification);
 
 // => /Notification/id
 
-// router.get('/:id', notificationController.getNotificationById);
+router.get('/:id', notificationController.getNotificationById);
 
 router.put('/:id', notificationValidator, notificationController.updateNotification);
 

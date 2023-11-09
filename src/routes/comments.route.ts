@@ -8,11 +8,11 @@ const commentController = require('../controllers/comments.controllers');
 
 router.get('/', commentController.getAllComment);
 
-// router.post('/', commentValidator, commentController.createComment);
+router.post('/', commentsValidator, commentController.createComment);
 
 // => /Comment/id
 
-// router.get('/:id', commentController.getCommentById);
+router.get('/:id', commentController.getCommentById);
 
 router.put('/:id', commentsValidator, commentController.updateComment);
 

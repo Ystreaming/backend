@@ -27,6 +27,19 @@ const ChannelService = require('../services/channels.services');
             }
         }
 }
+    async function getChannelById(req: Request, res: Response) {
+        if (!Number.isInteger(parseInt(req.params.id))) {
+            return res.status(400).json({ message: 'Id must be an integer' });
+        } else  {
+            const channel = await ChannelService.getChannelById(req.params.id);
+
+            if (!channel) {
+                return res.status(404).json({ message: 'Channel not found' });
+            } else {
+                return res.status(200).json(channel);
+            }
+        }
+}
     async function updateChannel(req: Request, res: Response) {
         if (!Number.isInteger(parseInt(req.params.id))) {
             return res.status(400).json({ message: 'Id must be an integer' });
@@ -56,6 +69,7 @@ const ChannelService = require('../services/channels.services');
   module.exports = {
     getAllChannels,
     createChannel,
+    getChannelById,
     updateChannel,
     deleteChannel
 };
