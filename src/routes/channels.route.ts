@@ -1,29 +1,21 @@
 import { Request, Response } from 'express';
 const express = require('express');
 const router = express.Router();
+const { channelValidator } = require('../validators/channels.validator');
+const channelController = require('../controllers/channels.controllers');
 
 // => /Channel
-router.get('/', (req: Request, res: Response) => {
-    console.log('GET /channels');
-});
+router.get('/', channelController.getAllChannels);
 
-router.post('/', (req: Request, res: Response) => {
-    console.log('POST /channels');
-});
+router.post('/', channelValidator, channelController.createChannel);
 
 // => /Channel/id
 
-router.get('/:id', (req: Request, res: Response) => {
-    console.log('GET /channels/:id');
-});
+router.get('/:id', channelController.getChannelById);
 
-router.put('/:id', (req: Request, res: Response) => {
-    console.log('PUT /channels/:id');
-});
+router.put('/:id', channelValidator, channelController.updateChannel);
 
-router.delete('/:id', (req: Request, res: Response) => {
-    console.log('DELETE /channels/:id');
-});
+router.delete('/:id', channelController.deleteChannel);
 
 // => /Channel/name
 

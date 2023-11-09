@@ -1,30 +1,22 @@
 import { Request, Response } from 'express';
 const express = require('express');
 const router = express.Router();
+const { notificationValidator } = require('../validators/notifications.validator');
+const notificationController = require('../controllers/notifications.controllers');
 
 // => /Notification
 
-router.get('/', (req: Request, res: Response) => {
-    console.log('GET /notifications');
-});
+router.get('/', notificationController.getAllNotifications);
 
-router.post('/', (req: Request, res: Response) => {
-    console.log('POST /notifications');
-});
+router.post('/', notificationValidator, notificationController.createNotification);
 
 // => /Notification/id
 
-router.get('/:id', (req: Request, res: Response) => {
-    console.log('GET /notifications/:id');
-});
+router.get('/:id', notificationController.getNotificationById);
 
-router.put('/:id', (req: Request, res: Response) => {
-    console.log('PUT /notifications/:id');
-});
+router.put('/:id', notificationValidator, notificationController.updateNotification);
 
-router.delete('/:id', (req: Request, res: Response) => {
-    console.log('DELETE /notifications/:id');
-});
+router.delete('/:id', notificationController.deleteNotification);
 
 // => /Notification/user/id
 

@@ -1,30 +1,22 @@
 import { Request, Response } from 'express';
 const express = require('express');
 const router = express.Router();
+const { videoValidator } = require('../validators/videos.validator');
+const videoController = require('../controllers/videos.controllers');
 
 // => /Video
 
-router.get('/', (req: Request, res: Response) => {
-    console.log('GET /videos');
-});
+router.get('/', videoController.getAllVideos);
 
-router.post('/', (req: Request, res: Response) => {
-    console.log('POST /videos');
-});
+router.post('/', videoValidator, videoController.createVideo);
 
 // => /Video/id
 
-router.get('/:id', (req: Request, res: Response) => {
-    console.log('GET /videos/:id');
-});
+router.get('/:id', videoController.getVideoById);
 
-router.put('/:id', (req: Request, res: Response) => {
-    console.log('PUT /videos/:id');
-});
+router.put('/:id', videoValidator, videoController.updateVideo);
 
-router.delete('/:id', (req: Request, res: Response) => {
-    console.log('DELETE /videos/:id');
-});
+router.delete('/:id', videoController.deleteVideo);
 
 // => /Video/user/id
 

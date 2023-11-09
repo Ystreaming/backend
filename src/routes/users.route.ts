@@ -1,4 +1,3 @@
-import { Request, Response } from 'express';
 const userController = require('../controllers/users.controllers');
 const express = require('express');
 const router = express.Router();
@@ -20,8 +19,9 @@ router.delete('/:id', userController.deleteUser);
 
 // => /User/username/:username
 
-router.get('/username/:username:', (req: Request, res: Response) => {
-    console.log('GET /users/username/:username');
-});
+router.get('/username/:username:', userController.getUserByUsername);
+
+// => /User/login
+router.get('/login', userController.loginUser);
 
 module.exports = router;
