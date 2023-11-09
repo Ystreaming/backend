@@ -34,6 +34,10 @@ const UserSchema = new Schema<User>({
     type: Boolean,
     default: true,
   },
+  sub: {
+    type: String,
+    required: true,
+  },
   language: {
     type: String,
     required: true,

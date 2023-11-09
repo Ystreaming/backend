@@ -9,6 +9,7 @@ interface User extends Document {
     username: string;
     password: string;
     createdAt: Date;
+    sub: string;
     status: boolean;
     language: string;
     profileImage: {type: Schema.Types.ObjectId, ref:'Files'};
