@@ -58,7 +58,7 @@ async function loginUser(req: Request, res: Response) {
                 return res.status(404).json({ message: 'User not found' });
             } else {
                 const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-                res.cookie('token', token, { httpOnly: true });
+                res.json('token');
                 return res.status(200).json({ message: 'User logged in' });
             }
         }
