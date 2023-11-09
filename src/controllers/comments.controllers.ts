@@ -7,7 +7,7 @@ const VideoService = require('../services/videos.services')
         try {
         const comment = await CommentsService.getAllComment();
             if (!comment) {
-                res.status(404).json({ message: 'Comment not found' });
+                res.status(204).json({ message: 'Comment not found' });
             } else {
                 res.status(200).json(comment);
             }
