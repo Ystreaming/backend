@@ -14,7 +14,6 @@ router.post('/', historicValidator, historicController.createHistoric);
 
 router.get('/:id', historicController.getHistoricById);
 
-router.put('/:id', historicValidator, historicController.updateHistoric);
 
 router.delete('/:id', historicController.deleteHistoric);
 

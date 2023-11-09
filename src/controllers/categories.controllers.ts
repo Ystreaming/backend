@@ -71,5 +71,7 @@ const CategoryService = require('../services/categories.services');
   module.exports = {
     getAllCategory,
     updateCategory,
+    createCategory,
+    getCategoryById,
     deleteCategory
 };

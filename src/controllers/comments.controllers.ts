@@ -1,8 +1,6 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 const CommentsService = require('../services/historics.services');
-const UserService = require('../services/users.services');
-const VideoService = require('../services/videos.services')
 
     async function getAllComment(req: Request, res: Response) {
         try {

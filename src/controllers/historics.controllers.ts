@@ -42,19 +42,6 @@ const HistoricService = require('../services/historics.services');
             }
         }
     }
-    async function updateHistoric(req: Request, res: Response) {
-        if (!Number.isInteger(parseInt(req.params.id))) {
-            return res.status(400).json({ message: 'Id must be an integer' });
-        } else {
-            const historic = await HistoricService.updateHistoric(req.params.id, req.body);
-
-            if (!historic) {
-                return res.status(404).json({ message: 'historic not found' });
-            } else {
-                return res.status(200).json(historic);
-            }
-        }
-}
     async function deleteHistoric(req: Request, res: Response) {
         if (!Number.isInteger(parseInt(req.params.id))) {
             return res.status(400).json({ message: 'Id must be an integer' });
@@ -72,6 +59,5 @@ const HistoricService = require('../services/historics.services');
     getAllHistoric,
     createHistoric,
     getHistoricById,
-    updateHistoric,
     deleteHistoric
 };
