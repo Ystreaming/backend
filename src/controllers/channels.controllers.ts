@@ -5,7 +5,7 @@ const ChannelService = require('../services/channels.service');
         try {
         const channel = await ChannelService.getAllChannel();
         if (!channel) {
-            res.status(404).json({ message: 'Channel not found' });
+            res.status(204).json({ message: 'Channel not found' });
         } else {
             res.status(200).json(channel);
         }

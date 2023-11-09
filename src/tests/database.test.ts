@@ -8,6 +8,7 @@ jest.mock('mongoose', () => ({
 describe('connectToDatabase', () => {
   const mockConnect = mongoose.connect as jest.Mock;
   let consoleSpy: jest.SpyInstance;
+  const originalMongoUri = process.env.MONGO_URI;
 
   beforeEach(() => {
     consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -36,8 +37,9 @@ describe('connectToDatabase', () => {
 
   it('should pass correct mongo options to mongoose connect', async () => {
     const mongoOptions = {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+      bufferCommands: true,
+      autoIndex: true,
+      autoCreate: true,
     };
 
     await connectToDatabase();
@@ -45,12 +47,12 @@ describe('connectToDatabase', () => {
     expect(mockConnect).toHaveBeenCalledWith(expect.any(String), mongoOptions);
   });
 
-  it('should use default mongo URI if none provided in env', async () => {
+  it('should throw an error if MONGO_URI is not provided', async () => {
     delete process.env.MONGO_URI;
 
-    await connectToDatabase();
-
-    expect(mockConnect).toHaveBeenCalledWith('mongodb://localhost:27017/YStream', expect.any(Object));
+    await expect(connectToDatabase()).rejects.toThrow(
+      "La variable d'environnement MONGO_URI est requise"
+    );
   });
 
   it('should handle specific connection error', async () => {
@@ -77,6 +79,7 @@ describe('connectToDatabase', () => {
   afterEach(() => {
     jest.restoreAllMocks();
     consoleSpy.mockRestore();
+    process.env.MONGO_URI = originalMongoUri;
   });
 
   afterAll(async () => {

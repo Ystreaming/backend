@@ -6,7 +6,7 @@ async function getAllRoles(req: Request, res: Response) {
     try {
         const roles = await RolesService.getAllRoles();
         if (!roles) {
-            res.status(404).json({ message: 'Role not found' });
+            res.status(204).json({ message: 'Role not found' });
         } else {
             res.status(200).json(roles);
         }

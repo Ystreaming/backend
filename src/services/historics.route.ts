@@ -4,11 +4,11 @@ function getAllHistorics() {
     return HistoricsModel.HistoricsModel.find();
 }
 
-function getHistoricsById(id: number) {
+function getHistoricsById(id: string) {
     return HistoricsModel.HistoricsModel.findById(id);
 }
 
-function getHistoricsByUserId(id: number) {
+function getHistoricsByUserId(id: string) {
     return HistoricsModel.HistoricsModel.find({user_id: id});
 }
 
@@ -21,7 +21,7 @@ function createHistorics(historics: typeof HistoricsModel) {
     return newHistorics.save();
 }
 
-function deleteHistorics(id: number) {
+function deleteHistorics(id: string) {
     return HistoricsModel.HistoricsModel.findOneAndDelete({ id: id });
 }
 

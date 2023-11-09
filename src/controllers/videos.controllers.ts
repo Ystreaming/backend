@@ -5,7 +5,7 @@ const VideoService = require('../services/videos.service');
         try {
         const video = await VideoService.getAllVideo();
         if (!video) {
-            res.status(404).json({ message: 'Video not found' });
+            res.status(204).json({ message: 'Video not found' });
         } else {
             res.status(200).json(video);
         }

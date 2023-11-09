@@ -5,7 +5,7 @@ const HistoricService = require('../services/historics.service');
         try {
         const historic = await HistoricService.getAllHistoric();
         if (!historic) {
-            res.status(404).json({ message: 'Historic not found' });
+            res.status(204).json({ message: 'Historic not found' });
         } else {
             res.status(200).json(historic);
         }

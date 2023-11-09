@@ -1,30 +1,22 @@
 import { Request, Response } from 'express';
 const express = require('express');
 const router = express.Router();
+const { historicValidator } = require('../validators/historics.validator');
+const historicController = require('../controllers/historics.controllers');
 
 // => /historic
 
-router.get('/', (req: Request, res: Response) => {
-    console.log('GET /historics');
-});
+router.get('/', historicController.getAllHistorics);
 
-router.post('/', (req: Request, res: Response) => {
-    console.log('POST /historics');
-});
+router.post('/', historicValidator, historicController.createHistoric);
 
 // => /historic/id
 
-router.get('/:id', (req: Request, res: Response) => {
-    console.log('GET /historics/:id');
-});
+router.get('/:id', historicController.getHistoricById);
 
-router.put('/:id', (req: Request, res: Response) => {
-    console.log('PUT /historics/:id');
-});
+router.put('/:id', historicValidator, historicController.updateHistoric);
 
-router.delete('/:id', (req: Request, res: Response) => {
-    console.log('DELETE /historics/:id');
-});
+router.delete('/:id', historicController.deleteHistoric);
 
 // => /historic/user/id
 

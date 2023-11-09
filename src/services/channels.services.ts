@@ -4,7 +4,7 @@ function getAllChannels() {
     return ChannelModel.ChannelModel.find();
 }
 
-function getChannelById(id: number) {
+function getChannelById(id: string) {
     return ChannelModel.ChannelModel.findOne({ id: id });
 }
 
@@ -12,11 +12,11 @@ function getChannelByName(name: string) {
     return ChannelModel.ChannelModel.findOne({ name: name });
 }
 
-function getChannelByUserId(id: number) {
+function getChannelByUserId(id: string) {
     return ChannelModel.ChannelModel.find({ user_id: id });
 }
 
-function getChannelByCategoryId(id: number) {
+function getChannelByCategoryId(id: string) {
     return ChannelModel.ChannelModel.find({ category_id: id });
 }
 
@@ -31,7 +31,7 @@ function createChannel(channel: typeof ChannelModel) {
     return newChannel.save();
 }
 
-function updateChannel(id: number, channel: typeof ChannelModel) {
+function updateChannel(id: string, channel: typeof ChannelModel) {
     return ChannelModel.ChannelModel.findOneAndUpdate({ id: id }, {
         name: channel.name,
         description: channel.description,
@@ -41,7 +41,7 @@ function updateChannel(id: number, channel: typeof ChannelModel) {
     });
 }
 
-function deleteChannel(id: number) {
+function deleteChannel(id: string) {
     return ChannelModel.ChannelModel.findOneAndDelete({ id: id });
 }
 
