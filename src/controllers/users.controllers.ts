@@ -7,7 +7,7 @@ async function getAllUsers(req: Request, res: Response) {
     try {
         const users = await UsersService.getAllUsers();
         if (!users) {
-            res.status(404).json({ message: 'Users not found' });
+            res.status(204).json({ message: 'Users not found' });
         } else {
             res.status(200).json(users);
         }
@@ -20,7 +20,7 @@ async function getAllUsers(req: Request, res: Response) {
 async function createUser(req: Request, res: Response) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.status(400).json({ error: 'Validation failed', details: errors.array() });
     }
 
     try {
@@ -86,13 +86,13 @@ async function updateUser(req: Request, res: Response) {
 
 async function deleteUser(req: Request, res: Response) {
     if (!Number.isInteger(parseInt(req.params.id))) {
-        return res.status(400).json({ message: 'Id must be an integer' });
+        return res.status(400).json({ error: 'ID must be an integer' });
     } else {
         const user = await UsersService.deleteUser(req.params.id);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         } else {
-            return res.status(200).json({ message: 'User deleted' });
+            return res.status(200).json({message: 'User deleted successfully'});
         }
     }
 }
