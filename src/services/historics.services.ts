@@ -1,28 +1,29 @@
-const HistoricsModel = require('../models/historics.models')
+import HistoricsModel from '../models/historics.models';
+import Historics from '../interfaces/historics.interface';
 
 function getAllHistorics() {
-    return HistoricsModel.HistoricsModel.find();
+    return HistoricsModel.find();
 }
 
 function getHistoricsById(id: string) {
-    return HistoricsModel.HistoricsModel.findById(id);
+    return HistoricsModel.findById({ _id: id });
 }
 
 function getHistoricsByUserId(id: string) {
-    return HistoricsModel.HistoricsModel.find({user_id: id});
+    return HistoricsModel.find({user_id: id});
 }
 
-function createHistorics(historics: typeof HistoricsModel) {
-    const newHistorics = new HistoricsModel.HistoricsModel({
-        user_id: historics.user_id,
-        video_id: historics.video_id,
+function createHistorics(historics: Historics) {
+    const newHistorics = new HistoricsModel({
+        idUser: historics.idUser,
+        idVideo: historics.idVideo,
         created_at: new Date(),
     });
     return newHistorics.save();
 }
 
 function deleteHistorics(id: string) {
-    return HistoricsModel.HistoricsModel.findOneAndDelete({ id: id });
+    return HistoricsModel.findOneAndDelete({ _id: id });
 }
 
 module.exports = {
