@@ -55,7 +55,7 @@ async function updateUser(id: string, userData: any) {
       dateOfBirth: userData.dateOfBirth,
       username: userData.username,
       password: hashPassword,
-      sub: userData.string,
+      sub: userData.sub,
       language: userData.language,
       profileImage: userData.profileImage,
     });
