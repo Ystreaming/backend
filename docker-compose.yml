@@ -1,6 +1,7 @@
 version: '3.1'
 
 services:
+  # Service MongoDB
   mongodb:
     image: mongo:latest
     container_name: ystream-mongodb
@@ -11,5 +12,65 @@ services:
     volumes:
       - mongodb-data:/data/db
 
+  # Service RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: YStream
+      RABBITMQ_DEFAULT_PASS: Ystream1234
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+
+  # Service SonarQube
+  sonarqube:
+    image: sonarqube:latest
+    container_name: ystream-sonarqube
+    ports:
+      - "9001:9000"
+    environment:
+      - SONAR_JDBC_URL=jdbc:postgresql://db:5432/sonar
+      - SONAR_JDBC_USERNAME=sonar
+      - SONAR_JDBC_PASSWORD=sonar
+      - SONAR_WEB_JAVAOPTS=-Xmx512m -Xms128m -XX:+HeapDumpOnOutOfMemoryError
+    depends_on:
+      - db
+    volumes:
+      - sonarqube-data:/opt/sonarqube/data
+      - sonarqube-logs:/opt/sonarqube/logs
+      - sonarqube-extensions:/opt/sonarqube/extensions
+
+  # Base de données pour SonarQube
+  db:
+    image: postgres:latest
+    container_name: ystream-postgres
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: sonar
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data
+
+  # Service SonarScanner
+  sonarscanner:
+    image: sonarsource/sonar-scanner-cli
+    environment:
+      - SONAR_HOST_URL=http://sonarqube:9000
+    volumes:
+      - .:/usr/src
+    command: >
+      sonar-scanner
+      -Dsonar.projectKey=YStream
+      -Dsonar.sources=src
+      -Dsonar.host.url=http://host.docker.internal:9001
+      -Dsonar.login=sqa_debc990686427b9053fdabeb6e3c4a6b63e8bb6c
+
+
 volumes:
   mongodb-data:
+  rabbitmq-data:
+  sonarqube-data:
+  sonarqube-logs:
+  sonarqube-extensions:
+  postgresql-data:
