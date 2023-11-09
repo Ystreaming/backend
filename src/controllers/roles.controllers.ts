@@ -1,39 +1,39 @@
 import { Request, Response } from 'express';
-const RolesService = require('../services/roles.service');
+const RoleService = require('../services/roles.service');
 
-    async function getAllRoles(req: Request, res: Response) {
+    async function getAllRole(req: Request, res: Response) {
         try {
-        const roles = await RolesService.getAllRoles();
-        if (!roles) {
+        const role = await RoleService.getAllRoles();
+        if (!role) {
             res.status(404).json({ message: 'Role not found' });
         } else {
-            res.status(200).json(roles);
+            res.status(200).json(role);
         }
         } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal Server Error' });
         }
 }
-    async function updateRoles(req: Request, res: Response) {
+    async function updateRole(req: Request, res: Response) {
         if (!Number.isInteger(parseInt(req.params.id))) {
             return res.status(400).json({ message: 'Id must be an integer' });
         } else {
-            const roles = await RolesService.updateRoles(req.params.id, req.body);
+            const role = await RoleService.updateRole(req.params.id, req.body);
 
-            if (!roles) {
+            if (!role) {
                 return res.status(404).json({ message: 'Role not found' });
             } else {
-                return res.status(200).json(roles);
+                return res.status(200).json(role);
             }
         }
 }
-    async function deleteRoles(req: Request, res: Response) {
+    async function deleteRole(req: Request, res: Response) {
         if (!Number.isInteger(parseInt(req.params.id))) {
             return res.status(400).json({ message: 'Id must be an integer' });
         } else {
-            const roles = await RolesService.deleteUser(req.params.id);
+            const role = await RoleService.deleteRole(req.params.id);
 
-            if (!roles) {
+            if (!role) {
                 return res.status(404).json({ message: 'Role not found' });
             } else {
                 return res.status(200).json({ message: 'Role deleted' });
@@ -41,7 +41,7 @@ const RolesService = require('../services/roles.service');
         }
 }
   module.exports = {
-    getAllRoles,
-    updateRoles,
-    deleteRoles
+    getAllRole,
+    updateRole,
+    deleteRole
 };

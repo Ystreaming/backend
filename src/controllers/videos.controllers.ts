@@ -1,10 +1,9 @@
 import { Request, Response } from 'express';
-const VideosService = require('../services/videos.service');
-
+const VideoService = require('../services/videos.service');
 
     async function getAllVideo (req: Request, res: Response) {
         try {
-        const video = await VideosService.getAllVideo();
+        const video = await VideoService.getAllVideo();
         if (!video) {
             res.status(404).json({ message: 'Video not found' });
         } else {
@@ -19,7 +18,7 @@ const VideosService = require('../services/videos.service');
         if (!Number.isInteger(parseInt(req.params.id))) {
             return res.status(400).json({ message: 'Id must be an integer' });
         } else  {
-            const video = await VideosService.getVideoById(req.params.id);
+            const video = await VideoService.getVideoById(req.params.id);
 
             if (!video) {
                 return res.status(404).json({ message: 'Video not found' });
@@ -30,7 +29,7 @@ const VideosService = require('../services/videos.service');
 }
     async function updateVideo(req: Request, res: Response) {
         if (!Number.isInteger(parseInt(req.params.id))) {
-            const video = await VideosService.updateVideo(req.params.id, req.body);
+            const video = await VideoService.updateVideo(req.params.id, req.body);
 
             if (!video) {
                 return res.status(404).json({ message: 'Video not found' });
@@ -43,7 +42,7 @@ const VideosService = require('../services/videos.service');
         if (!Number.isInteger(parseInt(req.params.id))) {
             return res.status(400).json({ message: 'Id must be an integer' });
         } else {
-            const video = await VideosService.deleteVideo(req.params.id);
+            const video = await VideoService.deleteVideo(req.params.id);
                 if (!video) {
                 return res.status(404).json({ message: 'Video not found' });
             } else {
