@@ -4,15 +4,15 @@ function getAllVideos() {
     return VideosModel.VideosModel.find();
 }
 
-function getVideoById(id: number) {
+function getVideoById(id: string) {
     return VideosModel.VideosModel.findById(id);
 }
 
-function getVideoByChannelId(id: number) {
+function getVideoByChannelId(id: string) {
     return VideosModel.VideosModel.find({channel_id: id});
 }
 
-function getVideoByCategoryId(id: number) {
+function getVideoByCategoryId(id: string) {
     return VideosModel.VideosModel.find({category_id: id});
 }
 
@@ -34,7 +34,7 @@ function addVideo(video: typeof VideosModel) {
     return newVideo.save();
 }
 
-function updateVideo(id: number, video: typeof VideosModel) {
+function updateVideo(id: string, video: typeof VideosModel) {
     return VideosModel.VideosModel.findOneAndUpdate({ id: id }, {
         title: video.title,
         created_at: new Date(),
@@ -51,7 +51,7 @@ function updateVideo(id: number, video: typeof VideosModel) {
     });
 }
 
-function deleteVideo(id: number) {
+function deleteVideo(id: string) {
     return VideosModel.VideosModel.findOneAndDelete({ id: id });
 }
 
