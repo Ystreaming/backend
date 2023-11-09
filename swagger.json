@@ -2439,16 +2439,11 @@
       "User": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64",
-            "description": "User id"
-          },
-          "firstname": {
+          "firstName": {
             "type": "string",
             "description": "User firstname"
           },
-          "lastname": {
+          "lastName": {
             "type": "string",
             "description": "User lastname"
           },
@@ -2488,7 +2483,7 @@
           },
           "profileImage": {
             "type": "string",
-            "format": "binary",
+            "format": "string",
             "description": "User profile image"
           }
         }
@@ -2496,18 +2491,13 @@
       "Video": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64",
-            "description": "Video id"
-          },
           "title": {
             "type": "string",
             "description": "Video title"
           },
           "createdAt": {
             "type": "string",
-            "format": "date-time",
+            "format": "date",
             "description": "Video creation date"
           },
           "like": {
@@ -2536,7 +2526,6 @@
           },
           "img": {
             "type": "string",
-            "format": "binary",
             "description": "Video image"
           },
           "url": {
@@ -2551,17 +2540,17 @@
           },
           "idComment": {
             "type": "array",
-            "format": "int64",
+            "format": "string",
             "description": "Video comment id"
           },
           "idChannel": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
+            "format": "string",
             "description": "Video channel id"
           },
           "idCategory": {
-            "type": "integer",
-            "format": "int64",
+            "type": "array",
+            "format": "string",
             "description": "Video category id"
           }
         }
@@ -2569,11 +2558,6 @@
       "Rôles": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64",
-            "description": "Rôles id"
-          },
           "name": {
             "type": "string",
             "description": "Rôles name"
@@ -2585,7 +2569,7 @@
           },
           "idUser": {
             "type": "array",
-            "format": "int64",
+            "format": "string",
             "description": "Rôles user id"
           }
         }
@@ -2593,11 +2577,6 @@
       "Notifications": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64",
-            "description": "Notification id"
-          },
           "title": {
             "type": "string",
             "description": "Notification title"
@@ -2616,39 +2595,33 @@
             "description": "Notification type"
           },
           "idUser": {
-            "type": "integer",
-            "format": "int64",
-            "description": "Notification user id"
+            "type": "string",
+            "format": "string",
+            "description": "ObjectID of user"
           }
         }
       },
       "Historics": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64",
-            "description": "Historics id"
-          },
           "idUser": {
-            "type": "integer",
-            "format": "int64",
-            "description": "Historics user id"
+            "type": "string",
+            "format": "string",
+            "description": "ObjectID of user"
           },
           "idVideo": {
-            "type": "integer",
-            "format": "int64",
-            "description": "Historics video id"
+            "type": "array",
+            "format": "string",
+            "description": "Array of string of video id"
           }
         }
       },
       "Comments": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64",
-            "description": "Comment id"
+          "texte": {
+            "type": "string",
+            "description": "Comment texte"
           },
           "like": {
             "type": "integer",
@@ -2660,51 +2633,42 @@
             "format": "int64",
             "description": "Comment dislike"
           },
-          "texte": {
-            "type": "string",
-            "description": "Comment texte"
-          },
           "createdAt": {
             "type": "string",
-            "format": "date-time",
+            "format": "date",
             "description": "Comment creation date"
           },
           "idUser": {
-            "type": "integer",
-            "format": "int64",
-            "description": "Comment user id"
+            "type": "string",
+            "format": "string",
+            "description": "ObjectID of user"
           }
         }
       },
       "Channels": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64",
-            "description": "Channel id"
-          },
           "name": {
             "type": "string",
             "description": "Channel name"
-          },
-          "image": {
-            "type": "string",
-            "format": "binary",
-            "description": "Channel image"
           },
           "description": {
             "type": "string",
             "description": "Channel description"
           },
+          "image": {
+            "type": "string",
+            "format": "binary",
+            "description": "ObjectID of file image"
+          },
           "idCategory": {
             "type": "array",
-            "format": "int64",
+            "format": "string",
             "description": "Channel category id"
           },
           "idVideos": {
             "type": "array",
-            "format": "int64",
+            "format": "string",
             "description": "Channel video id"
           }
         }
@@ -2712,19 +2676,43 @@
       "Category": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64",
-            "description": "Category id"
-          },
           "name": {
             "type": "string",
             "description": "Category name"
           },
           "image": {
             "type": "string",
-            "format": "binary",
-            "description": "Category image"
+            "format": "object",
+            "description": "ObjectID of image file"
+          }
+        }
+      },
+      "file": {
+        "type": "object",
+        "properties": {
+          "filename": {
+            "type": "string",
+            "description": "File name"
+          },
+          "contentType": {
+            "type": "string",
+            "description": "File type"
+          },
+          "lenght": {
+            "type": "int64",
+            "description": "File size"
+          },
+          "chunkSize": {
+            "type": "int64",
+            "description": "File path"
+          },
+          "uploadDate": {
+            "type": "date",
+            "description": "File upload date"
+          },
+          "md5": {
+            "type": "string",
+            "description": "File md5"
           }
         }
       }
