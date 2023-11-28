@@ -2,20 +2,34 @@ import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 const CategoryService = require('../services/categories.services');
 const fileService = require('../services/files.services');
+import CategoryModel from '../models/categories.models';
 
 async function getAllCategory(req: Request, res: Response) {
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const limit = parseInt(req.query.limit as string, 10) || 50;
+    const skip = (page - 1) * limit;
+
     try {
-        const category = await CategoryService.getAllCategory();
-        if (!category) {
-            res.status(204).json({ message: 'Category not found' });
+        const categories = await CategoryService.getAllCategory(skip, limit);
+        const totalCategories = await CategoryModel.countDocuments();
+        const totalPages = Math.ceil(totalCategories / limit);
+
+        if (!categories.length) {
+            res.status(204).json({ message: 'No categories found' });
         } else {
-            res.status(200).json(category);
+            res.status(200).json({
+                categories,
+                total: totalCategories,
+                totalPages,
+                currentPage: page
+            });
         }
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ message: 'Internal Server Error' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 }
+
 
 async function createCategory(req: Request, res: Response) {
     const errors = validationResult(req);
