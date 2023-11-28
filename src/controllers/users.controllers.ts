@@ -3,20 +3,30 @@ const UsersService = require('../services/users.services');
 const { validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const fileService = require('../services/files.services');
+import UserModel from '../models/users.models';
 
 async function getAllUsers(req: Request, res: Response) {
+    const page = parseInt(req.query.page as string ?? '1', 10);
+    const limit = parseInt(req.query.limit as string ?? '50', 10);
+    const skip = (page - 1) * limit;
+
     try {
-        const users = await UsersService.getAllUsers();
-        if (!users) {
-            res.status(204).json({ message: 'Users not found' });
-        } else {
-            res.status(200).json(users);
-        }
-        } catch (error) {
+        const users = await UserModel.find().skip(skip).limit(limit);
+        const totalUsers = await UserModel.countDocuments();
+        const totalPages = Math.ceil(totalUsers / limit);
+
+        res.status(200).json({
+            users,
+            totalUsers,
+            totalPages,
+            currentPage: page
+        });
+    } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }
+
 
 async function createUser(req: Request, res: Response) {
     try {
@@ -51,7 +61,6 @@ async function getUserById(req: Request, res: Response) {
         }
     }
 }
-
 async function getUserByUsername(req: Request, res: Response) {
     if (!Number.isInteger(parseInt(req.params.username))) {
         return res.status(400).json({ message: 'Id must be an integer' });
@@ -111,7 +120,7 @@ async function deleteUser(req: Request, res: Response) {
     }
 }
 
-module.exports = {
+  module.exports = {
     createUser,
     getAllUsers,
     getUserByUsername,

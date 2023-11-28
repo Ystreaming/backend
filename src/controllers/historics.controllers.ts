@@ -1,20 +1,34 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 const HistoricService = require('../services/historics.services');
+import HistoricModel from '../models/historics.models';
 
 async function getAllHistoric(req: Request, res: Response) {
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const limit = parseInt(req.query.limit as string, 10) || 50;
+    const skip = (page - 1) * limit;
+
     try {
-        const historic = await HistoricService.getAllHistoric();
-        if (!historic) {
-            res.status(204).json({ message: 'Historic not found' });
+        const historics = await HistoricService.getAllHistoric(skip, limit);
+        const totalHistorics = await HistoricModel.countDocuments();
+        const totalPages = Math.ceil(totalHistorics / limit);
+
+        if (!historics.length) {
+            res.status(204).json({ message: 'No historic records found' });
         } else {
-            res.status(200).json(historic);
+            res.status(200).json({
+                historics,
+                total: totalHistorics,
+                totalPages,
+                currentPage: page
+            });
         }
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }
+
 
 async function createHistoric(req: Request, res: Response) {
     const errors = validationResult(req);

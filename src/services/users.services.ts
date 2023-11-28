@@ -33,7 +33,7 @@ async function loginUser(username: string, password: string) {
     return user;
 }
 
-function getAllUsers() {
+function getAllUsers(page= 1, limit= 50) {
     return UserModel.find();
 }
 

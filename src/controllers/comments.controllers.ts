@@ -1,20 +1,34 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 const CommentsService = require('../services/historics.services');
+import CommentModel from '../models/historics.models';
 
 async function getAllComment(req: Request, res: Response) {
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const limit = parseInt(req.query.limit as string, 10) || 50;
+    const skip = (page - 1) * limit;
+
     try {
-        const comment = await CommentsService.getAllComment();
-        if (!comment) {
-            res.status(204).json({ message: 'Comment not found' });
+        const comments = await CommentsService.getAllComment(skip, limit);
+        const totalComments = await CommentModel.countDocuments();
+        const totalPages = Math.ceil(totalComments / limit);
+
+        if (!comments.length) {
+            res.status(204).json({ message: 'No comments found' });
         } else {
-            res.status(200).json(comment);
+            res.status(200).json({
+                comments,
+                total: totalComments,
+                totalPages,
+                currentPage: page
+            });
         }
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ message: 'Internal Server Error' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 }
+
 
 async function createComment(req: Request, res: Response) {
     const errors = validationResult(req);
