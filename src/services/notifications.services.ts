@@ -10,6 +10,8 @@ export async function sendNotification(message: any): Promise<void> {
     channel.sendToQueue(queueName, Buffer.from(JSON.stringify(message)));
     console.log(`Notification envoyée : ${JSON.stringify(message)}`);
 
+    emit('notification', message);
+
     setTimeout(() => {
       connection.close();
     }, 500);
@@ -18,3 +20,7 @@ export async function sendNotification(message: any): Promise<void> {
     throw error;
   }
 }
+function emit(arg0: string, message: any) {
+  throw new Error('Function not implemented.');
+}
+
