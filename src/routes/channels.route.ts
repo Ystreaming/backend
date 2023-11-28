@@ -3,11 +3,13 @@ const express = require('express');
 const router = express.Router();
 const { channelValidator } = require('../validators/channels.validator');
 const channelController = require('../controllers/channels.controllers');
+const { uploadSingleFile } = require('../middlewares/file.middleware');
+
 
 // => /Channel
 router.get('/', channelController.getAllChannels);
 
-router.post('/', channelValidator, channelController.createChannel);
+router.post('/', uploadSingleFile('image'), channelValidator, channelController.createChannel);
 
 // => /Channel/id
 
@@ -19,9 +21,9 @@ router.delete('/:id', channelController.deleteChannel);
 
 // => /Channel/name
 
-router.get('/:name', (req: Request, res: Response) => {
-    console.log('GET /channels/:name');
-});
+// router.get('/:name', (req: Request, res: Response) => {
+//     console.log('GET /channels/:name');
+// });
 
 // => /Channel/category/id
 

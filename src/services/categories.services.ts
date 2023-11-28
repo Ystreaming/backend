@@ -1,7 +1,7 @@
 import CategoriesModel from '../models/categories.models';
 import Categories from '../interfaces/categories.interface';
 
-function getAllCategories() {
+function getAllCategory() {
     return CategoriesModel.find();
 }
 
@@ -33,7 +33,7 @@ function deleteCategory(id: string) {
 }
 
 module.exports = {
-    getAllCategories,
+    getAllCategory,
     getCategoryById,
     getCategoryByName,
     createCategory,

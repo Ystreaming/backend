@@ -3,13 +3,14 @@ const express = require('express');
 const router = express.Router();
 const { videoValidator } = require('../validators/videos.validator');
 const videoController = require('../controllers/videos.controllers');
-import { uploadSingleVideo, listVideo, checkVideoExists, deleteVideo } from '../middlewares/video.middleware';
+const { uploadSingleFile } = require('../middlewares/file.middleware');
+
 
 // => /Video
 
 router.get('/', videoController.getAllVideo);
 
-// router.post('/', videoValidator, videoController.createVideo);
+// router.post('/', uploadSingleFile('img'), videoValidator, videoController.createVideo);
 
 // => /Video/id
 
