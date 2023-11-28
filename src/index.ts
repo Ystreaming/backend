@@ -2,24 +2,13 @@ import app from './app';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { connectToDatabase } from './tools/database';
-import { connectToRabbitMQ } from './tools/rabbitMQ';
 
 dotenv.config({ path: './.env/.env.developpement' });
-
-interface BasicRabbitMQConnection {
-  close: () => Promise<void>;
-}
-
-let rabbitMQConnection: BasicRabbitMQConnection | null = null;
 
 async function startServer() {
   try {
     await connectToDatabase();
     console.log("Connexion à la base de données établie");
-
-    const rabbitMQStuff = await connectToRabbitMQ();
-    rabbitMQConnection = rabbitMQStuff.connection;
-    console.log("Connexion à RabbitMQ établie");
 
     const port = process.env.PORT || 3000;
     app.listen(port, () => {
@@ -38,11 +27,6 @@ async function gracefulShutdown(signal: AbortSignal) {
   try {
     await mongoose.disconnect();
     console.log('Connexion à la base de données fermée.');
-
-    if (rabbitMQConnection) {
-      await rabbitMQConnection.close();
-      console.log('Connexion à RabbitMQ fermée.');
-    }
 
     process.exit(0);
   } catch (error) {

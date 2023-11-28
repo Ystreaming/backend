@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const { videoValidator } = require('../validators/videos.validator');
 const videoController = require('../controllers/videos.controllers');
+import { uploadSingleVideo, listVideo, checkVideoExists, deleteVideo } from '../middlewares/video.middleware';
 
 // => /Video
 
@@ -20,8 +21,8 @@ router.delete('/:id', videoController.deleteVideo);
 
 // => /Video/user/id
 
-router.get('/channel/:id', (req: Request, res: Response) => {
-    console.log('GET /videos/channel/:id');
-});
+// router.get('/channel/:id', (req: Request, res: Response) => {
+//     console.log('GET /videos/channel/:id');
+// });
 
 module.exports = router;

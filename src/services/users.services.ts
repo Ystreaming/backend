@@ -15,14 +15,14 @@ async function createUser(user: any) {
         password: hashPassword,
         status: user.status,
         language: user.language,
-        sub: user.string,
+        sub: user.sub,
         profileImage: user.profileImage,
     });
     return await newUser.save();
 }
 
-async function loginUser(email: string, password: string) {
-    const user = await UserModel.findOne({ email: email });
+async function loginUser(username: string, password: string) {
+    const user = await UserModel.findOne({ username: username });
     if (!user) {
         throw new Error('User not found');
     }

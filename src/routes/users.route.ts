@@ -2,12 +2,14 @@ const userController = require('../controllers/users.controllers');
 const express = require('express');
 const router = express.Router();
 const { userValidator } = require('../validators/users.validator');
+const { uploadSingleFile } = require('../middlewares/file.middleware');
 
 // => /User
 
 router.get('/', userController.getAllUsers);
 
-router.post('/', userValidator, userController.createUser);
+router.post('/', uploadSingleFile('profileImage'), userController.createUser);
+
 
 // => /User/id
 
@@ -22,6 +24,6 @@ router.delete('/:id', userController.deleteUser);
 // router.get('/username/:username:', userController.getUserByUsername);
 
 // => /User/login
-router.get('/login', userController.loginUser);
+router.post('/login', userController.loginUser);
 
 module.exports = router;

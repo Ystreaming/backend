@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 const UsersService = require('../services/users.services');
 const { validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
+const fileService = require('../services/files.services');
 
 async function getAllUsers(req: Request, res: Response) {
     try {
@@ -18,13 +19,19 @@ async function getAllUsers(req: Request, res: Response) {
 }
 
 async function createUser(req: Request, res: Response) {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ error: 'Validation failed', details: errors.array() });
-    }
-
     try {
-        const newUser = await UsersService.createUser(req.body);
+        let fileId = null;
+        if (req.file) {
+            const file = await fileService.createFile(req.file);
+            fileId = file._id;
+        }
+
+        const userData = {
+            ...req.body,
+            profileImage: fileId
+        };
+        const newUser = await UsersService.createUser(userData);
+
         return res.status(201).json(newUser);
     } catch (error) {
         console.error(error);
@@ -65,14 +72,8 @@ async function loginUser(req: Request, res: Response) {
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         } else {
-            const user = await UsersService.loginUser(req.body.username, req.body.password);
-            if (!user) {
-                return res.status(404).json({ message: 'User not found' });
-            } else {
-                const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-                res.json('token');
-                return res.status(200).json({ message: 'User logged in' });
-            }
+            const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            res.json(token);
         }
     }
 }
