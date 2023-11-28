@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
-import { validationResult } from 'express-validator';
+import { validationResult } from 'express-validator'
+import { sendNotification } from '../services/notifications.services';
 const NotificationService = require('../services/notifications.services');
 
-    async function getAllNotification(req: Request, res: Response) {
+async function getAllNotification(req: Request, res: Response) {
         try {
         const notification = await NotificationService.getAllNotifications();
         if (!notification) {
@@ -15,21 +16,23 @@ const NotificationService = require('../services/notifications.services');
         res.status(500).json({ message: 'Internal Server Error' });
         }
 }
-    async function createNotification(req: Request, res: Response) {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ error: 'Validation failed', details: errors.array() });
-        }
-
-        try {
-            const newNotification = await NotificationService.createNotification(req.body);
-            return res.status(201).json(newNotification);
-        } catch (error) {
-            console.error(error);
-            return res.status(500).json({ message: 'Internal Server Error' });
-        }
+async function createNotification(req: Request, res: Response) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ error: 'Validation failed', details: errors.array() });
     }
-    async function getNotificationById(req: Request, res: Response) {
+
+    try {
+        const newNotification = await NotificationService.createNotification(req.body);
+        await sendNotification(newNotification);
+
+        return res.status(201).json(newNotification);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+async function getNotificationById(req: Request, res: Response) {
         if (!Number.isInteger(parseInt(req.params.id))) {
             return res.status(400).json({ message: 'Id must be an integer' });
         } else  {
@@ -42,7 +45,7 @@ const NotificationService = require('../services/notifications.services');
             }
         }
     }
-    async function updateNotification(req: Request, res: Response) {
+async function updateNotification(req: Request, res: Response) {
         if (!Number.isInteger(parseInt(req.params.id))) {
             return res.status(400).json({ message: 'Id must be an integer' });
         } else {
@@ -55,7 +58,7 @@ const NotificationService = require('../services/notifications.services');
             }
         }
 }
-    async function deleteNotification(req: Request, res: Response) {
+async function deleteNotification(req: Request, res: Response) {
         if (!Number.isInteger(parseInt(req.params.id))) {
             return res.status(400).json({ message: 'Id must be an integer' });
         } else {
@@ -68,6 +71,7 @@ const NotificationService = require('../services/notifications.services');
             }
         }
 }
+
   module.exports = {
     getAllNotification,
     createNotification,
