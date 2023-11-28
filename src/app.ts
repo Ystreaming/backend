@@ -14,7 +14,6 @@ const VideosRoute = require('./routes/videos.route');
 const ChannelsRoute = require('./routes/channels.route');
 const CommentsRoute = require('./routes/comments.route');
 const HistoricsRoute = require('./routes/historics.route');
-const FileRoute = require('./routes/file.route');
 
 app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
@@ -26,7 +25,6 @@ app.use('/videos', VideosRoute);
 app.use('/channels', ChannelsRoute);
 app.use('/comments', CommentsRoute);
 app.use('/historics', HistoricsRoute);
-app.use('/files', FileRoute);
 
 app.use((err: Error, req: Request, res: Response, next: Function) => {
   res.status(500).json({

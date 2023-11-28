@@ -15,7 +15,7 @@ async function createUser(user: any) {
         password: hashPassword,
         status: user.status,
         language: user.language,
-        sub: user.string,
+        sub: user.sub,
         profileImage: user.profileImage,
     });
     return await newUser.save();

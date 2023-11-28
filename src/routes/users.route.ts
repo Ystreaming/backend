@@ -2,12 +2,14 @@ const userController = require('../controllers/users.controllers');
 const express = require('express');
 const router = express.Router();
 const { userValidator } = require('../validators/users.validator');
+const { uploadSingleFile } = require('../middlewares/file.middleware');
 
 // => /User
 
 router.get('/', userController.getAllUsers);
 
-router.post('/', userValidator, userController.createUser);
+router.post('/', uploadSingleFile('profileImage'), userController.createUser);
+
 
 // => /User/id
 
