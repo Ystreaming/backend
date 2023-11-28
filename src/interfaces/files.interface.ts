@@ -1,14 +1,14 @@
 import { Document } from 'mongoose';
 
 interface File extends Document {
+    fieldname: string;
+    originalname: string;
+    encoding: string;
+    mimetype: string;
+    destination: string;
     filename: string;
-    contentType: string;
-    length: number;
-    chunkSize: number;
-    uploadDate: Date;
-    aliases: string[];
-    metadata: any;
-    md5: string;
+    path: string;
+    size: number;
 }
 
 export default File;

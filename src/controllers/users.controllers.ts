@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 const UsersService = require('../services/users.services');
 const { validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
+const fileService = require('../services/files.services');
 
 async function getAllUsers(req: Request, res: Response) {
     try {
@@ -18,13 +19,19 @@ async function getAllUsers(req: Request, res: Response) {
 }
 
 async function createUser(req: Request, res: Response) {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ error: 'Validation failed', details: errors.array() });
-    }
-
     try {
-        const newUser = await UsersService.createUser(req.body);
+        let fileId = null;
+        if (req.file) {
+            const file = await fileService.createFile(req.file);
+            fileId = file._id;
+        }
+
+        const userData = {
+            ...req.body,
+            profileImage: fileId
+        };
+        const newUser = await UsersService.createUser(userData);
+
         return res.status(201).json(newUser);
     } catch (error) {
         console.error(error);
@@ -44,23 +51,29 @@ async function getUserById(req: Request, res: Response) {
         }
     }
 }
-
-async function loginUser(req: Request, res: Response) {
-    if (!req.body.email || !req.body.password) {
-        return res.status(400).json({ message: 'email and password are required' });
-    } else {
-        const user = await UsersService.loginUser(req.body.email, req.body.password);
+async function getUserByUsername(req: Request, res: Response) {
+    if (!Number.isInteger(parseInt(req.params.username))) {
+        return res.status(400).json({ message: 'Id must be an integer' });
+    } else  {
+        const user = await UsersService.getUserByUsername(req.params.username);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         } else {
-            const user = await UsersService.loginUser(req.body.email, req.body.password);
-            if (!user) {
-                return res.status(404).json({ message: 'User not found' });
-            } else {
-                const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-                res.json('token');
-                return res.status(200).json({ message: 'User logged in' });
-            }
+            return res.status(200).json(user);
+        }
+    }
+}
+
+async function loginUser(req: Request, res: Response) {
+    if (!req.body.username || !req.body.password) {
+        return res.status(400).json({ message: 'username and password are required' });
+    } else {
+        const user = await UsersService.loginUser(req.body.username, req.body.password);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        } else {
+            const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            res.json(token);
         }
     }
 }
@@ -100,6 +113,7 @@ async function deleteUser(req: Request, res: Response) {
   module.exports = {
     createUser,
     getAllUsers,
+    getUserByUsername,
     getUserById,
     loginUser,
     updateUser,

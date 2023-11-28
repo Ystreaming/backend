@@ -6,26 +6,32 @@ const FileSchema = new Schema<file>({
         type: String,
         required: true
     },
-    contentType: {
+    originalname: {
         type: String,
         required: true
     },
-    length: {
-        type: Number,
-        required: true
-    },
-    chunkSize: {
-        type: Number,
-        required: true
-    },
-    uploadDate: {
-        type: Date,
-        default: Date.now
-    },
-    aliases: [String],
-    metadata: Schema.Types.Mixed,
-    md5: {
+    encoding: {
         type: String,
+        required: true
+    },
+    mimetype: {
+        type: String,
+        required: true
+    },
+    destination: {
+        type: String,
+        required: true
+    },
+    fieldname: {
+        type: String,
+        required: true
+    },
+    path: {
+        type: String,
+        required: true
+    },
+    size: {
+        type: Number,
         required: true
     }
 });

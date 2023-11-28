@@ -132,3 +132,6 @@ dist
 # SonarQube files
 .sonarqube/
 .scannerwork/
+
+# Uploaded files
+uploads/
