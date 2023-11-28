@@ -51,6 +51,7 @@ async function getUserById(req: Request, res: Response) {
         }
     }
 }
+
 async function getUserByUsername(req: Request, res: Response) {
     if (!Number.isInteger(parseInt(req.params.username))) {
         return res.status(400).json({ message: 'Id must be an integer' });
@@ -110,7 +111,7 @@ async function deleteUser(req: Request, res: Response) {
     }
 }
 
-  module.exports = {
+module.exports = {
     createUser,
     getAllUsers,
     getUserByUsername,

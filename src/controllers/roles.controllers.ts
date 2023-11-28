@@ -15,6 +15,7 @@ async function getAllRoles(req: Request, res: Response) {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }
+
 async function createRoles(req: Request, res: Response) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -29,6 +30,7 @@ async function createRoles(req: Request, res: Response) {
         return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
+
 async function getRolesById(req: Request, res: Response) {
     if (!Number.isInteger(parseInt(req.params.id))) {
         return res.status(400).json({ message: 'Id must be an integer' });
