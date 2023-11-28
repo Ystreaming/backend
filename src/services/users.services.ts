@@ -21,8 +21,8 @@ async function createUser(user: any) {
     return await newUser.save();
 }
 
-async function loginUser(email: string, password: string) {
-    const user = await UserModel.findOne({ email: email });
+async function loginUser(username: string, password: string) {
+    const user = await UserModel.findOne({ username: username });
     if (!user) {
         throw new Error('User not found');
     }

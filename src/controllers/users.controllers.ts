@@ -72,14 +72,8 @@ async function loginUser(req: Request, res: Response) {
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         } else {
-            const user = await UsersService.loginUser(req.body.username, req.body.password);
-            if (!user) {
-                return res.status(404).json({ message: 'User not found' });
-            } else {
-                const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-                res.json('token');
-                return res.status(200).json({ message: 'User logged in' });
-            }
+            const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            res.json(token);
         }
     }
 }
