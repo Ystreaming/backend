@@ -1,6 +1,13 @@
 import { connectToRabbitMQ } from '../tools/rabbitMQ';
+import { EventEmitter } from 'events';
+
+interface MyEventEmitter extends EventEmitter {
+  emit(event: 'notification', message: any): boolean;
+}
 
 const queueName = 'notifications';
+
+const eventEmitter: MyEventEmitter = new EventEmitter();
 
 export async function sendNotification(message: any): Promise<void> {
   try {
@@ -10,7 +17,7 @@ export async function sendNotification(message: any): Promise<void> {
     channel.sendToQueue(queueName, Buffer.from(JSON.stringify(message)));
     console.log(`Notification envoyée : ${JSON.stringify(message)}`);
 
-    emit('notification', message);
+    eventEmitter.emit('notification', message);
 
     setTimeout(() => {
       connection.close();
@@ -20,7 +27,6 @@ export async function sendNotification(message: any): Promise<void> {
     throw error;
   }
 }
-function emit(arg0: string, message: any) {
-  throw new Error('Function not implemented.');
-}
-
+eventEmitter.on('notification', (message) => {
+  console.log('Notification émise :', message);
+});
