@@ -4,6 +4,7 @@ import YAML from 'yamljs';
 import path from 'path';
 const yamlFilePath = path.resolve(__dirname, '../documentation/openapi.yaml');
 const swaggerDocument = YAML.load(yamlFilePath);
+import cors from 'cors';
 
 const app: Application = express();
 
@@ -16,6 +17,7 @@ const CommentsRoute = require('./routes/comments.route');
 const HistoricsRoute = require('./routes/historics.route');
 
 app.use(express.json());
+app.use(cors());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use('/users', UsersRoute);
