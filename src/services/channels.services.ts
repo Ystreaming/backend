@@ -1,51 +1,54 @@
-const ChannelModel = require('../models/channel.model');
+import ChannelModel from '../models/channels.models';
+import Channel from '../interfaces/channels.interface';
 
 function getAllChannels() {
-    return ChannelModel.ChannelModel.find();
+    return ChannelModel.find();
 }
 
-function getChannelById(id: number) {
-    return ChannelModel.ChannelModel.findOne({ id: id });
+function getChannelById(id: string) {
+    return ChannelModel.findOne({ id: id });
 }
 
 function getChannelByName(name: string) {
-    return ChannelModel.ChannelModel.findOne({ name: name });
+    return ChannelModel.findOne({ _name: name });
 }
 
-function getChannelByUserId(id: number) {
-    return ChannelModel.ChannelModel.find({ user_id: id });
+function getChannelByUserId(id: string) {
+    return ChannelModel.find({ Iduser: id });
 }
 
-function getChannelByCategoryId(id: number) {
-    return ChannelModel.ChannelModel.find({ category_id: id });
+function getChannelByCategoryId(id: string) {
+    return ChannelModel.find({ iDcategory: id });
 }
 
-function createChannel(channel: typeof ChannelModel) {
-    const newChannel = new ChannelModel.ChannelModel({
+function createChannel(channel: Channel) {
+    const newChannel = new ChannelModel({
         name: channel.name,
         description: channel.description,
         image: channel.image,
-        idCategories: channel.idCategories,
+        idCategories: channel.idCategory,
         idVideos: channel.idVideos,
     });
     return newChannel.save();
 }
 
-function updateChannel(id: number, channel: typeof ChannelModel) {
-    return ChannelModel.ChannelModel.findOneAndUpdate({ id: id }, {
+function updateChannel(id: string, channel: Channel) {
+    return ChannelModel.findOneAndUpdate({ _id: id }, {
         name: channel.name,
         description: channel.description,
         image: channel.image,
-        idCategories: channel.idCategories,
+        idCategories: channel.idCategory,
         idVideos: channel.idVideos,
     });
 }
 
-function deleteChannel(id: number) {
-    return ChannelModel.ChannelModel.findOneAndDelete({ id: id });
+function deleteChannel(id: string) {
+    return ChannelModel.findOneAndDelete({ _id: id });
 }
 
 module.exports = {
+    getChannelByUserId,
+    getChannelByCategoryId,
     getAllChannels,
     getChannelById,
     getChannelByName,

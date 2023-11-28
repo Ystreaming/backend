@@ -2,11 +2,6 @@ import mongoose, { Schema } from 'mongoose';
 import Comment from '../interfaces/comments.interface';
 
 const Comment = new Schema<Comment>({
-    id: {
-      type:  Number,
-      required: true,
-      unique: true,
-    },
     texte: {
         type: String,
         required: true,

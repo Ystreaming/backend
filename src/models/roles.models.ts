@@ -2,11 +2,6 @@ import mongoose, { Schema } from 'mongoose';
 import Role from '../interfaces/roles.interface';
 
 const Role = new Schema<Role>({
-    id: {
-      type:  Number,
-      required: true,
-      unique: true,
-    },
     name: {
       type: String,
       required: true,

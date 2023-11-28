@@ -1,0 +1,84 @@
+import { Request, Response } from 'express';
+const { validationResult } = require('express-validator');
+const RolesService = require('../services/roles.services');
+
+async function getAllRoles(req: Request, res: Response) {
+    try {
+        const roles = await RolesService.getAllRoles();
+        if (!roles) {
+            res.status(204).json({ message: 'Role not found' });
+        } else {
+            res.status(200).json(roles);
+        }
+        } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+async function createRoles(req: Request, res: Response) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ error: 'Validation failed', details: errors.array() });
+    }
+
+    try {
+        const newRole = await RolesService.createRoles(req.body);
+        return res.status(201).json(newRole);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+async function getRolesById(req: Request, res: Response) {
+    if (!Number.isInteger(parseInt(req.params.id))) {
+        return res.status(400).json({ message: 'Id must be an integer' });
+    } else  {
+        const roles = await RolesService.getRoleById(req.params.id);
+
+        if (!roles) {
+            return res.status(404).json({ message: 'Roles not found' });
+        } else {
+            return res.status(200).json(roles);
+        }
+    }
+}
+
+async function updateRoles(req: Request, res: Response) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    if (!Number.isInteger(parseInt(req.params.id))) {
+        return res.status(400).json({ message: 'Id must be an integer' });
+    } else {
+        const roles = await RolesService.updateRoles(req.params.id, req.body);
+
+        if (!roles) {
+            return res.status(404).json({ message: 'Role not found' });
+        } else {
+            return res.status(200).json(roles);
+        }
+    }
+}
+
+async function deleteRoles(req: Request, res: Response) {
+    if (!Number.isInteger(parseInt(req.params.id))) {
+        return res.status(400).json({ message: 'Id must be an integer' });
+    } else {
+        const roles = await RolesService.deleteRoles(req.params.id);
+
+        if (!roles) {
+            return res.status(404).json({ message: 'Role not found' });
+        } else {
+            return res.status(200).json({ message: 'Role deleted' });
+        }
+    }
+}
+
+  module.exports = {
+    getAllRoles,
+    createRoles,
+    getRolesById,
+    updateRoles,
+    deleteRoles,
+};

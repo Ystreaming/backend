@@ -1,29 +1,21 @@
 import { Request, Response } from 'express';
 const express = require('express');
 const router = express.Router();
+const { rolesValidator } = require('../validators/roles.validator');
+const rolesController = require('../controllers/roles.controllers');
 
 // => /Role
 
-router.get('/', (req: Request, res: Response) => {
-    console.log('GET /roles');
-});
+router.get('/', rolesController.getAllRoles);
 
-router.post('/', (req: Request, res: Response) => {
-    console.log('POST /roles');
-});
+router.post('/', rolesValidator, rolesController.createRoles);
 
 // => /Role/id
 
-router.get('/:id', (req: Request, res: Response) => {
-    console.log('GET /roles/:id');
-});
+router.get('/:id', rolesController.getRolesById);
 
-router.put('/:id', (req: Request, res: Response) => {
-    console.log('PUT /roles/:id');
-});
+router.put('/:id', rolesValidator, rolesController.updateRoles);
 
-router.delete('/:id', (req: Request, res: Response) => {
-    console.log('DELETE /roles/:id');
-});
+router.delete('/:id', rolesController.deleteRoles);
 
 module.exports = router;

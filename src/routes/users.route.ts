@@ -1,35 +1,27 @@
-import { Request, Response } from 'express';
+const userController = require('../controllers/users.controllers');
 const express = require('express');
 const router = express.Router();
+const { userValidator } = require('../validators/users.validator');
 
 // => /User
 
-router.get('/', (req: Request, res: Response) => {
-    console.log('GET /users');
-});
+router.get('/', userController.getAllUsers);
 
-router.post('/', (req: Request, res: Response) => {
-    console.log('POST /users');
-});
+router.post('/', userValidator, userController.createUser);
 
 // => /User/id
 
-router.get('/:id', (req: Request, res: Response) => {
-    console.log('GET /users/:id');
-});
+router.get('/:id', userController.getUserById);
 
-router.put('/:id', (req: Request, res: Response) => {
-    console.log('PUT /users/:id');
-});
+router.put('/:id', userController.updateUser);
 
-router.delete('/:id', (req: Request, res: Response) => {
-    console.log('DELETE /users/:id');
-});
+router.delete('/:id', userController.deleteUser);
 
 // => /User/username/:username
 
-router.get('/username/:username:', (req: Request, res: Response) => {
-    console.log('GET /users/username/:username');
-});
+// router.get('/username/:username:', userController.getUserByUsername);
+
+// => /User/login
+router.get('/login', userController.loginUser);
 
 module.exports = router;
