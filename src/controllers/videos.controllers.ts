@@ -1,20 +1,30 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 const VideoService = require('../services/videos.services');
+import VideoModel from '../models/videos.models';
 
-async function getAllVideo (req: Request, res: Response) {
+async function getAllVideo(req: Request, res: Response) {
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const limit = parseInt(req.query.limit as string, 10) || 50;
+    const skip = (page - 1) * limit;
+
     try {
-        const video = await VideoService.getAllVideo();
-        if (!video) {
-            res.status(204).json({ message: 'Video not found' });
-        } else {
-            res.status(200).json(video);
-        }
+        const videos = await VideoService.getAllVideo(skip, limit);
+        const totalVideos = await VideoModel.countDocuments();
+        const totalPages = Math.ceil(totalVideos / limit);
+
+        res.status(200).json({
+            videos,
+            totalVideos,
+            totalPages,
+            currentPage: page
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }
+
 
 async function createVideo(req: Request, res: Response) {
     const errors = validationResult(req);
