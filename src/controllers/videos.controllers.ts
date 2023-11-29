@@ -20,7 +20,6 @@ const VideoService = require('../services/videos.services');
         if (!errors.isEmpty()) {
             return res.status(400).json({ error: 'Validation failed', details: errors.array() });
         }
-
         try {
             const newVideo = await VideoService.createVideo(req.body);
             return res.status(201).json(newVideo);
@@ -28,7 +27,7 @@ const VideoService = require('../services/videos.services');
             console.error(error);
             return res.status(500).json({ message: 'Internal Server Error' });
         }
-    }
+}
     async function getVideoById(req: Request, res: Response) {
         if (!Number.isInteger(parseInt(req.params.id))) {
             return res.status(400).json({ message: 'Id must be an integer' });
