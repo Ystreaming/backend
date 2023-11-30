@@ -20,8 +20,6 @@ router.delete('/:id', notificationController.deleteNotification);
 
 // => /Notification/user/id
 
-router.get('/users/:id', (req: Request, res: Response) => {
-    console.log('GET /users/:id');
-});
+router.get('/users/:id', notificationController.getNotificationByUserId);
 
 module.exports = router;

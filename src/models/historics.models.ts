@@ -3,12 +3,12 @@ import Historics from '../interfaces/historics.interface';
 
 const HistoricSchema = new Schema<Historics>({
     idUser: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Channels',
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Channels',
     },
     idVideo: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Videos',
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Videos',
     },
 });
 

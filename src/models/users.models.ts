@@ -4,11 +4,11 @@ import User from '../interfaces/users.interface';
 const UserSchema = new Schema<User>({
   firstName: {
     type: String,
-    required: true,
+    required: false,
   },
   lastName: {
     type: String,
-    required: true,
+    required: false,
   },
   email: {
     type: String,
@@ -36,16 +36,16 @@ const UserSchema = new Schema<User>({
   },
   sub: {
     type: String,
-    required: true,
+    required: false,
   },
   language: {
     type: String,
-    required: true,
+    required: false,
   },
   profileImage: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Files',
-    required: true,
+    required: false,
   },
 });
 

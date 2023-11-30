@@ -15,14 +15,14 @@ async function createUser(user: any) {
         password: hashPassword,
         status: user.status,
         language: user.language,
-        sub: user.string,
+        sub: user.sub,
         profileImage: user.profileImage,
     });
     return await newUser.save();
 }
 
-async function loginUser(email: string, password: string) {
-    const user = await UserModel.findOne({ email: email });
+async function loginUser(username: string, password: string) {
+    const user = await UserModel.findOne({ username: username });
     if (!user) {
         throw new Error('User not found');
     }
@@ -33,7 +33,7 @@ async function loginUser(email: string, password: string) {
     return user;
 }
 
-function getAllUsers() {
+function getAllUsers(page= 1, limit= 50) {
     return UserModel.find();
 }
 
@@ -42,7 +42,14 @@ function getUserById(id: string) {
 }
 
 function getUserByUsername(username: string) {
-    return UserModel.findOne({ username: username });
+    const searchRegex = new RegExp('^' + username, 'i');
+
+    return UserModel.find({ username: { $regex: searchRegex } });
+}
+
+async function getSubByUser(userId: string, skip: number, limit: number) {
+    const user = await UserModel.findById(userId, { sub: { $slice: [skip, limit] } });
+    return user ? user.sub : null;
 }
 
 async function updateUser(id: string, userData: any) {
@@ -70,6 +77,7 @@ module.exports = {
     getAllUsers,
     getUserById,
     getUserByUsername,
+    getSubByUser,
     updateUser,
     deleteUser,
 };

@@ -1,20 +1,34 @@
 import { Request, Response } from 'express';
 const { validationResult } = require('express-validator');
 const RolesService = require('../services/roles.services');
+import RolesModel from '../models/roles.models';
 
 async function getAllRoles(req: Request, res: Response) {
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const limit = parseInt(req.query.limit as string, 10) || 50;
+    const skip = (page - 1) * limit;
+
     try {
-        const roles = await RolesService.getAllRoles();
-        if (!roles) {
-            res.status(204).json({ message: 'Role not found' });
+        const roles = await RolesService.getAllRoles(skip, limit);
+        const totalRoles = await RolesModel.countDocuments();
+        const totalPages = Math.ceil(totalRoles / limit);
+
+        if (!roles.length) {
+            res.status(204).json({ message: 'No roles found' });
         } else {
-            res.status(200).json(roles);
+            res.status(200).json({
+                roles,
+                total: totalRoles,
+                totalPages,
+                currentPage: page
+            });
         }
-        } catch (error) {
+    } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }
+
 async function createRoles(req: Request, res: Response) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -29,6 +43,7 @@ async function createRoles(req: Request, res: Response) {
         return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
+
 async function getRolesById(req: Request, res: Response) {
     if (!Number.isInteger(parseInt(req.params.id))) {
         return res.status(400).json({ message: 'Id must be an integer' });

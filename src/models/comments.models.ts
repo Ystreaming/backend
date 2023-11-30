@@ -3,8 +3,8 @@ import Comment from '../interfaces/comments.interface';
 
 const Comment = new Schema<Comment>({
     texte: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     like: {
       type: Number,
@@ -18,9 +18,9 @@ const Comment = new Schema<Comment>({
       type: Date,
       required: true,
     },
-      idUser: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Users',
+    idUser: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Users',
     },
 });
 

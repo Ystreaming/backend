@@ -3,11 +3,13 @@ const express = require('express');
 const router = express.Router();
 const { channelValidator } = require('../validators/channels.validator');
 const channelController = require('../controllers/channels.controllers');
+const { uploadSingleFile } = require('../middlewares/file.middleware');
 
 // => /Channel
+
 router.get('/', channelController.getAllChannels);
 
-router.post('/', channelValidator, channelController.createChannel);
+router.post('/', uploadSingleFile('image'), channelValidator, channelController.createChannel);
 
 // => /Channel/id
 
@@ -17,22 +19,20 @@ router.put('/:id', channelValidator, channelController.updateChannel);
 
 router.delete('/:id', channelController.deleteChannel);
 
-// => /Channel/name
+// => /Channel/search/name
 
-router.get('/:name', (req: Request, res: Response) => {
-    console.log('GET /channels/:name');
-});
+router.get('/search/:name', channelController.searchChannelByName);
 
 // => /Channel/category/id
 
-router.get('/category/:id', (req: Request, res: Response) => {
-    console.log('GET /channels/category/:id');
-});
+router.get('/category/:id', channelController.getChannelByCategoryId);
 
-// => /Channel/user/name
+// => /Channel/view
 
-router.get('/user/:name', (req: Request, res: Response) => {
-    console.log('GET /channels/user/:name');
-});
+router.get('/view/:id', channelController.getViewByChannelId);
+
+// => /Channel/like
+
+router.get('/like/:id', channelController.getLikeByChannelId);
 
 module.exports = router;
