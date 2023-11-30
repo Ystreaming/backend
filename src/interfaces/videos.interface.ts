@@ -6,6 +6,7 @@ interface Video extends Document {
     id: number;
     title: string;
     createdAt: Date;
+    view: number;
     like: number;
     dislike: number;
     description: string;

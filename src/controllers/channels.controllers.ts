@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import ChannelModel from '../models/channels.models';
 const ChannelService = require('../services/channels.services');
 const fileService = require('../services/files.services');
+const VideoService = require('../services/videos.services');
 
 async function getAllChannels(req: Request, res: Response) {
     try {
@@ -105,6 +106,34 @@ async function getChannelByCategoryId(req: Request, res: Response) {
     }
 }
 
+async function getViewByChannelId(req: Request, res: Response) {
+    try {
+        const channel = await VideoService.getViewByChannelId(req.params.id);
+        if (!channel) {
+            res.status(204).json({ message: 'No channel found' });
+        } else {
+            res.status(200).json(channel);
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+async function getLikeByChannelId(req: Request, res: Response) {
+    try {
+        const channel = await VideoService.getLikeByChannelId(req.params.id);
+        if (!channel) {
+            res.status(204).json({ message: 'No channel found' });
+        } else {
+            res.status(200).json(channel);
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
 async function updateChannel(req: Request, res: Response) {
     if (!Number.isInteger(parseInt(req.params.id))) {
         return res.status(400).json({ message: 'Id must be an integer' });
@@ -139,6 +168,8 @@ module.exports = {
     getChannelById,
     searchChannelByName,
     getChannelByCategoryId,
+    getViewByChannelId,
+    getLikeByChannelId,
     updateChannel,
     deleteChannel
 };

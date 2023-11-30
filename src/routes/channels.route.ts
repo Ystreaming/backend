@@ -27,4 +27,10 @@ router.get('/search/:name', channelController.searchChannelByName);
 
 router.get('/category/:id', channelController.getChannelByCategoryId);
 
+// => /Channel/view
+router.get('/view/:id', channelController.getViewByChannelId);
+
+// => /Channel/like
+router.get('/like/:id', channelController.getLikeByChannelId);
+
 module.exports = router;

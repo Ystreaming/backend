@@ -1,13 +1,19 @@
 import VideosModel from '../models/videos.models';
 import Videos from '../interfaces/videos.interface';
+import mongoose from 'mongoose';
 
 function getAllVideos() {
     return VideosModel.find();
 }
 
 function getVideoById(id: string) {
-    return VideosModel.findById({ _id: id });
+    return VideosModel.findByIdAndUpdate(
+        { _id: id },
+        { $inc: { view: 1 } },
+        { new: true }
+    );
 }
+
 
 function getVideoByChannelId(id: string) {
     return VideosModel.find({channel_id: id});
@@ -21,6 +27,7 @@ function addVideo(video: Videos) {
     const newVideo = new VideosModel({
         title: video.title,
         created_at: new Date(),
+        view: 0,
         like: 0,
         dislike: 0,
         description: video.description,
@@ -46,10 +53,27 @@ function searchVideoByCategory(id: string) {
     return VideosModel.find({ idCategory: id });
 }
 
+function getViewByChannelId(id: string) {
+    const objectId = new mongoose.Types.ObjectId(id);
+    return VideosModel.aggregate([
+        { $match: { idChannel: objectId } },
+        { $group: { _id: null, view: { $sum: "$view" } }}
+    ]);
+}
+
+function getLikeByChannelId(id: string) {
+    const objectId = new mongoose.Types.ObjectId(id);
+    return VideosModel.aggregate([
+        { $match: { idChannel: objectId } },
+        { $group: { _id: null, like: { $sum: "$like" } }}
+    ]);
+}
+
 function updateVideo(id: string, video: Videos) {
     return VideosModel.findOneAndUpdate({ _id: id }, {
         title: video.title,
         created_at: new Date(),
+        view: video.view,
         like: video.like,
         dislike: video.dislike,
         description: video.description,
@@ -75,6 +99,8 @@ module.exports = {
     getVideoById,
     getVideoByChannelId,
     getVideoByCategoryId,
+    getViewByChannelId,
+    getLikeByChannelId,
     addVideo,
     updateVideo,
     deleteVideo,
