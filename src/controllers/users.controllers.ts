@@ -26,6 +26,7 @@ async function getAllUsers(req: Request, res: Response) {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }
+
 async function createUser(req: Request, res: Response) {
     try {
         let fileId = null;
@@ -46,6 +47,7 @@ async function createUser(req: Request, res: Response) {
         return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
+
 async function getUserById(req: Request, res: Response) {
     if (!Number.isInteger(parseInt(req.params.id))) {
         return res.status(400).json({ message: 'Id must be an integer' });
@@ -110,6 +112,7 @@ async function getSubByUser(req: Request, res: Response) {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }
+
 async function loginUser(req: Request, res: Response) {
     if (!req.body.username || !req.body.password) {
         return res.status(400).json({ message: 'username and password are required' });
