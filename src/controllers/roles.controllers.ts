@@ -29,7 +29,6 @@ async function getAllRoles(req: Request, res: Response) {
     }
 }
 
-
 async function createRoles(req: Request, res: Response) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

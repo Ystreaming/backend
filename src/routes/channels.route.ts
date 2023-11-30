@@ -5,8 +5,8 @@ const { channelValidator } = require('../validators/channels.validator');
 const channelController = require('../controllers/channels.controllers');
 const { uploadSingleFile } = require('../middlewares/file.middleware');
 
-
 // => /Channel
+
 router.get('/', channelController.getAllChannels);
 
 router.post('/', uploadSingleFile('image'), channelValidator, channelController.createChannel);
@@ -28,9 +28,11 @@ router.get('/search/:name', channelController.searchChannelByName);
 router.get('/category/:id', channelController.getChannelByCategoryId);
 
 // => /Channel/view
+
 router.get('/view/:id', channelController.getViewByChannelId);
 
 // => /Channel/like
+
 router.get('/like/:id', channelController.getLikeByChannelId);
 
 module.exports = router;

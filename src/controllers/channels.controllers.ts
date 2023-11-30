@@ -39,7 +39,6 @@ async function createChannel(req: Request, res: Response) {
     }
 }
 
-
 async function getChannelById(req: Request, res: Response) {
     if (!Number.isInteger(parseInt(req.params.id))) {
         return res.status(400).json({ message: 'Id must be an integer' });

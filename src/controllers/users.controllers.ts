@@ -27,7 +27,6 @@ async function getAllUsers(req: Request, res: Response) {
     }
 }
 
-
 async function createUser(req: Request, res: Response) {
     try {
         let fileId = null;

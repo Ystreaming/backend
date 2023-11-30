@@ -45,17 +45,17 @@ const videoSchema = new Schema<Video>({
       required: true,
     },
     idComment: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Comments',
-      },
-      idChannel: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Channels',
-      },
-      idCategory: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category',
-      },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comments',
+    },
+    idChannel: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Channels',
+    },
+    idCategory: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category',
+    },
   });
 
 const VideoModel = mongoose.model<Video>('Videos', videoSchema);
