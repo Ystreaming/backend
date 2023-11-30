@@ -19,8 +19,6 @@ router.delete('/:id', historicController.deleteHistoric);
 
 // => /historic/user/id
 
-router.get('/user/:id', (req: Request, res: Response) => {
-    console.log('GET /historics/user/:id');
-});
+router.get('/user/:id', historicController.getHistoricByUserId);
 
 module.exports = router;

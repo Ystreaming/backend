@@ -59,6 +59,32 @@ async function getHistoricById(req: Request, res: Response) {
     }
 }
 
+async function getHistoricByUserId(req: Request, res: Response) {
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const limit = parseInt(req.query.limit as string, 10) || 50;
+    const skip = (page - 1) * limit;
+
+    try {
+        const historic = await HistoricService.getHistoricByUserId(req.params.id, skip, limit);
+        const totalHistorics = await HistoricModel.countDocuments();
+        const totalPages = Math.ceil(totalHistorics / limit);
+
+        if (!historic.length) {
+            res.status(204).json({ message: 'No historic records found' });
+        } else {
+            res.status(200).json({
+                historic,
+                total: totalHistorics,
+                totalPages,
+                currentPage: page
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
 async function deleteHistoric(req: Request, res: Response) {
     if (!Number.isInteger(parseInt(req.params.id))) {
         return res.status(400).json({ message: 'Id must be an integer' });
@@ -76,6 +102,7 @@ async function deleteHistoric(req: Request, res: Response) {
 module.exports = {
     getAllHistoric,
     createHistoric,
+    getHistoricByUserId,
     getHistoricById,
     deleteHistoric
 };
