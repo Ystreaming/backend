@@ -25,9 +25,7 @@ router.get('/search/:name', channelController.searchChannelByName);
 
 // => /Channel/category/id
 
-router.get('/category/:id', (req: Request, res: Response) => {
-    console.log('GET /channels/category/:id');
-});
+router.get('/category/:id', channelController.getChannelByCategoryId);
 
 // => /Channel/user/name
 
