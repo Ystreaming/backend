@@ -10,6 +10,10 @@ const videoSchema = new Schema<Video>({
       type: Date,
       default: Date.now,
     },
+    view: {
+      type: Number,
+      default: 0,
+    },
     like: {
       type: Number,
       default: 0,
@@ -24,7 +28,7 @@ const videoSchema = new Schema<Video>({
       required: true,
     },
     time: {
-      type: Date,
+      type: Number,
       required: true,
     },
     img: {

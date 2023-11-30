@@ -61,16 +61,56 @@ async function getUserById(req: Request, res: Response) {
         }
     }
 }
+
 async function getUserByUsername(req: Request, res: Response) {
-    if (!Number.isInteger(parseInt(req.params.username))) {
-        return res.status(400).json({ message: 'Id must be an integer' });
-    } else  {
-        const user = await UsersService.getUserByUsername(req.params.username);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+    const page = parseInt(req.query.page as string ?? '1', 10);
+    const limit = parseInt(req.query.limit as string ?? '50', 10);
+    const skip = (1 - 1) * limit;
+
+    try {
+        const user = await UsersService.getUserByUsername(req.params.username, skip, limit);
+        const totalUsers = await UserModel.countDocuments();
+        const totalPages = Math.ceil(totalUsers / limit);
+
+        if (!user.length) {
+            res.status(204).json({ message: 'No user found' });
         } else {
-            return res.status(200).json(user);
+            res.status(200).json({
+                user,
+                total: totalUsers,
+                totalPages,
+                currentPage: page
+            });
         }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+async function getSubByUser(req: Request, res: Response) {
+    const page = parseInt(req.query.page as string ?? '1', 10);
+    const limit = parseInt(req.query.limit as string ?? '50', 10);
+    const skip = (page - 1) * limit;
+
+    try {
+        const subItems = await UsersService.getSubByUser(req.params.id, skip, limit);
+        if (!subItems || subItems.length === 0) {
+            res.status(204).json({ message: 'No content found for user' });
+        } else {
+            const totalItems = subItems.length;
+            const totalPages = Math.ceil(totalItems / limit);
+
+            res.status(200).json({
+                subItems,
+                total: totalItems,
+                totalPages,
+                currentPage: page
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
@@ -124,6 +164,7 @@ async function deleteUser(req: Request, res: Response) {
     createUser,
     getAllUsers,
     getUserByUsername,
+    getSubByUser,
     getUserById,
     loginUser,
     updateUser,

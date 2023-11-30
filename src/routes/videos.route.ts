@@ -10,7 +10,7 @@ const { uploadSingleFile } = require('../middlewares/file.middleware');
 
 router.get('/', videoController.getAllVideo);
 
-// router.post('/', uploadSingleFile('img'), videoValidator, videoController.createVideo);
+router.post('/', uploadSingleFile('img'), videoValidator, videoController.createVideo);
 
 // => /Video/id
 
@@ -20,10 +20,11 @@ router.put('/:id', videoValidator, videoController.updateVideo);
 
 router.delete('/:id', videoController.deleteVideo);
 
-// => /Video/user/id
+// => /Video/search
 
-// router.get('/channel/:id', (req: Request, res: Response) => {
-//     console.log('GET /videos/channel/:id');
-// });
+router.get('/search/:search', videoController.searchVideo);
+
+// => /video/category/:id
+router.get('/category/:id', videoController.getVideoByCategoryId);
 
 module.exports = router;

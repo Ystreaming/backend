@@ -42,7 +42,14 @@ function getUserById(id: string) {
 }
 
 function getUserByUsername(username: string) {
-    return UserModel.findOne({ username: username });
+    const searchRegex = new RegExp('^' + username, 'i');
+
+    return UserModel.find({ username: { $regex: searchRegex } });
+}
+
+async function getSubByUser(userId: string, skip: number, limit: number) {
+    const user = await UserModel.findById(userId, { sub: { $slice: [skip, limit] } });
+    return user ? user.sub : null;
 }
 
 async function updateUser(id: string, userData: any) {
@@ -70,6 +77,7 @@ module.exports = {
     getAllUsers,
     getUserById,
     getUserByUsername,
+    getSubByUser,
     updateUser,
     deleteUser,
 };

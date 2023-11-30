@@ -59,6 +59,32 @@ async function getNotificationById(req: Request, res: Response) {
     }
 }
 
+async function getNotificationByUserId(req: Request, res: Response) {
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const limit = parseInt(req.query.limit as string, 10) || 50;
+    const skip = (page - 1) * limit;
+
+    try {
+        const notification = await NotificationService.getNotificationByUserId(req.params.id, skip, limit);
+        const totalNotification = await NotificationModel.countDocuments();
+        const totalPages = Math.ceil(totalNotification / limit);
+
+        if (!notification.length) {
+            res.status(204).json({ message: 'No notification found' });
+        } else {
+            res.status(200).json({
+                notification,
+                total: totalNotification,
+                totalPages,
+                currentPage: page
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
 async function updateNotification(req: Request, res: Response) {
     if (!Number.isInteger(parseInt(req.params.id))) {
         return res.status(400).json({ message: 'Id must be an integer' });
@@ -91,6 +117,7 @@ module.exports = {
     getAllNotification,
     createNotification,
     getNotificationById,
+    getNotificationByUserId,
     updateNotification,
     deleteNotification
 };

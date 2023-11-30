@@ -19,22 +19,18 @@ router.put('/:id', channelValidator, channelController.updateChannel);
 
 router.delete('/:id', channelController.deleteChannel);
 
-// => /Channel/name
+// => /Channel/search/name
 
-// router.get('/:name', (req: Request, res: Response) => {
-//     console.log('GET /channels/:name');
-// });
+router.get('/search/:name', channelController.searchChannelByName);
 
 // => /Channel/category/id
 
-router.get('/category/:id', (req: Request, res: Response) => {
-    console.log('GET /channels/category/:id');
-});
+router.get('/category/:id', channelController.getChannelByCategoryId);
 
-// => /Channel/user/name
+// => /Channel/view
+router.get('/view/:id', channelController.getViewByChannelId);
 
-router.get('/user/:name', (req: Request, res: Response) => {
-    console.log('GET /channels/user/:name');
-});
+// => /Channel/like
+router.get('/like/:id', channelController.getLikeByChannelId);
 
 module.exports = router;
