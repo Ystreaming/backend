@@ -24,7 +24,7 @@ async function getAllVideo(req: Request, res: Response) {
         console.error(error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
-    
+}
 async function createVideo(req: Request, res: Response) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
