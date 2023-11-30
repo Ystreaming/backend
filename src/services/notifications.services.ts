@@ -2,13 +2,9 @@ import { connectToRabbitMQ } from '../tools/rabbitMQ';
 import { EventEmitter } from 'events';
 import express from 'express';
 
-interface MyEventEmitter extends EventEmitter {
-  emit(event: 'notification', message: any): boolean;
-}
-
 const queueName = 'notifications';
 
-const eventEmitter: MyEventEmitter = new EventEmitter();
+const eventEmitter: EventEmitter = new EventEmitter();
 
 export async function sendNotification(message: any): Promise<void> {
   try {
@@ -42,7 +38,6 @@ app.get('/sse', (req, res) => {
 
   eventEmitter.on('notification', onNotification);
 
-  // Ferme la connexion SSE si le client se déconnecte
   req.on('close', () => {
     eventEmitter.off('notification', onNotification);
   });
