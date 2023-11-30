@@ -20,10 +20,8 @@ router.put('/:id', videoValidator, videoController.updateVideo);
 
 router.delete('/:id', videoController.deleteVideo);
 
-// => /Video/user/id
+// => /Video/search
 
-// router.get('/channel/:id', (req: Request, res: Response) => {
-//     console.log('GET /videos/channel/:id');
-// });
+router.get('/search/:search', videoController.searchVideo);
 
 module.exports = router;

@@ -10,7 +10,7 @@ function getChannelById(id: string) {
 }
 
 function searchChannelByName(name: string) {
-    const searchRegex = new RegExp(name, 'i');
+    const searchRegex = new RegExp('^' + name, 'i');
 
     return ChannelModel.find({ name: searchRegex });
 }

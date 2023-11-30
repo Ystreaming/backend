@@ -52,6 +52,28 @@ async function createVideo(req: Request, res: Response) {
     }
 }
 
+async function searchVideo(req: Request, res: Response) {
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const limit = parseInt(req.query.limit as string, 10) || 50;
+    const skip = (page - 1) * limit;
+
+    try {
+        const videos = await VideoService.searchVideo(req.params.search as string, skip, limit);
+        const totalVideos = await VideoModel.countDocuments();
+        const totalPages = Math.ceil(totalVideos / limit);
+
+        res.status(200).json({
+            videos,
+            totalVideos,
+            totalPages,
+            currentPage: page
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
 async function getVideoById(req: Request, res: Response) {
     if (!Number.isInteger(parseInt(req.params.id))) {
         return res.status(400).json({ message: 'Id must be an integer' });
@@ -93,6 +115,7 @@ async function deleteVideo(req: Request, res: Response) {
 
 module.exports = {
     getAllVideo,
+    searchVideo,
     createVideo,
     getVideoById,
     updateVideo,

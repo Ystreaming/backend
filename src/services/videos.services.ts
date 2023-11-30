@@ -36,6 +36,12 @@ function addVideo(video: Videos) {
     return newVideo.save();
 }
 
+function searchVideo(q: string) {
+    const searchRegex = new RegExp('^' + q, 'i');
+
+    return VideosModel.find({ title: searchRegex });
+}
+
 function updateVideo(id: string, video: Videos) {
     return VideosModel.findOneAndUpdate({ _id: id }, {
         title: video.title,
@@ -59,6 +65,7 @@ function deleteVideo(id: string) {
 }
 
 module.exports = {
+    searchVideo,
     getAllVideos,
     getVideoById,
     getVideoByChannelId,
