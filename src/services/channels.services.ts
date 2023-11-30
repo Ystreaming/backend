@@ -20,7 +20,7 @@ function getChannelByUserId(id: string) {
 }
 
 function getChannelByCategoryId(id: string) {
-    return ChannelModel.find({ iDcategory: id });
+    return ChannelModel.find({ idCategory: id });
 }
 
 function createChannel(channel: Channel) {

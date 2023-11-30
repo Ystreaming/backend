@@ -42,6 +42,10 @@ function searchVideo(q: string) {
     return VideosModel.find({ title: searchRegex });
 }
 
+function searchVideoByCategory(id: string) {
+    return VideosModel.find({ idCategory: id });
+}
+
 function updateVideo(id: string, video: Videos) {
     return VideosModel.findOneAndUpdate({ _id: id }, {
         title: video.title,
@@ -65,6 +69,7 @@ function deleteVideo(id: string) {
 }
 
 module.exports = {
+    searchVideoByCategory,
     searchVideo,
     getAllVideos,
     getVideoById,
