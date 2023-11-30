@@ -27,10 +27,4 @@ router.get('/search/:name', channelController.searchChannelByName);
 
 router.get('/category/:id', channelController.getChannelByCategoryId);
 
-// => /Channel/user/name
-
-router.get('/user/:name', (req: Request, res: Response) => {
-    console.log('GET /channels/user/:name');
-});
-
 module.exports = router;
