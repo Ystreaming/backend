@@ -10,7 +10,6 @@ router.get('/', userController.getAllUsers);
 
 router.post('/', uploadSingleFile('profileImage'), userController.createUser);
 
-
 // => /User/id
 
 router.get('/:id', userController.getUserById);
@@ -24,9 +23,11 @@ router.delete('/:id', userController.deleteUser);
 router.get('/username/:username', userController.getUserByUsername);
 
 // => /user/sub/:id
+
 router.get('/sub/:id', userController.getSubByUser);
 
 // => /User/login
+
 router.post('/login', userController.loginUser);
 
 module.exports = router;

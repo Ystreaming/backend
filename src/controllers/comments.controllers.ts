@@ -29,7 +29,6 @@ async function getAllComment(req: Request, res: Response) {
     }
 }
 
-
 async function createComment(req: Request, res: Response) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

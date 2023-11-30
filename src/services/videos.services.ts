@@ -14,7 +14,6 @@ function getVideoById(id: string) {
     );
 }
 
-
 function getVideoByChannelId(id: string) {
     return VideosModel.find({channel_id: id});
 }

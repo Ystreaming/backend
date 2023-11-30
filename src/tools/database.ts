@@ -4,9 +4,9 @@ import dotenv from 'dotenv';
 dotenv.config({ path: './.env/.env.developpement' });
 
 const options: ConnectOptions = {
-     bufferCommands: true,
-     autoIndex: true,
-     autoCreate: true,
+  bufferCommands: true,
+  autoIndex: true,
+  autoCreate: true,
 };
 
 export const connectToDatabase = async () => {

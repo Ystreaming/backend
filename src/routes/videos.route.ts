@@ -25,6 +25,7 @@ router.delete('/:id', videoController.deleteVideo);
 router.get('/search/:search', videoController.searchVideo);
 
 // => /video/category/:id
+
 router.get('/category/:id', videoController.getVideoByCategoryId);
 
 module.exports = router;

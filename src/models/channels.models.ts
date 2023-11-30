@@ -9,20 +9,20 @@ const Channel = new Schema<Channel>({
     description: {
         type: String,
         required: true,
-      },
+    },
     image: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Files',
       required: true,
-      },
-      idCategory: {
+    },
+    idCategory: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
-      },
-      idVideos: {
+    },
+    idVideos: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Videos',
-      },
+    },
 });
 
 const ChannelModel = mongoose.model<Channel>('Channels', Channel);
