@@ -21,7 +21,10 @@ router.delete('/:id', userController.deleteUser);
 
 // => /User/username/:username
 
-// router.get('/username/:username:', userController.getUserByUsername);
+router.get('/username/:username', userController.getUserByUsername);
+
+// => /user/sub/:id
+router.get('/sub/:id', userController.getSubByUser);
 
 // => /User/login
 router.post('/login', userController.loginUser);
