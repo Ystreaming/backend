@@ -19,11 +19,9 @@ router.put('/:id', channelValidator, channelController.updateChannel);
 
 router.delete('/:id', channelController.deleteChannel);
 
-// => /Channel/name
+// => /Channel/search/name
 
-// router.get('/:name', (req: Request, res: Response) => {
-//     console.log('GET /channels/:name');
-// });
+router.get('/search/:name', channelController.searchChannelByName);
 
 // => /Channel/category/id
 
