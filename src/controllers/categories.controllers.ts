@@ -30,7 +30,6 @@ async function getAllCategory(req: Request, res: Response) {
     }
 }
 
-
 async function createCategory(req: Request, res: Response) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -52,7 +51,6 @@ async function createCategory(req: Request, res: Response) {
         return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
-
 
 async function getCategoryById(req: Request, res: Response) {
     if (!Number.isInteger(parseInt(req.params.id))) {

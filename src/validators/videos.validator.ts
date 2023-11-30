@@ -8,11 +8,6 @@ export const videoValidator = [
         .exists()
         .notEmpty().withMessage('Title is required'),
 
-    body('createdAt')
-        .isDate().withMessage('Invalid date')
-        .exists()
-        .notEmpty().withMessage('Date of birth is required'),
-
     body('like')
         .isNumeric()
         .exists()
@@ -30,7 +25,7 @@ export const videoValidator = [
         .notEmpty().withMessage('Description is required'),
 
     body('time')
-        .isDate().withMessage('Invalid date')
+        .isNumeric().withMessage('Invalid date')
         .exists()
         .notEmpty().withMessage('time is required'),
 

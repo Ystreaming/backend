@@ -6,11 +6,12 @@ interface Video extends Document {
     id: number;
     title: string;
     createdAt: Date;
+    view: number;
     like: number;
     dislike: number;
     description: string;
     language: string;
-    time: Date;
+    time: Number;
     img: {type: Schema.Types.ObjectId, ref:'Files'};
     url: string;
     urllocal: string;
