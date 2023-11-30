@@ -1,5 +1,3 @@
-
-
 // import { connectToRabbitMQ } from '../tools/rabbitMQ';
 
 // const queueName = 'notifications';
@@ -8,10 +6,10 @@
 //   try {
 //     const { connection, channel } = await connectToRabbitMQ();
 
-
 //     channel.assertQueue(queueName, { durable: false });
 //     channel.sendToQueue(queueName, Buffer.from(JSON.stringify(message)));
 //     console.log(`Notification envoyée : ${JSON.stringify(message)}`);
+
 //     setTimeout(() => {
 //       connection.close();
 //     }, 500);
@@ -20,4 +18,3 @@
 //     throw error;
 //   }
 // }
-

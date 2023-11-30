@@ -24,8 +24,7 @@
   },
   "homepage": "https://github.com/Ystreaming/backend#readme",
   "dependencies": {
-    "@types/multer": "^1.4.11",
-    "@types/socket.io": "^3.0.2",
+    "@types/multer": "^1.4.9",
     "amqplib": "^0.10.3",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
