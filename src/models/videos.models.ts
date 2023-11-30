@@ -24,7 +24,7 @@ const videoSchema = new Schema<Video>({
       required: true,
     },
     time: {
-      type: Date,
+      type: Number,
       required: true,
     },
     img: {

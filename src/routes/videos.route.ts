@@ -10,7 +10,7 @@ const { uploadSingleFile } = require('../middlewares/file.middleware');
 
 router.get('/', videoController.getAllVideo);
 
-// router.post('/', uploadSingleFile('img'), videoValidator, videoController.createVideo);
+router.post('/', uploadSingleFile('img'), videoValidator, videoController.createVideo);
 
 // => /Video/id
 
