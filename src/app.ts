@@ -1,4 +1,7 @@
 import express, { Application, Request, Response } from 'express';
+import http from 'http';
+import { Server as SocketIoServer } from 'socket.io';
+import bodyParser from 'body-parser';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import path from 'path';
@@ -7,6 +10,8 @@ const swaggerDocument = YAML.load(yamlFilePath);
 import cors from 'cors';
 
 const app: Application = express();
+const server = http.createServer(app);
+const io = new SocketIoServer(server);
 
 const UsersRoute = require('./routes/users.route');
 const RolesRoute = require('./routes/roles.route');
@@ -32,6 +37,10 @@ app.use((err: Error, req: Request, res: Response, next: Function) => {
   res.status(500).json({
     message: err.message,
   });
+});
+
+io.on('connection', (socket) => {
+  console.log('Client connecté');
 });
 
 export default app;
