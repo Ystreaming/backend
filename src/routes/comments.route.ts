@@ -24,8 +24,6 @@ router.get('/user/:id', commentController.getCommentByUserId);
 
 // => /Comment/video/id
 
-router.get('/video/:id', (req: Request, res: Response) => {
-    console.log('GET /comments/video/:id');
-});
+router.get('/video/:id', commentController.getCommentByVideoId);
 
 module.exports = router;
