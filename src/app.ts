@@ -28,6 +28,11 @@ app.use('/channels', ChannelsRoute);
 app.use('/comments', CommentsRoute);
 app.use('/historics', HistoricsRoute);
 
+app.get('/test/error', (req, res, next) => {
+  const error = new Error('Test Error');
+  next(error);
+});
+
 app.use((err: Error, req: Request, res: Response, next: Function) => {
   res.status(500).json({
     message: err.message,
