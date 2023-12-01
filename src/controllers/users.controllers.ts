@@ -49,15 +49,16 @@ async function createUser(req: Request, res: Response) {
 }
 
 async function getUserById(req: Request, res: Response) {
-    if (!Number.isInteger(parseInt(req.params.id))) {
-        return res.status(400).json({ message: 'Id must be an integer' });
-    } else  {
+    try {
         const user = await UsersService.getUserById(req.params.id);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         } else {
             return res.status(200).json(user);
         }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
@@ -72,7 +73,7 @@ async function getUserByUsername(req: Request, res: Response) {
         const totalPages = Math.ceil(totalUsers / limit);
 
         if (!user.length) {
-            res.status(204).json({ message: 'No user found' });
+            res.status(404).json({ message: 'No user found' });
         } else {
             res.status(200).json({
                 user,
@@ -95,7 +96,7 @@ async function getSubByUser(req: Request, res: Response) {
     try {
         const subItems = await UsersService.getSubByUser(req.params.id, skip, limit);
         if (!subItems || subItems.length === 0) {
-            res.status(204).json({ message: 'No content found for user' });
+            res.status(404).json({ message: 'No content found for user' });
         } else {
             const totalItems = subItems.length;
             const totalPages = Math.ceil(totalItems / limit);
@@ -147,15 +148,16 @@ async function updateUser(req: Request, res: Response) {
 }
 
 async function deleteUser(req: Request, res: Response) {
-    if (!Number.isInteger(parseInt(req.params.id))) {
-        return res.status(400).json({ error: 'ID must be an integer' });
-    } else {
-        const user = await UsersService.deleteUser(req.params.id);
-        if (!user) {
+    try {
+        const deletedUser = await UsersService.deleteUser(req.params.id);
+        if (!deletedUser) {
             return res.status(404).json({ message: 'User not found' });
         } else {
-            return res.status(200).json({message: 'User deleted successfully'});
+            return res.status(200).json({ message: 'User deleted successfully' });
         }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
