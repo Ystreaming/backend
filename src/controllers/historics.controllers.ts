@@ -45,16 +45,16 @@ async function createHistoric(req: Request, res: Response) {
 }
 
 async function getHistoricById(req: Request, res: Response) {
-    if (!Number.isInteger(parseInt(req.params.id))) {
-        return res.status(400).json({ message: 'Id must be an integer' });
-    } else  {
+    try {
         const historic = await HistoricService.getHistoricById(req.params.id);
-
         if (!historic) {
-            return res.status(404).json({ message: 'Historic not found' });
+            res.status(204).json({ message: 'No historic records found' });
         } else {
-            return res.status(200).json(historic);
+            res.status(200).json(historic);
         }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
@@ -85,16 +85,16 @@ async function getHistoricByUserId(req: Request, res: Response) {
 }
 
 async function deleteHistoric(req: Request, res: Response) {
-    if (!Number.isInteger(parseInt(req.params.id))) {
-        return res.status(400).json({ message: 'Id must be an integer' });
-    } else {
+    try {
         const historic = await HistoricService.deleteHistoric(req.params.id);
-
         if (!historic) {
-            return res.status(404).json({ message: 'Historic not found' });
+            res.status(204).json({ message: 'No historic records found' });
         } else {
-            return res.status(200).json({ message: 'Historic deleted' });
+            res.status(200).json(historic);
         }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
