@@ -40,16 +40,16 @@ async function createChannel(req: Request, res: Response) {
 }
 
 async function getChannelById(req: Request, res: Response) {
-    if (!Number.isInteger(parseInt(req.params.id))) {
-        return res.status(400).json({ message: 'Id must be an integer' });
-    } else  {
+    try {
         const channel = await ChannelService.getChannelById(req.params.id);
-
         if (!channel) {
-            return res.status(404).json({ message: 'Channel not found' });
+            res.status(204).json({ message: 'No channel found' });
         } else {
-            return res.status(200).json(channel);
+            res.status(200).json(channel);
         }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
@@ -134,30 +134,30 @@ async function getLikeByChannelId(req: Request, res: Response) {
 }
 
 async function updateChannel(req: Request, res: Response) {
-    if (!Number.isInteger(parseInt(req.params.id))) {
-        return res.status(400).json({ message: 'Id must be an integer' });
-    } else {
+    try {
         const channel = await ChannelService.updateChannel(req.params.id, req.body);
-
         if (!channel) {
-            return res.status(404).json({ message: 'Channel not found' });
+            res.status(204).json({ message: 'No channel found' });
         } else {
-            return res.status(200).json(channel);
+            res.status(200).json(channel);
         }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
 async function deleteChannel(req: Request, res: Response) {
-    if (!Number.isInteger(parseInt(req.params.id))) {
-        return res.status(400).json({ message: 'Id must be an integer' });
-    } else {
+    try {
         const channel = await ChannelService.deleteChannel(req.params.id);
-
         if (!channel) {
-            return res.status(404).json({ message: 'Channel not found' });
+            res.status(204).json({ message: 'No channel found' });
         } else {
-            return res.status(200).json({ message: 'Channel deleted' });
+            res.status(200).json(channel);
         }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 

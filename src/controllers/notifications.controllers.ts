@@ -45,16 +45,16 @@ async function createNotification(req: Request, res: Response) {
 }
 
 async function getNotificationById(req: Request, res: Response) {
-    if (!Number.isInteger(parseInt(req.params.id))) {
-        return res.status(400).json({ message: 'Id must be an integer' });
-    } else  {
+    try {
         const notification = await NotificationService.getNotificationById(req.params.id);
-
         if (!notification) {
-            return res.status(404).json({ message: 'Notification not found' });
+            res.status(204).json({ message: 'No notification found' });
         } else {
-            return res.status(200).json(notification);
+            res.status(200).json(notification);
         }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
@@ -85,30 +85,30 @@ async function getNotificationByUserId(req: Request, res: Response) {
 }
 
 async function updateNotification(req: Request, res: Response) {
-    if (!Number.isInteger(parseInt(req.params.id))) {
-        return res.status(400).json({ message: 'Id must be an integer' });
-    } else {
+    try {
         const notification = await NotificationService.updateNotification(req.params.id, req.body);
-
         if (!notification) {
             return res.status(404).json({ message: 'Notification not found' });
         } else {
             return res.status(200).json(notification);
         }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
 async function deleteNotification(req: Request, res: Response) {
-    if (!Number.isInteger(parseInt(req.params.id))) {
-        return res.status(400).json({ message: 'Id must be an integer' });
-    } else {
+    try {
         const notification = await NotificationService.deleteNotification(req.params.id);
-
         if (!notification) {
-            return res.status(404).json({ message: 'Notification not found' });
+            res.status(204).json({ message: 'No notification found' });
         } else {
-            return res.status(200).json({ message: 'Notification deleted' });
+            res.status(200).json(notification);
         }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
