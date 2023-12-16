@@ -9,7 +9,7 @@ async function getAllHistoric(req: Request, res: Response) {
     const skip = (page - 1) * limit;
 
     try {
-        const historics = await HistoricService.getAllHistoric(skip, limit);
+        const historics = await HistoricService.getAllHistorics(skip, limit);
         const totalHistorics = await HistoricModel.countDocuments();
         const totalPages = Math.ceil(totalHistorics / limit);
 
@@ -30,13 +30,8 @@ async function getAllHistoric(req: Request, res: Response) {
 }
 
 async function createHistoric(req: Request, res: Response) {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ error: 'Validation failed', details: errors.array() });
-    }
-
     try {
-        const newHistoric = await HistoricService.createHistoric(req.body);
+        const newHistoric = await HistoricService.createHistorics(req.body);
         return res.status(201).json(newHistoric);
     } catch (error) {
         console.error(error);
@@ -46,7 +41,7 @@ async function createHistoric(req: Request, res: Response) {
 
 async function getHistoricById(req: Request, res: Response) {
     try {
-        const historic = await HistoricService.getHistoricById(req.params.id);
+        const historic = await HistoricService.getHistoricsById(req.params.id);
         if (!historic) {
             res.status(204).json({ message: 'No historic records found' });
         } else {
@@ -64,7 +59,7 @@ async function getHistoricByUserId(req: Request, res: Response) {
     const skip = (page - 1) * limit;
 
     try {
-        const historic = await HistoricService.getHistoricByUserId(req.params.id, skip, limit);
+        const historic = await HistoricService.getHistoricsByUserId(req.params.id, skip, limit);
         const totalHistorics = await HistoricModel.countDocuments();
         const totalPages = Math.ceil(totalHistorics / limit);
 
@@ -86,7 +81,7 @@ async function getHistoricByUserId(req: Request, res: Response) {
 
 async function deleteHistoric(req: Request, res: Response) {
     try {
-        const historic = await HistoricService.deleteHistoric(req.params.id);
+        const historic = await HistoricService.deleteHistorics(req.params.id);
         if (!historic) {
             res.status(204).json({ message: 'No historic records found' });
         } else {
