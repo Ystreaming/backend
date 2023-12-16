@@ -7,13 +7,13 @@ const Role = new Schema<Role>({
       required: true,
     },
     permission: {
-      type: String,
+      type: [String],
       required: true,
       },
-    idUsers: {
+    idUsers: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Users',
-    },
+    }],
 });
 
 const RoleModel = mongoose.model<Role>('Roles', Role);

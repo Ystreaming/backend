@@ -36,7 +36,7 @@ async function createRoles(req: Request, res: Response) {
     }
 
     try {
-        const newRole = await RolesService.createRoles(req.body);
+        const newRole = await RolesService.createRole(req.body);
         return res.status(201).json(newRole);
     } catch (error) {
         console.error(error);
@@ -46,7 +46,7 @@ async function createRoles(req: Request, res: Response) {
 
 async function getRolesById(req: Request, res: Response) {
     try {
-        const roles = await RolesService.getRolesById(req.params.id);
+        const roles = await RolesService.getRoleById(req.params.id);
         if (!roles) {
             res.status(204).json({ message: 'No role found' });
         } else {
@@ -66,7 +66,7 @@ async function updateRoles(req: Request, res: Response) {
     if (!Number.isInteger(parseInt(req.params.id))) {
         return res.status(400).json({ message: 'Id must be an integer' });
     } else {
-        const roles = await RolesService.updateRoles(req.params.id, req.body);
+        const roles = await RolesService.updateRole(req.params.id, req.body);
 
         if (!roles) {
             return res.status(404).json({ message: 'Role not found' });
@@ -78,7 +78,7 @@ async function updateRoles(req: Request, res: Response) {
 
 async function deleteRoles(req: Request, res: Response) {
     try {
-        const roles = await RolesService.deleteRoles(req.params.id);
+        const roles = await RolesService.deleteRole(req.params.id);
         if (!roles) {
             res.status(204).json({ message: 'No role found' });
         } else {
