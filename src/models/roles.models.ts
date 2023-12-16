@@ -8,7 +8,6 @@ const Role = new Schema<Role>({
     },
     permission: {
       type: [String],
-      required: true,
       },
     idUsers: [{
       type: mongoose.Schema.Types.ObjectId,
