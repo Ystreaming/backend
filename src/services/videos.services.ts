@@ -33,7 +33,7 @@ function addVideo(video: Videos) {
         language: video.language,
         time: video.time,
         img: video.img,
-        url: video.url,
+        url: video._id,
         urllocal: video.urllocal,
         idComment: null,
         idChannel: video.idChannel,
