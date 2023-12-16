@@ -91,6 +91,35 @@ function deleteVideo(id: string) {
     return VideosModel.findOneAndDelete({ _id: id });
 }
 
+function getCommentsByVideoId(id: string) {
+    return VideosModel.findById({ _id: id })
+        .populate('idComment')
+        .select('idComment')
+        .then(video => {
+            if (!video) {
+                throw new Error('Video not found');
+            }
+            return video.idComment;
+        });
+}
+
+function addCommentOnVideo(id: string, idComment: string) {
+    return VideosModel.findById(id)
+        .then(video => {
+            if (!video) {
+                throw new Error('Video not found');
+            }
+
+            if (!Array.isArray(video.idComment)) {
+                video.idComment = [];
+            }
+
+            video.idComment.push(new mongoose.Types.ObjectId(idComment));
+
+            return video.save();
+        });
+}
+
 module.exports = {
     searchVideoByCategory,
     searchVideo,
@@ -103,4 +132,6 @@ module.exports = {
     addVideo,
     updateVideo,
     deleteVideo,
+    getCommentsByVideoId,
+    addCommentOnVideo,
 };
