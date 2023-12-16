@@ -65,7 +65,7 @@ async function updateUser(id: string, userData: any) {
       language: userData.language,
       profileImage: userData.profileImage,
     });
-  }
+}
 
 function deleteUser(id: string) {
     return UserModel.findOneAndDelete({ _id: id });

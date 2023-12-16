@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const { userValidator } = require('../validators/users.validator');
 const { uploadSingleFile } = require('../middlewares/file.middleware');
+const { verifyPassword } = require('../middlewares/users.middleware');
 
 // => /User
 
@@ -14,7 +15,7 @@ router.post('/', uploadSingleFile('profileImage'), userController.createUser);
 
 router.get('/:id', userController.getUserById);
 
-router.put('/:id', userController.updateUser);
+router.put('/:id', verifyPassword, userController.updateUser);
 
 router.delete('/:id', userController.deleteUser);
 
