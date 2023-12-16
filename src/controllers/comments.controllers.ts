@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
-const CommentsService = require('../services/historics.services');
-import CommentModel from '../models/historics.models';
+const CommentsService = require('../services/comments.services');
+import CommentModel from '../models/comments.models';
 
 async function getAllComment(req: Request, res: Response) {
     const page = parseInt(req.query.page as string, 10) || 1;
@@ -9,7 +9,7 @@ async function getAllComment(req: Request, res: Response) {
     const skip = (page - 1) * limit;
 
     try {
-        const comments = await CommentsService.getAllComment(skip, limit);
+        const comments = await CommentsService.getAllComments(skip, limit);
         const totalComments = await CommentModel.countDocuments();
         const totalPages = Math.ceil(totalComments / limit);
 
@@ -36,7 +36,7 @@ async function createComment(req: Request, res: Response) {
     }
 
     try {
-        const newComment = await CommentsService.createComment(req.body);
+        const newComment = await CommentsService.createComments(req.body);
         return res.status(201).json(newComment);
     } catch (error) {
         console.error(error);
@@ -46,7 +46,7 @@ async function createComment(req: Request, res: Response) {
 
 async function getCommentById(req: Request, res: Response) {
     try {
-        const comment = await CommentsService.getCommentById(req.params.id);
+        const comment = await CommentsService.getCommentsById(req.params.id);
         if (!comment) {
             res.status(204).json({ message: 'No comment found' });
         } else {
@@ -64,7 +64,7 @@ async function getCommentByUserId(req: Request, res: Response) {
     const skip = (page - 1) * limit;
 
     try {
-        const comment = await CommentsService.getCommentByUserId(req.params.id, skip, limit);
+        const comment = await CommentsService.getCommentsByUserId(req.params.id, skip, limit);
         const totalComment = await CommentModel.countDocuments();
         const totalPages = Math.ceil(totalComment / limit);
 
@@ -90,7 +90,7 @@ async function getCommentByVideoId(req: Request, res: Response) {
     const skip = (page - 1) * limit;
 
     try {
-        const comment = await CommentsService.getCommentByVideoId(req.params.id, skip, limit);
+        const comment = await CommentsService.getCommentsByVideoId(req.params.id, skip, limit);
         const totalComment = await CommentModel.countDocuments();
         const totalPages = Math.ceil(totalComment / limit);
 

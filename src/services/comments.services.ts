@@ -10,19 +10,15 @@ function getCommentsById(id: string) {
 }
 
 function getCommentsByUserId(id: string) {
-    return CommentsModel.find({user_id: id});
+    return CommentsModel.find({idUser: id});
 }
 
-function getCommentsByVideoId(id: string) {
-    return CommentsModel.find({video_id: id});
-}
-
-function addComment(comment: Comment) {
+function createComments(comment: Comment) {
     const newComment = new CommentsModel({
         texte: comment.texte,
-        like: comment.like,
-        dislike: comment.dislike,
-        createdAt: comment.createdAt,
+        like: 0,
+        dislike: 0,
+        createdAt: new Date(),
         idUser: comment.idUser,
     });
     return newComment.save();
@@ -46,8 +42,7 @@ module.exports = {
     getAllComments,
     getCommentsById,
     getCommentsByUserId,
-    getCommentsByVideoId,
-    addComment,
+    createComments,
     updateComment,
     deleteComment,
 };
