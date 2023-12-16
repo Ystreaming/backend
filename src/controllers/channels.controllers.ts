@@ -6,7 +6,7 @@ const VideoService = require('../services/videos.services');
 
 async function getAllChannels(req: Request, res: Response) {
     try {
-        const channel = await ChannelService.getAllChannel();
+        const channel = await ChannelService.getAllChannels();
         if (!channel) {
             res.status(204).json({ message: 'Channel not found' });
         } else {

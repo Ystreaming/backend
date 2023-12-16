@@ -6,7 +6,7 @@ function getAllChannels() {
 }
 
 function getChannelById(id: string) {
-    return ChannelModel.findOne({ id: id });
+    return ChannelModel.findOne({ _id: id });
 }
 
 function searchChannelByName(name: string) {
@@ -16,7 +16,7 @@ function searchChannelByName(name: string) {
 }
 
 function getChannelByUserId(id: string) {
-    return ChannelModel.find({ Iduser: id });
+    return ChannelModel.find({ idUser: id });
 }
 
 function getChannelByCategoryId(id: string) {
