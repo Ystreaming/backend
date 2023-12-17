@@ -4,6 +4,7 @@ const { validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const fileService = require('../services/files.services');
 import UserModel from '../models/users.models';
+import mongoose from 'mongoose';
 
 async function getAllUsers(req: Request, res: Response) {
     const page = parseInt(req.query.page as string ?? '1', 10);
@@ -41,7 +42,7 @@ async function createUser(req: Request, res: Response) {
         };
         const newUser = await UsersService.createUser(userData);
 
-        return res.status(201).json({ message: 'User created successfully' });
+        return res.status(201).json({ _id: newUser._id});
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Internal Server Error' });
@@ -50,6 +51,10 @@ async function createUser(req: Request, res: Response) {
 
 async function getUserById(req: Request, res: Response) {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ message: 'Invalid id' });
+        }
+
         const user = await UsersService.getUserById(req.params.id);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
