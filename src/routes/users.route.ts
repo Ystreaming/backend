@@ -31,4 +31,7 @@ router.get('/sub/:id', userController.getSubByUser);
 
 router.post('/login', userController.loginUser);
 
+// => /users/sub/:id
+router.patch('/sub/:id', userController.addSub);
+
 module.exports = router;
