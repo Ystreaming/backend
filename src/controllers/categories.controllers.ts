@@ -14,7 +14,7 @@ async function getAllCategory(req: Request, res: Response) {
         const totalCategories = await CategoryModel.countDocuments();
         const totalPages = Math.ceil(totalCategories / limit);
 
-        if (!categories.length) {
+        if (categories.length === 0) {
             res.status(204).json({ message: 'No categories found' });
         } else {
             res.status(200).json({
@@ -65,8 +65,6 @@ async function getCategoryById(req: Request, res: Response) {
 }
 
 async function updateCategory(req: Request, res: Response) {
-    const errors = validationResult(req);
-
     try {
         let categoryData = req.body;
 

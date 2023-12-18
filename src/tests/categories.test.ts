@@ -165,5 +165,14 @@ describe('User API Endpoints', () => {
             expect(response.statusCode).toBe(404);
             expect(response.body).toHaveProperty('message', 'Category not found');
         });
+
+        it('Should return 204 if no categories found', async () => {
+            const DeleteResponse = await mongoose.model('Category').deleteMany({});
+
+            const response = await request(app)
+                .get('/category');
+
+            expect(response.statusCode).toBe(204);
+        });
     });
 });
