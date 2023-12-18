@@ -115,21 +115,28 @@ async function getSubByUser(req: Request, res: Response) {
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Internal Server Error' });
+        if (error instanceof Error && error.message === 'User not found') {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
 async function loginUser(req: Request, res: Response) {
-    if (!req.body.username || !req.body.password) {
-        return res.status(400).json({ message: 'username and password are required' });
-    } else {
-        const user = await UsersService.loginUser(req.body.username, req.body.password);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+    try {
+        if (!req.body.username || !req.body.password) {
+            return res.status(400).json({ message: 'username and password are required' });
         } else {
+            const user = await UsersService.loginUser(req.body.username, req.body.password);
             const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
             res.json(token);
         }
+    } catch (error) {
+        console.error(error);
+        if (error instanceof Error && error.message === 'User not found') {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
@@ -141,13 +148,12 @@ async function updateUser(req: Request, res: Response) {
 
     try {
         const updatedUser = await UsersService.updateUser(req.params.id, req.body);
-        if (!updatedUser) {
-            return res.status(404).json({ message: 'User not found' });
-        } else {
-            return res.status(200).json({ message: 'User updated successfully' });
-        }
+        return res.status(200).json({ message: 'User updated successfully' });
     } catch (error) {
         console.error(error);
+        if (error instanceof Error && error.message === 'User not found') {
+            return res.status(404).json({ message: 'User not found' });
+        }
         return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
