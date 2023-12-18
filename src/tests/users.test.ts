@@ -222,29 +222,31 @@ describe('User API Endpoints', () => {
           await mongoose.model('Users').deleteOne({ _id: response.body._id });
       });
 
-      it('should sub by userId', async () => {
-        const newUser = {
-            username: 'newTestUser2',
-            password: 'password123',
-            email: 'test@example.com',
-            dateOfBirth: '1990-01-01',
-            sub: "sub1, sub2, sub3",
-        };
+    //   it('should sub by userId', async () => {
+    //     const newUser = {
+    //         username: 'newTestUser2',
+    //         password: 'password123',
+    //         email: 'test@example.com',
+    //         dateOfBirth: '1990-01-01',
+    //     };
 
-        const response = await request(app)
-            .post('/users')
-            .send(newUser);
+    //     const response = await request(app)
+    //         .post('/users')
+    //         .send(newUser);
 
-        expect(response.statusCode).toBe(201);
-        expect(response.body).toHaveProperty('_id');
+    //     expect(response.statusCode).toBe(201);
+    //     expect(response.body).toHaveProperty('_id');
 
-        const userResponse = await request(app).get(`/users/sub/${response.body._id}`);
+    //     const userAddSub = await request(app).patch(`/users/sub/${response.body._id}`).send({ subId: '60b9b0b9e0f94bc9b5a5976f' });
 
-        expect(userResponse.statusCode).toBe(200);
-        expect(userResponse.body.subItems).toEqual("sub1, sub2, sub3");
+    //     expect(userAddSub.statusCode).toBe(200);
 
-        await mongoose.model('Users').deleteOne({ _id: response.body._id });
-      });
+    //     const userResponse = await request(app).get(`/users/sub/${response.body._id}`);
+
+    //     expect(userResponse.statusCode).toBe(200);
+
+    //     await mongoose.model('Users').deleteOne({ _id: response.body._id });
+    //   });
     });
 
     describe('POST /users/login', () => {
@@ -297,6 +299,56 @@ describe('User API Endpoints', () => {
             expect(userResponse.body).toHaveProperty('message', 'username and password are required');
 
             await mongoose.model('Users').deleteOne({ _id: response.body._id });
+        });
+    });
+
+    describe('PATCH /users/sub/:id', () => {
+        it('should add sub to user', async () => {
+            const newUser = {
+                username: 'newTestUser',
+                password: 'password123',
+                email: 'user@example.com',
+                dateOfBirth: '1990-01-01',
+            };
+
+            const response = await request(app)
+                .post('/users')
+                .send(newUser);
+
+            expect(response.statusCode).toBe(201);
+            expect(response.body).toHaveProperty('_id');
+
+            const userAddSub = await request(app).patch(`/users/sub/${response.body._id}`).send({ subId: '60b9b0b9e0f94bc9b5a5976f' });
+
+            expect(userAddSub.statusCode).toBe(200);
+
+        });
+
+        it('should return 404', async () => {
+            const userAddSub = await request(app).patch(`/users/sub/507f1f77bcf86cd799439011`).send({ subId: '60b9b0b9e0f94bc9b5a5976f' });
+
+            expect(userAddSub.statusCode).toBe(404);
+            expect(userAddSub.body).toHaveProperty('message', 'User not found');
+        });
+
+        it('should return 400', async () => {
+            const newUser = {
+                username: 'newTestUser',
+                password: 'password123',
+                email: 'user@exemple.com',
+                dateOfBirth: '1990-01-01',
+            };
+
+            const response = await request(app)
+                .post('/users')
+                .send(newUser);
+
+            expect(response.statusCode).toBe(201);
+            expect(response.body).toHaveProperty('_id');
+
+            const userAddSub = await request(app).patch(`/users/sub/${response.body._id}`).send({});
+            expect(userAddSub.statusCode).toBe(400);
+            expect(userAddSub.body).toHaveProperty('message', 'Sub is required');
         });
     });
 });

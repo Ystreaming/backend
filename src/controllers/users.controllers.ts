@@ -167,18 +167,22 @@ async function deleteUser(req: Request, res: Response) {
 }
 
 async function addSub(req: Request, res: Response) {
+    if (!req.body.subId) {
+        return res.status(400).json({ message: 'Sub is required' });
+    }
+
     try {
         const user = await UsersService.addSub(req.params.id, req.body.subId);
-        if (!user) {
-            res.status(404).json({ message: 'User not found' });
-        } else {
-            res.status(200).json({ message: 'Sub added successfully' });
-        }
+        return res.status(200).json({ message: 'Sub added successfully' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Internal Server Error' });
+        if (error instanceof Error && error.message === 'User not found') {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
+
 
   module.exports = {
     createUser,
