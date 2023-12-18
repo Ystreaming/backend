@@ -8,21 +8,6 @@ export const commentsValidator = [
         .exists()
         .notEmpty().withMessage('Texte is required'),
 
-    body('like')
-        .isNumeric()
-        .exists()
-        .notEmpty().withMessage('Like is required'),
-
-    body('dislike')
-        .isNumeric()
-        .exists()
-        .notEmpty().withMessage('Dislike is required'),
-
-    body('createdAt')
-        .isDate().withMessage('Invalid date')
-        .exists()
-        .notEmpty().withMessage('Date of birth is required'),
-
     body('idUser')
         .isString()
         .isLength({ min: 3 }).withMessage('IdUser should be at least 5 characters')
