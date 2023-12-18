@@ -15,6 +15,7 @@ const VideosRoute = require('./routes/videos.route');
 const ChannelsRoute = require('./routes/channels.route');
 const CommentsRoute = require('./routes/comments.route');
 const HistoricsRoute = require('./routes/historics.route');
+const NotificationsRoute = require('./routes/notifications.route');
 
 app.use(express.json());
 app.use(cors());
@@ -27,6 +28,7 @@ app.use('/videos', VideosRoute);
 app.use('/channels', ChannelsRoute);
 app.use('/comments', CommentsRoute);
 app.use('/historics', HistoricsRoute);
+app.use('/notifications', NotificationsRoute);
 
 app.get('/test/error', (req, res, next) => {
   const error = new Error('Test Error');

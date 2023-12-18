@@ -34,10 +34,11 @@ const UserSchema = new Schema<User>({
     type: Boolean,
     default: true,
   },
-  sub: {
-    type: String,
+  sub: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'channels',
     required: false,
-  },
+  }],
   language: {
     type: String,
     required: false,

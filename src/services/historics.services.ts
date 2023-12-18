@@ -10,7 +10,7 @@ function getHistoricsById(id: string) {
 }
 
 function getHistoricsByUserId(id: string) {
-    return HistoricsModel.find({user_id: id});
+    return HistoricsModel.find({idUser: id});
 }
 
 function createHistorics(historics: Historics) {

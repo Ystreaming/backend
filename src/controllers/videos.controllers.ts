@@ -137,6 +137,46 @@ async function deleteVideo(req: Request, res: Response) {
     }
 }
 
+async function getCommentsByVideoId(req: Request, res: Response) {
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const limit = parseInt(req.query.limit as string, 10) || 50;
+    const skip = (page - 1) * limit;
+
+    try {
+        const comments = await VideoService.getCommentsByVideoId(req.params.id, skip, limit);
+        const totalComments = await VideoModel.countDocuments();
+        const totalPages = Math.ceil(totalComments / limit);
+
+        if (!comments.length) {
+            res.status(204).json({ message: 'No comment found' });
+        } else {
+            res.status(200).json({
+                comments,
+                totalComments,
+                totalPages,
+                currentPage: page
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+async function addCommentOnVideo(req: Request, res: Response) {
+    try {
+        const video = await VideoService.addCommentOnVideo(req.params.id, req.body.idComment);
+        if (!video) {
+            res.status(204).json({ message: 'No video found' });
+        } else {
+            res.status(200).json(video);
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
 module.exports = {
     getAllVideo,
     searchVideo,
@@ -144,5 +184,7 @@ module.exports = {
     getVideoByCategoryId,
     getVideoById,
     updateVideo,
-    deleteVideo
+    deleteVideo,
+    getCommentsByVideoId,
+    addCommentOnVideo,
 };

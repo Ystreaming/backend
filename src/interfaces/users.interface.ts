@@ -9,7 +9,7 @@ interface User extends Document {
     username: string;
     password: string;
     createdAt: Date;
-    sub: string;
+    sub: {type: Schema.Types.ObjectId, ref:'Channels'}[];
     status: boolean;
     language: string;
     profileImage: {type: Schema.Types.ObjectId, ref:'Files'};
