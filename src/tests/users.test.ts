@@ -323,6 +323,16 @@ describe('User API Endpoints', () => {
 
             await mongoose.model('Users').deleteOne({ _id: response.body._id });
         });
+
+        it('should return 404', async () => {
+            const userResponse = await request(app).post('/users/login').send({
+              username: 'newTestUser123',
+              password: 'password1234',
+            });
+
+            expect(userResponse.statusCode).toBe(404);
+            expect(userResponse.body).toHaveProperty('message', 'User not found');
+        });
     });
 
     describe('PATCH /users/sub/:id', () => {

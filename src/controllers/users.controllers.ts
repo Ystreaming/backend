@@ -120,16 +120,20 @@ async function getSubByUser(req: Request, res: Response) {
 }
 
 async function loginUser(req: Request, res: Response) {
-    if (!req.body.username || !req.body.password) {
-        return res.status(400).json({ message: 'username and password are required' });
-    } else {
-        const user = await UsersService.loginUser(req.body.username, req.body.password);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+    try {
+        if (!req.body.username || !req.body.password) {
+            return res.status(400).json({ message: 'username and password are required' });
         } else {
+            const user = await UsersService.loginUser(req.body.username, req.body.password);
             const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
             res.json(token);
         }
+    } catch (error) {
+        console.error(error);
+        if (error instanceof Error && error.message === 'User not found') {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
