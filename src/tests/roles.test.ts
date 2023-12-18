@@ -65,4 +65,29 @@ describe('Roles API Endpoints', () => {
       expect(response.statusCode).toBe(200);
     });
   });
+
+  describe('GET /roles/:id', () => {
+    it('should get role by id', async () => {
+      const response = await request(app)
+          .get(`/roles/${roleId}`);
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toHaveProperty('_id');
+    });
+
+    it('should not get role by id with wrong id', async () => {
+      const response = await request(app)
+          .get('/roles/123');
+
+      expect(response.statusCode).toBe(500);
+      expect(response.body).toHaveProperty('message', 'Internal Server Error');
+    });
+
+    it('should return 404 if role not found', async () => {
+      const response = await request(app)
+          .get('/roles/60c2c9b5c7e6b42d9c2c4c8e');
+
+      expect(response.statusCode).toBe(204);
+    });
+  });
 });
