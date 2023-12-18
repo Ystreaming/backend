@@ -1,6 +1,8 @@
 import request from 'supertest';
 import app from '../app';
 import mongoose from 'mongoose';
+const path = require('path');
+const fs = require('fs');
 
 describe('User API Endpoints', () => {
     let userId: any;
@@ -78,6 +80,21 @@ describe('User API Endpoints', () => {
           const response = await request(app).get(`/users/6565bf4d9e0f94bc9b5a5976`);
 
           expect(response.statusCode).toBe(404);
+        });
+
+        it('Should add file to user', async () => {
+            const filePath = path.resolve('./src/tests/ressources/fichier_tests_create_user.jpg');
+
+            const response = await request(app)
+                .post('/users')
+                .attach('profileImage', filePath)
+                .field('username', 'testUser')
+                .field('password', 'password123')
+                .field('email', 'test@example.com')
+                .field('dateOfBirth', '1990-01-01')
+
+            expect(response.statusCode).toBe(201);
+            expect(response.body).toHaveProperty('_id');
         });
     });
 
