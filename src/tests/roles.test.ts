@@ -49,4 +49,20 @@ describe('Roles API Endpoints', () => {
       expect(response.statusCode).toBe(400);
     });
   });
+
+  describe('GET /roles', () => {
+    it('should get all roles', async () => {
+      const response = await request(app)
+          .get('/roles');
+
+      expect(response.statusCode).toBe(200);
+    });
+
+    it('should get all roles with pagination', async () => {
+      const response = await request(app)
+          .get('/roles?page=1&limit=2');
+
+      expect(response.statusCode).toBe(200);
+    });
+  });
 });
