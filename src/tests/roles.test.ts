@@ -144,4 +144,38 @@ describe('Roles API Endpoints', () => {
       expect(response.statusCode).toBe(404);
     });
   });
+
+  describe('DELETE /roles/:id', () => {
+    it('should delete role by id', async () => {
+      const response = await request(app)
+          .delete(`/roles/${roleId}`);
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toHaveProperty('_id');
+    });
+
+    it('should not delete role by id with wrong id', async () => {
+      const response = await request(app)
+          .delete('/roles/123');
+
+      expect(response.statusCode).toBe(500);
+      expect(response.body).toHaveProperty('message', 'Internal Server Error');
+    });
+
+    it('should return 404 if role not found', async () => {
+      const response = await request(app)
+          .delete('/roles/60c2c9b5c7e6b42d9c2c4c8e');
+
+      expect(response.statusCode).toBe(204);
+    });
+
+    it('Should return 204 if no role found', async () => {
+      await mongoose.model('Roles').deleteMany({});
+
+      const response = await request(app)
+          .delete(`/roles/${roleId}`);
+
+      expect(response.statusCode).toBe(204);
+    });
+  });
 });
