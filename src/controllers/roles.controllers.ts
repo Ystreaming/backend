@@ -63,9 +63,7 @@ async function updateRoles(req: Request, res: Response) {
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-    if (!Number.isInteger(parseInt(req.params.id))) {
-        return res.status(400).json({ message: 'Id must be an integer' });
-    } else {
+    try {
         const roles = await RolesService.updateRole(req.params.id, req.body);
 
         if (!roles) {
@@ -73,6 +71,9 @@ async function updateRoles(req: Request, res: Response) {
         } else {
             return res.status(200).json(roles);
         }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 

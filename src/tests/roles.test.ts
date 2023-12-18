@@ -90,4 +90,58 @@ describe('Roles API Endpoints', () => {
       expect(response.statusCode).toBe(204);
     });
   });
+
+  describe('PUT /roles/:id', () => {
+    it('should update role by id', async () => {
+      const newRole = {
+        name: 'Admin',
+        permission: ['ADMIN'],
+      };
+
+      const response = await request(app)
+          .put(`/roles/${roleId}`)
+          .send(newRole);
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toHaveProperty('_id');
+    });
+
+    it('should not update role by id with wrong id', async () => {
+      const newRole = {
+        name: 'Admin',
+        permission: ['ADMIN'],
+      };
+
+      const response = await request(app)
+          .put('/roles/123')
+          .send(newRole);
+
+      expect(response.statusCode).toBe(500);
+      expect(response.body).toHaveProperty('message', 'Internal Server Error');
+    });
+
+    it('should not update role by id with wrong data', async () => {
+      const newRole = {
+      };
+
+      const response = await request(app)
+          .put(`/roles/${roleId}`)
+          .send(newRole);
+
+      expect(response.statusCode).toBe(400);
+    });
+
+    it('should return 404 if role not found', async () => {
+      const newRole = {
+        name: 'Admin',
+        permission: ['ADMIN'],
+      };
+
+      const response = await request(app)
+          .put('/roles/60c2c9b5c7e6b42d9c2c4c8e')
+          .send(newRole);
+
+      expect(response.statusCode).toBe(404);
+    });
+  });
 });
