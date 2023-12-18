@@ -9,10 +9,6 @@ function getCategoryById(id: string) {
     return CategoriesModel.findOne({ _id: id });
 }
 
-function getCategoryByName(name: string) {
-    return CategoriesModel.findOne({ name: name });
-}
-
 function createCategory(category: Categories) {
     const newCategory = new CategoriesModel({
         name: category.name,
@@ -35,7 +31,6 @@ function deleteCategory(id: string) {
 module.exports = {
     getAllCategory,
     getCategoryById,
-    getCategoryByName,
     createCategory,
     updateCategory,
     deleteCategory,
