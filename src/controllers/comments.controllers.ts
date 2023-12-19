@@ -13,7 +13,7 @@ async function getAllComment(req: Request, res: Response) {
         const totalComments = await CommentModel.countDocuments();
         const totalPages = Math.ceil(totalComments / limit);
 
-        if (!comments.length) {
+        if (!comments) {
             res.status(204).json({ message: 'No comments found' });
         } else {
             res.status(200).json({
@@ -84,32 +84,6 @@ async function getCommentByUserId(req: Request, res: Response) {
     }
 }
 
-async function getCommentByVideoId(req: Request, res: Response) {
-    const page = parseInt(req.query.page as string, 10) || 1;
-    const limit = parseInt(req.query.limit as string, 10) || 50;
-    const skip = (page - 1) * limit;
-
-    try {
-        const comment = await CommentsService.getCommentsByVideoId(req.params.id, skip, limit);
-        const totalComment = await CommentModel.countDocuments();
-        const totalPages = Math.ceil(totalComment / limit);
-
-        if (!comment.length) {
-            res.status(204).json({ message: 'No comment found' });
-        } else {
-            res.status(200).json({
-                comment,
-                total: totalComment,
-                totalPages,
-                currentPage: page
-            });
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Internal Server Error' });
-    }
-}
-
 async function updateComment(req: Request, res: Response) {
     try {
         const comment = await CommentsService.updateComment(req.params.id, req.body);
@@ -143,7 +117,6 @@ module.exports = {
     createComment,
     updateComment,
     getCommentByUserId,
-    getCommentByVideoId,
     getCommentById,
     deleteComment
 };

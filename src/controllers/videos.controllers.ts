@@ -147,7 +147,7 @@ async function getCommentsByVideoId(req: Request, res: Response) {
         const totalComments = await VideoModel.countDocuments();
         const totalPages = Math.ceil(totalComments / limit);
 
-        if (!comments.length) {
+        if (!comments) {
             res.status(204).json({ message: 'No comment found' });
         } else {
             res.status(200).json({
