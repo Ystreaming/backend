@@ -91,4 +91,44 @@ describe('Comments API Endpoints', () => {
       expect(response.statusCode).toBe(204);
     });
   });
+
+  describe('PUT /comments/:id', () => {
+    it('should update a comment', async () => {
+      const updateComment = {
+        texte: 'Test comment updated',
+      };
+
+      const response = await request(app)
+        .put(`/comments/${commentId}`)
+        .send(updateComment);
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toHaveProperty('_id', commentId);
+      expect(response.body).toHaveProperty('texte', updateComment.texte);
+    });
+
+    it('should not update a comment with wrong id', async () => {
+      const updateComment = {
+        texte: 'Test comment updated',
+      };
+
+      const response = await request(app)
+        .put('/comments/123')
+        .send(updateComment);
+
+      expect(response.statusCode).toBe(500);
+    });
+
+    it('should return 404 if comment not found', async () => {
+      const updateComment = {
+        texte: 'Test comment updated',
+      };
+
+      const response = await request(app)
+        .put('/comments/5f9d7b7b7f8b9b1b3c9b4b4b')
+        .send(updateComment);
+
+      expect(response.statusCode).toBe(204);
+    });
+  });
 });
