@@ -71,7 +71,6 @@ function getLikeByChannelId(id: string) {
         { $group: { _id: null, like: { $sum: "$like" } }}
     ]);
 }
-
 function updateVideo(id: string, video: Videos) {
     return VideosModel.findOneAndUpdate({ _id: id }, {
         title: video.title,
@@ -98,17 +97,40 @@ function deleteVideo(id: string) {
 function getVideoStreamById(id: string) {
     const filePath = path.join(uploadsDirectory, `${id}.mp4`);
 
-    // Check if the file exists
     if (!fs.existsSync(filePath)) {
         throw new Error('Video file not found');
     }
-
-    // Return the video stream
     return fs.createReadStream(filePath);
 }
+async function saveVideo(video: Videos) {
+    try {
+        const newVideo = new VideosModel({
+            title: video.title,
+            created_at: new Date(),
+            view: 0,
+            like: 0,
+            dislike: 0,
+            description: video.description,
+            language: video.language,
+            time: video.time,
+            img: video.img,
+            url: video.url,
+            urllocal: video.urllocal,
+            idComment: null,
+            idChannel: video.idChannel,
+            idCategory: video.idCategory,
+        });
 
+        const savedVideo = await newVideo.save();
+
+        return savedVideo;
+    } catch (error) {
+        throw error;
+    }
+}
 module.exports = {
     searchVideoByCategory,
+    saveVideo,
     searchVideo,
     getAllVideos,
     getVideoById,
