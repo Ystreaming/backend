@@ -13,7 +13,7 @@ async function getAllHistoric(req: Request, res: Response) {
         const totalHistorics = await HistoricModel.countDocuments();
         const totalPages = Math.ceil(totalHistorics / limit);
 
-        if (!historics.length) {
+        if (historics.length === 0) {
             res.status(204).json({ message: 'No historic records found' });
         } else {
             res.status(200).json({

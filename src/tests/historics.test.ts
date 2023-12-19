@@ -116,5 +116,29 @@ describe('Historics API Endpoints', () => {
       expect(response.statusCode).toBe(500);
       expect(response.body).toHaveProperty('message', 'Internal Server Error');
     });
+
+    it('should return 404 if historic not found', async () => {
+      const deleteResponse = await mongoose.model('Historics').deleteMany({});
+
+      const response = await request(app).get('/historics');
+
+      expect(response.statusCode).toBe(204);
+    });
+
+    it('should return 204 if no historic found for historics id', async () => {
+      const deleteResponse = await mongoose.model('Historics').deleteMany({});
+
+      const response = await request(app).get(`/historics/${historicId}`);
+
+      expect(response.statusCode).toBe(204);
+    });
+
+    it('should return 204 if no historic found for historics id', async () => {
+      const deleteResponse = await mongoose.model('Historics').deleteMany({});
+
+      const response = await request(app).delete(`/historics/${historicId}`);
+
+      expect(response.statusCode).toBe(204);
+    });
   });
 });
