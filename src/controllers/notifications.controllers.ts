@@ -84,20 +84,6 @@ async function getNotificationByUserId(req: Request, res: Response) {
     }
 }
 
-async function updateNotification(req: Request, res: Response) {
-    try {
-        const notification = await NotificationService.updateNotification(req.params.id, req.body);
-        if (!notification) {
-            return res.status(404).json({ message: 'Notification not found' });
-        } else {
-            return res.status(200).json(notification);
-        }
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: 'Internal Server Error' });
-    }
-}
-
 async function deleteNotification(req: Request, res: Response) {
     try {
         const notification = await NotificationService.deleteNotification(req.params.id);
@@ -117,6 +103,5 @@ module.exports = {
     createNotification,
     getNotificationById,
     getNotificationByUserId,
-    updateNotification,
     deleteNotification
 };
