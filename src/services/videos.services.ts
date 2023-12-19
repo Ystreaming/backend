@@ -1,6 +1,10 @@
 import VideosModel from '../models/videos.models';
 import Videos from '../interfaces/videos.interface';
 import mongoose from 'mongoose';
+import fs from 'fs';
+import path from 'path';
+
+const uploadsDirectory = path.join(__dirname, '../../uploads/video');
 
 function getAllVideos() {
     return VideosModel.find();
@@ -15,11 +19,11 @@ function getVideoById(id: string) {
 }
 
 function getVideoByChannelId(id: string) {
-    return VideosModel.find({channel_id: id});
+    return VideosModel.find({ channel_id: id });
 }
 
 function getVideoByCategoryId(id: string) {
-    return VideosModel.find({category_id: id});
+    return VideosModel.find({ category_id: id });
 }
 
 function addVideo(video: Videos) {
@@ -91,6 +95,18 @@ function deleteVideo(id: string) {
     return VideosModel.findOneAndDelete({ _id: id });
 }
 
+function getVideoStreamById(id: string) {
+    const filePath = path.join(uploadsDirectory, `${id}.mp4`);
+
+    // Check if the file exists
+    if (!fs.existsSync(filePath)) {
+        throw new Error('Video file not found');
+    }
+
+    // Return the video stream
+    return fs.createReadStream(filePath);
+}
+
 module.exports = {
     searchVideoByCategory,
     searchVideo,
@@ -103,4 +119,5 @@ module.exports = {
     addVideo,
     updateVideo,
     deleteVideo,
+    getVideoStreamById,
 };
