@@ -171,7 +171,16 @@ function deleteVideo(id: string) {
 
 function getCommentsByVideoId(id: string) {
     return VideosModel.findById({ _id: id })
-        .populate('idComment')
+        .populate({
+            path: 'idComment',
+            populate: {
+                path: 'idUser',
+                populate: {
+                    path: 'profileImage',
+                    model: 'Files',
+                }
+            }
+        })
         .select('idComment')
         .then(video => {
             if (!video) {
