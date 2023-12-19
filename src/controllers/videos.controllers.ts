@@ -25,6 +25,7 @@ async function getAllVideo(req: Request, res: Response) {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }
+
 async function createVideo(req: Request, res: Response) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -95,41 +96,84 @@ async function getVideoByCategoryId(req: Request, res: Response) {
 }
 
 async function getVideoById(req: Request, res: Response) {
-    if (!Number.isInteger(parseInt(req.params.id))) {
-        return res.status(400).json({ message: 'Id must be an integer' });
-    } else  {
+    try {
         const video = await VideoService.getVideoById(req.params.id);
-
         if (!video) {
-            return res.status(404).json({ message: 'Video not found' });
+            res.status(204).json({ message: 'No video found' });
         } else {
-            return res.status(200).json(video);
+            res.status(200).json(video);
         }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
 async function updateVideo(req: Request, res: Response) {
-    if (!Number.isInteger(parseInt(req.params.id))) {
+    try {
         const video = await VideoService.updateVideo(req.params.id, req.body);
-
         if (!video) {
             return res.status(404).json({ message: 'Video not found' });
         } else {
             return res.status(200).json(video);
         }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
 async function deleteVideo(req: Request, res: Response) {
-    if (!Number.isInteger(parseInt(req.params.id))) {
-        return res.status(400).json({ message: 'Id must be an integer' });
-    } else {
+    try {
         const video = await VideoService.deleteVideo(req.params.id);
         if (!video) {
-            return res.status(404).json({ message: 'Video not found' });
+            res.status(204).json({ message: 'No video found' });
         } else {
-            return res.status(200).json({ message: 'Video deleted' });
+            res.status(200).json(video);
         }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+async function getCommentsByVideoId(req: Request, res: Response) {
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const limit = parseInt(req.query.limit as string, 10) || 50;
+    const skip = (page - 1) * limit;
+
+    try {
+        const comments = await VideoService.getCommentsByVideoId(req.params.id, skip, limit);
+        const totalComments = await VideoModel.countDocuments();
+        const totalPages = Math.ceil(totalComments / limit);
+
+        if (!comments) {
+            res.status(204).json({ message: 'No comment found' });
+        } else {
+            res.status(200).json({
+                comments,
+                totalComments,
+                totalPages,
+                currentPage: page
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+async function addCommentOnVideo(req: Request, res: Response) {
+    try {
+        const video = await VideoService.addCommentOnVideo(req.params.id, req.body.idComment);
+        if (!video) {
+            res.status(204).json({ message: 'No video found' });
+        } else {
+            res.status(200).json(video);
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
@@ -140,5 +184,7 @@ module.exports = {
     getVideoByCategoryId,
     getVideoById,
     updateVideo,
-    deleteVideo
+    deleteVideo,
+    getCommentsByVideoId,
+    addCommentOnVideo,
 };

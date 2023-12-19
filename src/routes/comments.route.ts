@@ -22,8 +22,4 @@ router.delete('/:id', commentController.deleteComment);
 
 router.get('/user/:id', commentController.getCommentByUserId);
 
-// => /Comment/video/id
-
-router.get('/video/:id', commentController.getCommentByVideoId);
-
 module.exports = router;

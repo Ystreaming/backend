@@ -12,18 +12,6 @@ services:
     volumes:
       - mongodb-data:/data/db
 
-  # Service RabbitMQ
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    environment:
-      RABBITMQ_DEFAULT_USER: YStream
-      RABBITMQ_DEFAULT_PASS: Ystream1234
-    volumes:
-      - rabbitmq-data:/var/lib/rabbitmq
-
   # Service SonarQube
   sonarqube:
     image: sonarqube:latest
@@ -69,7 +57,6 @@ services:
 
 volumes:
   mongodb-data:
-  rabbitmq-data:
   sonarqube-data:
   sonarqube-logs:
   sonarqube-extensions:

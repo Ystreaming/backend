@@ -1,14 +1,13 @@
 import { Request, Response } from 'express';
 const express = require('express');
 const router = express.Router();
-const { historicValidator } = require('../validators/historics.validator');
 const historicController = require('../controllers/historics.controllers');
 
 // => /historic
 
 router.get('/', historicController.getAllHistoric);
 
-router.post('/', historicValidator, historicController.createHistoric);
+router.post('/', historicController.createHistoric);
 
 // => /historic/id
 

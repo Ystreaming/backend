@@ -19,10 +19,10 @@ const Channel = new Schema<Channel>({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
     },
-    idVideos: {
+    idVideos: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Videos',
-    },
+    }],
 });
 
 const ChannelModel = mongoose.model<Channel>('Channels', Channel);

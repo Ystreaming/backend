@@ -15,7 +15,7 @@ interface Video extends Document {
     img: {type: Schema.Types.ObjectId, ref:'Files'};
     url: string;
     urllocal: string;
-    idComment: mongoose.Types.ObjectId;
+    idComment: mongoose.Types.ObjectId[];
     idChannel: mongoose.Types.ObjectId;
     idCategory: mongoose.Types.ObjectId;
 }

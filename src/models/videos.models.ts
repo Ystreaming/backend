@@ -38,16 +38,14 @@ const videoSchema = new Schema<Video>({
     },
     url: {
       type: String,
-      required: true,
     },
     urllocal: {
       type: String,
-      required: true,
     },
-    idComment: {
+    idComment: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Comments',
-    },
+    }],
     idChannel: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Channels',
