@@ -13,7 +13,7 @@ async function getAllComment(req: Request, res: Response) {
         const totalComments = await CommentModel.countDocuments();
         const totalPages = Math.ceil(totalComments / limit);
 
-        if (!comments.length) {
+        if (!comments) {
             res.status(204).json({ message: 'No comments found' });
         } else {
             res.status(200).json({

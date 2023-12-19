@@ -92,6 +92,26 @@ describe('Comments API Endpoints', () => {
     });
   });
 
+  describe('GET /comments/user/:id', () => {
+    it('should get all comments by user id', async () => {
+      const response = await request(app).get(`/comments/user/${commentId}`);
+
+      expect(response.statusCode).toBe(204);
+    });
+
+    it('should not get all comments by user id with wrong id', async () => {
+      const response = await request(app).get('/comments/user/123');
+
+      expect(response.statusCode).toBe(500);
+    });
+
+    it('should return 404 if comment not found', async () => {
+      const response = await request(app).get('/comments/user/5f9d7b7b7f8b9b1b3c9b4b4b');
+
+      expect(response.statusCode).toBe(200);
+    });
+  });
+
   describe('PUT /comments/:id', () => {
     it('should update a comment', async () => {
       const updateComment = {
@@ -127,6 +147,29 @@ describe('Comments API Endpoints', () => {
       const response = await request(app)
         .put('/comments/5f9d7b7b7f8b9b1b3c9b4b4b')
         .send(updateComment);
+
+      expect(response.statusCode).toBe(204);
+    });
+  });
+
+  describe('DELETE /comments/:id', () => {
+    it('should delete a comment', async () => {
+      const response = await request(app).delete(`/comments/${commentId}`);
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toHaveProperty('_id', commentId);
+    });
+
+    it('should not delete a comment with wrong id', async () => {
+      const response = await request(app).delete('/comments/123');
+
+      expect(response.statusCode).toBe(500);
+    });
+
+    it('should return 404 if comment not found', async () => {
+      const deleteResponse = await mongoose.model('Comments').deleteMany({});
+
+      const response = await request(app).delete('/comments/5f9d7b7b7f8b9b1b3c9b4b4b');
 
       expect(response.statusCode).toBe(204);
     });
