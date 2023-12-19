@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 const express = require('express');
 const router = express.Router();
-const secretKey = 'votre_secret_key';
+const secretKey = process.env.SECRET_KEY as string;
 const { getUserById } = require('../services/users.services');
 import bcrypt from 'bcrypt';
 

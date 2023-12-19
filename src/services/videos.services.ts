@@ -1,9 +1,13 @@
 import VideosModel from '../models/videos.models';
 import Videos from '../interfaces/videos.interface';
+import ChannelModel from '../models/channels.models';
+import Channel from '../interfaces/channels.interface';
 import mongoose from 'mongoose';
 
 function getAllVideos() {
-    return VideosModel.find();
+    return VideosModel.find()
+        .populate('idChannel')
+        .populate('idCategory');
 }
 
 function getVideoById(id: string) {
@@ -11,15 +15,22 @@ function getVideoById(id: string) {
         { _id: id },
         { $inc: { view: 1 } },
         { new: true }
-    );
+    )
+    .populate('idComment')
+    .populate('idChannel')
+    .populate('idCategory');
 }
 
 function getVideoByChannelId(id: string) {
-    return VideosModel.find({channel_id: id});
+    return VideosModel.find({idChannel: id})
+        .populate('idChannel')
+        .populate('idCategory');
 }
 
 function getVideoByCategoryId(id: string) {
-    return VideosModel.find({category_id: id});
+    return VideosModel.find({idCategory: id})
+        .populate('idChannel')
+        .populate('idCategory');
 }
 
 function addVideo(video: Videos) {
@@ -39,13 +50,29 @@ function addVideo(video: Videos) {
         idChannel: video.idChannel,
         idCategory: video.idCategory,
     });
+    ChannelModel.findById(video.idChannel)
+        .then(channel => {
+            if (!channel) {
+                throw new Error('Channel not found');
+            }
+
+            if (!Array.isArray(channel.idVideos)) {
+                channel.idVideos = [];
+            }
+
+            channel.idVideos.push(new mongoose.Types.ObjectId(newVideo._id));
+
+            channel.save();
+        });
     return newVideo.save();
 }
 
 function searchVideo(q: string) {
     const searchRegex = new RegExp('^' + q, 'i');
 
-    return VideosModel.find({ title: searchRegex });
+    return VideosModel.find({ title: searchRegex })
+        .populate('idChannel')
+        .populate('idCategory');
 }
 
 function searchVideoByCategory(id: string) {

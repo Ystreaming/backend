@@ -2,15 +2,18 @@ import NotificationsModels from '../models/notifications.models';
 import Notifications from '../interfaces/notifications.interface';
 
 function getAllNotifications(skip: number, limit: number) {
-    return NotificationsModels.find().skip(skip).limit(limit);
+    return NotificationsModels.find().skip(skip).limit(limit)
+        .populate('idUser');
 }
 
 function getNotificationById(id: string) {
-    return NotificationsModels.findById({ _id: id });
+    return NotificationsModels.findById({ _id: id })
+        .populate('idUser');
 }
 
 function getNotificationByUserId(id: string) {
-    return NotificationsModels.find({idUser: id});
+    return NotificationsModels.find({idUser: id})
+        .populate('idUser');
 }
 
 function createNotification(notification: Notifications) {

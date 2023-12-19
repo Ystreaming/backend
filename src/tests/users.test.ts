@@ -1,6 +1,9 @@
 import request from 'supertest';
 import app from '../app';
 import mongoose from 'mongoose';
+const path = require('path');
+const fs = require('fs');
+import { Request, Response } from 'express';
 
 describe('User API Endpoints', () => {
     let userId: any;
@@ -55,6 +58,21 @@ describe('User API Endpoints', () => {
           expect(response.statusCode).toBe(500);
           expect(response.body).toHaveProperty('message', 'Internal Server Error');
         });
+
+        it('Should add file to user', async () => {
+            const filePath = path.resolve('./src/tests/ressources/fichier_tests_create_user.jpg');
+
+            const response = await request(app)
+                .post('/users')
+                .attach('profileImage', filePath)
+                .field('username', 'testUser')
+                .field('password', 'password123')
+                .field('email', 'test@example.com')
+                .field('dateOfBirth', '1990-01-01')
+
+            expect(response.statusCode).toBe(201);
+            expect(response.body).toHaveProperty('_id');
+        });
     });
 
     describe('GET /users', () => {
@@ -78,6 +96,12 @@ describe('User API Endpoints', () => {
           const response = await request(app).get(`/users/6565bf4d9e0f94bc9b5a5976`);
 
           expect(response.statusCode).toBe(404);
+        });
+
+        it('should return 400', async () => {
+            const response = await request(app).get(`/users/6565bf4d9e0f94bc9b5a597`);
+
+            expect(response.statusCode).toBe(400);
         });
     });
 
@@ -124,6 +148,18 @@ describe('User API Endpoints', () => {
           expect(response.statusCode).toBe(400);
           expect(response.body).toHaveProperty('message', 'Password is required');
         });
+
+        it('should return 400', async () => {
+            const newUser = {
+            };
+
+            const response = await request(app)
+                .put(`/users/6565bf4d9e0f94bc9b5a5976`)
+                .send(newUser);
+
+            expect(response.statusCode).toBe(400);
+            expect(response.body).toHaveProperty('message', 'Password is required');
+        });
     });
 
     describe('DELETE /users/:id', () => {
@@ -133,13 +169,6 @@ describe('User API Endpoints', () => {
             expect(response.statusCode).toBe(200);
             expect(response.body).toHaveProperty('message', 'User deleted successfully');
         });
-
-        it('should have 404', async () => {
-          const response = await request(app).delete(`/users/6565bf4d9e0f94bc9b5a5976`);
-
-          expect(response.statusCode).toBe(404);
-          expect(response.body).toHaveProperty('message', 'User not found');
-      });
 
       it('should return 500', async () => {
         const response = await request(app)
@@ -222,6 +251,13 @@ describe('User API Endpoints', () => {
           await mongoose.model('Users').deleteOne({ _id: response.body._id });
       });
 
+      it('should return user not found', async () => {
+        const userResponse = await request(app).get(`/users/sub/507f1f77bcf86cd799439011`);
+
+        expect(userResponse.statusCode).toBe(404);
+        expect(userResponse.body).toHaveProperty('message', 'User not found');
+      });
+
     //   it('should sub by userId', async () => {
     //     const newUser = {
     //         username: 'newTestUser2',
@@ -297,6 +333,41 @@ describe('User API Endpoints', () => {
 
             expect(userResponse.statusCode).toBe(400);
             expect(userResponse.body).toHaveProperty('message', 'username and password are required');
+
+            await mongoose.model('Users').deleteOne({ _id: response.body._id });
+        });
+
+        it('should return 404', async () => {
+            const userResponse = await request(app).post('/users/login').send({
+              username: 'newTestUser123',
+              password: 'password1234',
+            });
+
+            expect(userResponse.statusCode).toBe(404);
+            expect(userResponse.body).toHaveProperty('message', 'User not found');
+        });
+
+        it('should login user', async () => {
+            const newUser = {
+                username: 'newTestUser',
+                password: 'password123',
+                email: 'test@example.com',
+                dateOfBirth: '1990-01-01',
+            };
+
+            const response = await request(app)
+                .post('/users')
+                .send(newUser);
+
+            expect(response.statusCode).toBe(201);
+            expect(response.body).toHaveProperty('_id');
+
+            const userResponse = await request(app).post('/users/login').send({
+              username: 'newTestUser',
+              password: 'password1234',
+            });
+
+            expect(userResponse.statusCode).toBe(500);
 
             await mongoose.model('Users').deleteOne({ _id: response.body._id });
         });

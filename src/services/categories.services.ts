@@ -2,15 +2,13 @@ import CategoriesModel from '../models/categories.models';
 import Categories from '../interfaces/categories.interface';
 
 function getAllCategory() {
-    return CategoriesModel.find();
+    return CategoriesModel.find()
+        .populate('image');
 }
 
 function getCategoryById(id: string) {
-    return CategoriesModel.findOne({ _id: id });
-}
-
-function getCategoryByName(name: string) {
-    return CategoriesModel.findOne({ name: name });
+    return CategoriesModel.findOne({ _id: id })
+        .populate('image');
 }
 
 function createCategory(category: Categories) {
@@ -35,7 +33,6 @@ function deleteCategory(id: string) {
 module.exports = {
     getAllCategory,
     getCategoryById,
-    getCategoryByName,
     createCategory,
     updateCategory,
     deleteCategory,
