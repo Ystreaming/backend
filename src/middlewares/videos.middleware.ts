@@ -14,8 +14,9 @@ const uploadsDirectory = path.join(__dirname, '../../uploads/video');
 
 const storage: StorageEngine = multer.diskStorage({
   destination: (req, file, cb) => {
-    fs.mkdirSync(uploadsDirectory, { recursive: true });
-    cb(null, uploadsDirectory);
+    fs.promises.mkdir(uploadsDirectory, { recursive: true })
+      .then(() => cb(null, uploadsDirectory))
+      .catch(err => cb(err, ''));
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + '-' + file.originalname);
@@ -26,6 +27,9 @@ const upload = multer({
   storage,
   limits: {
     fileSize: 1024 * 1024
+  },
+  fileFilter: (req, file, cb) => {
+    cb(null, true);
   }
 });
 
@@ -33,14 +37,17 @@ function uploadSingleVideo(fieldName: string) {
   return upload.single(fieldName);
 }
 
-function listVideo(req: Request, res: Response, next: NextFunction) {
-  fs.readdir(uploadsDirectory, (err, files) => {
-    if (err) {
-      return res.status(500).send({ message: "Unable to scan files!" });
-    }
-    req.filesList = files.map(file => ({ name: file, url: `${req.protocol}://${req.get('host')}/files/${file}` }));
+async function listVideo(req: Request, res: Response, next: NextFunction) {
+  try {
+    const files = await fs.promises.readdir(uploadsDirectory);
+    req.filesList = files.map(file => ({
+      name: file,
+      url: `${req.protocol}://${req.get('host')}/files/${file}`
+    }));
     next();
-  });
+  } catch (err) {
+    res.status(404).send({ message: "Unable to scan files!" });
+  }
 }
 
 function checkVideoExists(req: Request, res: Response, next: NextFunction) {
@@ -48,21 +55,20 @@ function checkVideoExists(req: Request, res: Response, next: NextFunction) {
   const filePath = path.join(uploadsDirectory, fileName);
 
   if (!fs.existsSync(filePath)) {
-    return res.status(404).send({ message: "File not found" });
+      return res.status(404).send({ message: "File not found" });
   }
 
   req.filePath = filePath;
   next();
 }
-
 function deleteVideo(req: Request, res: Response, next: NextFunction) {
   const filePath = req.filePath as string;
 
   fs.unlink(filePath, (err) => {
-    if (err) {
-      return res.status(500).send({ message: err.message });
-    }
-    next();
+      if (err) {
+          return res.status(500).send({ message: err.message });
+      }
+      next();
   });
 }
 
@@ -72,3 +78,4 @@ export {
   checkVideoExists,
   deleteVideo
 };
+
