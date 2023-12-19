@@ -105,13 +105,17 @@ function streamVideo(req: Request, res: Response) {
         fs.createReadStream(filePath).pipe(res);
     }
 }
-
 // Middleware pour enregistrer une vidéo
 function saveVideo(req: Request, res: Response, next: NextFunction) {
-    // Vous pouvez accéder au fichier uploadé à partir de req.file
-    // Exemple : req.file.filename contient le nom du fichier sauvegardé
+    const fieldName = 'video';
+    const upload = uploadSingleVideo(fieldName);
 
-    res.status(200).send({ message: 'Video saved successfully' });
+    upload(req, res, (err: any) => {
+        if (err) {
+            return res.status(500).send({ message: 'Error uploading video' });
+        }
+        res.status(200).send({ message: 'Video saved successfully' });
+    });
 }
 
 export {
