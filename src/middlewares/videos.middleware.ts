@@ -2,84 +2,123 @@ import { Request, Response, NextFunction } from 'express';
 import multer, { StorageEngine } from 'multer';
 import fs from 'fs';
 import path from 'path';
+import rangeParser from 'range-parser';
 
 declare module 'express-serve-static-core' {
-  interface Request {
-    filesList?: { name: string; url: string }[];
-    filePath?: string;
-  }
+    interface Request {
+        filesList?: { name: string; url: string }[];
+        filePath?: string;
+    }
 }
 
 const uploadsDirectory = path.join(__dirname, '../../uploads/video');
 
 const storage: StorageEngine = multer.diskStorage({
-  destination: (req, file, cb) => {
-    fs.promises.mkdir(uploadsDirectory, { recursive: true })
-      .then(() => cb(null, uploadsDirectory))
-      .catch(err => cb(err, ''));
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);
-  }
-});
-
-const upload = multer({
-  storage,
-  limits: {
-    fileSize: 1024 * 1024
-  },
-  fileFilter: (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-    const allowedFileTypes = ['.mp4'];
-
-    const extname = path.extname(file.originalname).toLowerCase();
-    if (allowedFileTypes.includes(extname)) {
-      cb(null, true);
+    destination: (req, file, cb) => {
+        fs.mkdirSync(uploadsDirectory, { recursive: true });
+        cb(null, uploadsDirectory);
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname);
     }
-  }
 });
 
+const upload = multer({ storage });
+
+// Middleware pour l'upload d'un fichier
 function uploadSingleVideo(fieldName: string) {
-  return upload.single(fieldName);
+    return upload.single(fieldName);
 }
 
-async function listVideo(req: Request, res: Response, next: NextFunction) {
-  try {
-    const files = await fs.promises.readdir(uploadsDirectory);
-    req.filesList = files.map(file => ({
-      name: file,
-      url: `${req.protocol}://${req.get('host')}/files/${file}`
-    }));
-    next();
-  } catch (err) {
-    res.status(404).send({ message: "Unable to scan files!" });
-  }
+// Middleware pour lister tous les fichiers
+function listVideo(req: Request, res: Response, next: NextFunction) {
+    fs.readdir(uploadsDirectory, (err, files) => {
+        if (err) {
+            return res.status(500).send({ message: "Unable to scan files!" });
+        }
+        req.filesList = files.map(file => ({ name: file, url: `${req.protocol}://${req.get('host')}/files/${file}` }));
+        next();
+    });
 }
 
+// Middleware pour vérifier si le fichier existe
 function checkVideoExists(req: Request, res: Response, next: NextFunction) {
-  const fileName = req.params.id;
-  const filePath = path.join(uploadsDirectory, fileName);
+    const fileName = req.params.id;
+    const filePath = path.join(uploadsDirectory, fileName);
 
-  if (!fs.existsSync(filePath)) {
-      return res.status(404).send({ message: "File not found" });
-  }
-  req.filePath = filePath;
-  next();
+    if (!fs.existsSync(filePath)) {
+        return res.status(404).send({ message: "File not found" });
+    }
+
+    req.filePath = filePath;
+    next();
 }
-function deleteVideo(req: Request, res: Response, next: NextFunction) {
-  const filePath = req.filePath as string;
 
-  fs.unlink(filePath, (err) => {
-      if (err) {
-          return res.status(500).send({ message: err.message });
-      }
-      next();
-  });
+// Middleware pour supprimer un fichier
+function deleteVideo(req: Request, res: Response, next: NextFunction) {
+    const filePath = req.filePath as string;
+
+    fs.unlink(filePath, (err) => {
+        if (err) {
+            return res.status(500).send({ message: err.message });
+        }
+        next();
+    });
+}
+
+// Middleware pour le streaming vidéo
+function streamVideo(req: Request, res: Response) {
+    const filePath = req.filePath as string;
+
+    const stat = fs.statSync(filePath);
+    const fileSize = stat.size;
+    const range = req.headers.range;
+
+    if (range) {
+        const parts = rangeParser(fileSize, range);
+
+        if (parts instanceof Array) {
+            const start = parts[0].start;
+            const end = parts[0].end;
+            const chunksize = (end - start) + 1;
+
+            const fileStream = fs.createReadStream(filePath, { start, end });
+            const headers = {
+                'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+                'Accept-Ranges': 'bytes',
+                'Content-Length': chunksize,
+                'Content-Type': 'video/mp4',
+            };
+
+            res.writeHead(206, headers);
+            fileStream.pipe(res);
+        } else {
+            res.status(416).send('Range not satisfiable');
+        }
+    } else {
+        const headers = {
+            'Content-Length': fileSize,
+            'Content-Type': 'video/mp4',
+        };
+
+        res.writeHead(200, headers);
+        fs.createReadStream(filePath).pipe(res);
+    }
+}
+
+// Middleware pour enregistrer une vidéo
+function saveVideo(req: Request, res: Response, next: NextFunction) {
+    // Vous pouvez accéder au fichier uploadé à partir de req.file
+    // Exemple : req.file.filename contient le nom du fichier sauvegardé
+
+    res.status(200).send({ message: 'Video saved successfully' });
 }
 
 export {
-  uploadSingleVideo,
-  listVideo,
-  checkVideoExists,
-  deleteVideo
+    uploadSingleVideo,
+    listVideo,
+    checkVideoExists,
+    deleteVideo,
+    streamVideo,
+    saveVideo,
 };
-
