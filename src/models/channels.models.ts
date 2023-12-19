@@ -15,6 +15,10 @@ const Channel = new Schema<Channel>({
       ref: 'Files',
       required: true,
     },
+    subNumber: {
+        type: Number,
+        default: 0,
+    },
     idCategory: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
