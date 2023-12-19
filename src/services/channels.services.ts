@@ -57,6 +57,7 @@ function createChannel(channel: Channel) {
         name: channel.name,
         description: channel.description,
         image: channel.image,
+        subNumber: 0,
         idCategories: channel.idCategory,
         idVideos: channel.idVideos,
     });
