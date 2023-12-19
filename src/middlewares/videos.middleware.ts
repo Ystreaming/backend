@@ -28,8 +28,13 @@ const upload = multer({
   limits: {
     fileSize: 1024 * 1024
   },
-  fileFilter: (req, file, cb) => {
-    cb(null, true);
+  fileFilter: (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+    const allowedFileTypes = ['.mp4'];
+
+    const extname = path.extname(file.originalname).toLowerCase();
+    if (allowedFileTypes.includes(extname)) {
+      cb(null, true);
+    }
   }
 });
 
@@ -57,7 +62,6 @@ function checkVideoExists(req: Request, res: Response, next: NextFunction) {
   if (!fs.existsSync(filePath)) {
       return res.status(404).send({ message: "File not found" });
   }
-
   req.filePath = filePath;
   next();
 }
