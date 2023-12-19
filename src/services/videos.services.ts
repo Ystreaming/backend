@@ -1,13 +1,13 @@
 import VideosModel from '../models/videos.models';
 import Videos from '../interfaces/videos.interface';
 import ChannelModel from '../models/channels.models';
-import Channel from '../interfaces/channels.interface';
 import mongoose from 'mongoose';
 
 function getAllVideos() {
     return VideosModel.find()
         .populate('idChannel')
-        .populate('idCategory');
+        .populate('idCategory')
+        .populate('img');
 }
 
 function getVideoById(id: string) {
@@ -18,19 +18,22 @@ function getVideoById(id: string) {
     )
     .populate('idComment')
     .populate('idChannel')
-    .populate('idCategory');
+    .populate('idCategory')
+    .populate('img');
 }
 
 function getVideoByChannelId(id: string) {
     return VideosModel.find({idChannel: id})
         .populate('idChannel')
-        .populate('idCategory');
+        .populate('idCategory')
+        .populate('img');
 }
 
 function getVideoByCategoryId(id: string) {
     return VideosModel.find({idCategory: id})
         .populate('idChannel')
-        .populate('idCategory');
+        .populate('idCategory')
+        .populate('img');
 }
 
 function addVideo(video: Videos) {
@@ -72,7 +75,8 @@ function searchVideo(q: string) {
 
     return VideosModel.find({ title: searchRegex })
         .populate('idChannel')
-        .populate('idCategory');
+        .populate('idCategory')
+        .populate('img');
 }
 
 function searchVideoByCategory(id: string) {
