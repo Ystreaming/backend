@@ -2,25 +2,33 @@ import ChannelModel from '../models/channels.models';
 import Channel from '../interfaces/channels.interface';
 
 function getAllChannels() {
-    return ChannelModel.find();
+    return ChannelModel.find()
+        .populate('image');
 }
 
 function getChannelById(id: string) {
-    return ChannelModel.findOne({ _id: id });
+    return ChannelModel.findOne({ _id: id })
+        .populate('image')
+        .populate('idCategory')
+        .populate('idVideos')
+        .populate('idUser');
 }
 
 function searchChannelByName(name: string) {
     const searchRegex = new RegExp('^' + name, 'i');
 
-    return ChannelModel.find({ name: searchRegex });
+    return ChannelModel.find({ name: searchRegex })
+        .populate('image');
 }
 
 function getChannelByUserId(id: string) {
-    return ChannelModel.find({ idUser: id });
+    return ChannelModel.find({ idUser: id })
+        .populate('image');
 }
 
 function getChannelByCategoryId(id: string) {
-    return ChannelModel.find({ idCategory: id });
+    return ChannelModel.find({ idCategory: id })
+        .populate('image');
 }
 
 function createChannel(channel: Channel) {
