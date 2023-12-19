@@ -9,9 +9,30 @@ function getAllChannels() {
 function getChannelById(id: string) {
     return ChannelModel.findOne({ _id: id })
         .populate('image')
-        .populate('idCategory')
-        .populate('idVideos')
-        .populate('idUser');
+        .populate({
+            path: 'idCategory',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate({
+            path: 'idVideos',
+            populate: {
+                path: 'img',
+                model: 'Files',
+            }
+        })
+        .populate({
+            path: 'idVideos',
+            populate: {
+                path: 'idChannel',
+                populate: {
+                    path: 'profileImage',
+                    model: 'Files',
+                }
+            }
+        });
 }
 
 function searchChannelByName(name: string) {

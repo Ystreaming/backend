@@ -35,11 +35,21 @@ async function loginUser(username: string, password: string) {
 }
 
 function getAllUsers(page= 1, limit= 50) {
-    return UserModel.find();
+    return UserModel.find()
+        .populate('profileImage');
 }
 
 function getUserById(id: string) {
-    return UserModel.findOne({ _id: id });
+    return UserModel.findOne({ _id: id })
+        .populate('profileImage')
+        .populate({
+            path: 'sub',
+            model: 'Channels',
+            populate: {
+                path: 'image',
+                model: 'Files'
+            }
+        });
 }
 
 function getUserByUsername(username: string) {

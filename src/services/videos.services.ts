@@ -5,8 +5,20 @@ import mongoose from 'mongoose';
 
 function getAllVideos() {
     return VideosModel.find()
-        .populate('idChannel')
-        .populate('idCategory')
+        .populate({
+            path: 'idChannel',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate({
+            path: 'idCategory',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
         .populate('img');
 }
 
@@ -16,23 +28,58 @@ function getVideoById(id: string) {
         { $inc: { view: 1 } },
         { new: true }
     )
-    .populate('idComment')
-    .populate('idChannel')
-    .populate('idCategory')
+    .populate({
+        path: 'idChannel',
+        populate: {
+            path: 'image',
+            model: 'Files',
+        }
+    })
+    .populate({
+        path: 'idCategory',
+        populate: {
+            path: 'image',
+            model: 'Files',
+        }
+    })
     .populate('img');
 }
 
 function getVideoByChannelId(id: string) {
     return VideosModel.find({idChannel: id})
-        .populate('idChannel')
-        .populate('idCategory')
+        .populate({
+            path: 'idChannel',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate({
+            path: 'idCategory',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
         .populate('img');
 }
 
 function getVideoByCategoryId(id: string) {
     return VideosModel.find({idCategory: id})
-        .populate('idChannel')
-        .populate('idCategory')
+        .populate({
+            path: 'idChannel',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate({
+            path: 'idCategory',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
         .populate('img');
 }
 

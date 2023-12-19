@@ -3,17 +3,35 @@ import Historics from '../interfaces/historics.interface';
 
 function getAllHistorics() {
     return HistoricsModel.find()
-        .populate('idVideo');
+        .populate({
+            path: 'idVideo',
+            populate: {
+                path: 'img',
+                model: 'Files',
+            }
+        });
 }
 
 function getHistoricsById(id: string) {
     return HistoricsModel.findById({ _id: id })
-        .populate('idVideo');
+        .populate({
+            path: 'idVideo',
+            populate: {
+                path: 'img',
+                model: 'Files',
+            }
+        });
 }
 
 function getHistoricsByUserId(id: string) {
     return HistoricsModel.find({idUser: id})
-        .populate('idVideo');
+        .populate({
+            path: 'idVideo',
+            populate: {
+                path: 'img',
+                model: 'Files',
+            }
+        });
 }
 
 function createHistorics(historics: Historics) {

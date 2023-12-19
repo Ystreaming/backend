@@ -3,17 +3,35 @@ import Comment from '../interfaces/comments.interface';
 
 function getAllComments() {
     return CommentsModel.find()
-        .populate('idUser');
+        .populate({
+            path: 'idUser',
+            populate: {
+                path: 'profileImage',
+                model: 'Files',
+            }
+        });
 }
 
 function getCommentsById(id: string) {
     return CommentsModel.findById({ _id: id })
-        .populate('idUser');
+        .populate({
+            path: 'idUser',
+            populate: {
+                path: 'profileImage',
+                model: 'Files',
+            }
+        });
 }
 
 function getCommentsByUserId(id: string) {
     return CommentsModel.find({idUser: id})
-        .populate('idUser');
+        .populate({
+            path: 'idUser',
+            populate: {
+                path: 'profileImage',
+                model: 'Files',
+            }
+        });
 }
 
 function createComments(comment: Comment) {
