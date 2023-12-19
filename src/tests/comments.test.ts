@@ -70,4 +70,25 @@ describe('Comments API Endpoints', () => {
       expect(response.body).toHaveProperty('comments');
     });
   });
+
+  describe('GET /comments/:id', () => {
+    it('should get a comment by id', async () => {
+      const response = await request(app).get(`/comments/${commentId}`);
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toHaveProperty('_id', commentId);
+    });
+
+    it('should not get a comment by id with wrong id', async () => {
+      const response = await request(app).get('/comments/123');
+
+      expect(response.statusCode).toBe(500);
+    });
+
+    it('should return 404 if comment not found', async () => {
+      const response = await request(app).get('/comments/5f9d7b7b7f8b9b1b3c9b4b4b');
+
+      expect(response.statusCode).toBe(204);
+    });
+  });
 });
