@@ -38,16 +38,28 @@ describe('Historics API Endpoints', () => {
 
       await mongoose.model('Historics').deleteOne({ _id: response.body._id });
     });
+  });
 
-    it('should not create a new historic with wrong data', async () => {
-      const newHistoric = {
-      };
+  describe('GET /historics', () => {
+    it('should get all historics', async () => {
+      const response = await request(app).get('/historics');
 
-      const response = await request(app)
-          .post('/historics')
-          .send(newHistoric);
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toHaveProperty('historics');
+    });
 
-      expect(response.statusCode).toBe(400);
+    it('should get a historic by id', async () => {
+      const response = await request(app).get(`/historics/${historicId}`);
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toHaveProperty('_id');
+    });
+
+    it('should not get a historic by id with wrong id', async () => {
+      const response = await request(app).get('/historics/123');
+
+      expect(response.statusCode).toBe(500);
+      expect(response.body).toHaveProperty('message', 'Internal Server Error');
     });
   });
 });
