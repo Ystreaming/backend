@@ -2,15 +2,18 @@ import CommentsModel from '../models/comments.models';
 import Comment from '../interfaces/comments.interface';
 
 function getAllComments() {
-    return CommentsModel.find();
+    return CommentsModel.find()
+        .populate('idUser');
 }
 
 function getCommentsById(id: string) {
-    return CommentsModel.findById({ _id: id });
+    return CommentsModel.findById({ _id: id })
+        .populate('idUser');
 }
 
 function getCommentsByUserId(id: string) {
-    return CommentsModel.find({idUser: id});
+    return CommentsModel.find({idUser: id})
+        .populate('idUser');
 }
 
 function createComments(comment: Comment) {
