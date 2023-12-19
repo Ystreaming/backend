@@ -22,7 +22,7 @@ async function startServer() {
 process.on('SIGINT', gracefulShutdown);
 process.on('SIGTERM', gracefulShutdown);
 
-async function gracefulShutdown(signal: AbortSignal) {
+export async function gracefulShutdown(signal: AbortSignal) {
   console.log(`Reçu ${signal}. Fermeture du serveur...`);
   try {
     await mongoose.disconnect();
@@ -33,6 +33,10 @@ async function gracefulShutdown(signal: AbortSignal) {
     console.error('Erreur lors de la fermeture des connexions:', error);
     process.exit(1);
   }
+}
+
+module.exports = {
+  gracefulShutdown,
 }
 
 startServer();

@@ -18,6 +18,8 @@ router.get('/:id', videoController.getVideoById);
 
 router.put('/:id', videoValidator, videoController.updateVideo);
 
+router.patch('/:id', videoController.addCommentOnVideo);
+
 router.delete('/:id', videoController.deleteVideo);
 
 // => /Video/search
@@ -27,5 +29,9 @@ router.get('/search/:search', videoController.searchVideo);
 // => /video/category/:id
 
 router.get('/category/:id', videoController.getVideoByCategoryId);
+
+// => /video/comments/:id
+
+router.get('/comments/:id', videoController.getCommentsByVideoId);
 
 module.exports = router;

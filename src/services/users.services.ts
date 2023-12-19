@@ -1,5 +1,6 @@
 import UserModel from '../models/users.models';
 const bcrypt = require('bcrypt');
+const mongoose = require('mongoose');
 
 const SALT_ROUND:number = 10;
 
@@ -15,7 +16,7 @@ async function createUser(user: any) {
         password: hashPassword,
         status: user.status,
         language: user.language,
-        sub: user.sub,
+        sub: [],
         profileImage: user.profileImage,
     });
     return await newUser.save();
@@ -34,11 +35,21 @@ async function loginUser(username: string, password: string) {
 }
 
 function getAllUsers(page= 1, limit= 50) {
-    return UserModel.find();
+    return UserModel.find()
+        .populate('profileImage');
 }
 
 function getUserById(id: string) {
-    return UserModel.findOne({ _id: id });
+    return UserModel.findOne({ _id: id })
+        .populate('profileImage')
+        .populate({
+            path: 'sub',
+            model: 'Channels',
+            populate: {
+                path: 'image',
+                model: 'Files'
+            }
+        });
 }
 
 function getUserByUsername(username: string) {
@@ -48,8 +59,23 @@ function getUserByUsername(username: string) {
 }
 
 async function getSubByUser(userId: string, skip: number, limit: number) {
-    const user = await UserModel.findById(userId, { sub: { $slice: [skip, limit] } });
-    return user ? user.sub : null;
+    return UserModel.findById(userId)
+        .select('sub')
+        .slice('sub', [skip, limit])
+        .populate({
+            path: 'sub',
+            model: 'Channels',
+            populate: {
+                path: 'image',
+                model: 'Files'
+            }
+        })
+        .then(user => {
+            if (!user) {
+                throw new Error('User not found');
+            }
+            return user.sub;
+        });
 }
 
 async function updateUser(id: string, userData: any) {
@@ -65,10 +91,27 @@ async function updateUser(id: string, userData: any) {
       language: userData.language,
       profileImage: userData.profileImage,
     });
-  }
+}
 
 function deleteUser(id: string) {
     return UserModel.findOneAndDelete({ _id: id });
+}
+
+function addSub(userId: string, channelId: string) {
+    return UserModel.findById(userId)
+        .then(user => {
+            if (!user) {
+                throw new Error('User not found');
+            }
+
+            if (!Array.isArray(user.sub)) {
+                user.sub = [];
+            }
+
+            user.sub.push(new mongoose.Types.ObjectId(channelId));
+
+            return user.save();
+        });
 }
 
 module.exports = {
@@ -80,4 +123,5 @@ module.exports = {
     getSubByUser,
     updateUser,
     deleteUser,
+    addSub,
 };

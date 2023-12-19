@@ -2,15 +2,36 @@ import HistoricsModel from '../models/historics.models';
 import Historics from '../interfaces/historics.interface';
 
 function getAllHistorics() {
-    return HistoricsModel.find();
+    return HistoricsModel.find()
+        .populate({
+            path: 'idVideo',
+            populate: {
+                path: 'img',
+                model: 'Files',
+            }
+        });
 }
 
 function getHistoricsById(id: string) {
-    return HistoricsModel.findById({ _id: id });
+    return HistoricsModel.findById({ _id: id })
+        .populate({
+            path: 'idVideo',
+            populate: {
+                path: 'img',
+                model: 'Files',
+            }
+        });
 }
 
 function getHistoricsByUserId(id: string) {
-    return HistoricsModel.find({user_id: id});
+    return HistoricsModel.find({idUser: id})
+        .populate({
+            path: 'idVideo',
+            populate: {
+                path: 'img',
+                model: 'Files',
+            }
+        });
 }
 
 function createHistorics(historics: Historics) {
