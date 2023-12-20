@@ -1,7 +1,7 @@
 import HistoricsModel from '../models/historics.models';
 import Historics from '../interfaces/historics.interface';
 
-function getAllHistorics() {
+function getAllHistorics(skip: number, limit: number) {
     return HistoricsModel.find()
         .populate({
             path: 'idVideo',
@@ -9,7 +9,9 @@ function getAllHistorics() {
                 path: 'img',
                 model: 'Files',
             }
-        });
+        })
+        .skip(skip)
+        .limit(limit);
 }
 
 function getHistoricsById(id: string) {
