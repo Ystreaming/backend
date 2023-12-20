@@ -2,7 +2,6 @@ import request from 'supertest';
 import app from '../app';
 import mongoose from 'mongoose';
 const path = require('path');
-const fs = require('fs');
 import { Request, Response } from 'express';
 
 describe('User API Endpoints', () => {
