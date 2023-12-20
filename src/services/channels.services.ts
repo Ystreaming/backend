@@ -1,9 +1,11 @@
 import ChannelModel from '../models/channels.models';
 import Channel from '../interfaces/channels.interface';
 
-function getAllChannels() {
+function getAllChannels(skip: number, limit: number) {
     return ChannelModel.find()
-        .populate('image');
+        .populate('image')
+        .skip(skip)
+        .limit(limit);
 }
 
 function getChannelById(id: string) {
@@ -35,11 +37,13 @@ function getChannelById(id: string) {
         });
 }
 
-function searchChannelByName(name: string) {
+function searchChannelByName(name: string, skip: number, limit: number) {
     const searchRegex = new RegExp('^' + name, 'i');
 
     return ChannelModel.find({ name: searchRegex })
-        .populate('image');
+        .populate('image')
+        .skip(skip)
+        .limit(limit);
 }
 
 function getChannelByUserId(id: string) {

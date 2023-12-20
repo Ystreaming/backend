@@ -1,7 +1,7 @@
 import CommentsModel from '../models/comments.models';
 import Comment from '../interfaces/comments.interface';
 
-function getAllComments() {
+function getAllComments(skip: number, limit: number) {
     return CommentsModel.find()
         .populate({
             path: 'idUser',
@@ -9,7 +9,9 @@ function getAllComments() {
                 path: 'profileImage',
                 model: 'Files',
             }
-        });
+        })
+        .skip(skip)
+        .limit(limit);
 }
 
 function getCommentsById(id: string) {
@@ -23,7 +25,7 @@ function getCommentsById(id: string) {
         });
 }
 
-function getCommentsByUserId(id: string) {
+function getCommentsByUserId(id: string, skip: number, limit: number) {
     return CommentsModel.find({idUser: id})
         .populate({
             path: 'idUser',
@@ -31,7 +33,9 @@ function getCommentsByUserId(id: string) {
                 path: 'profileImage',
                 model: 'Files',
             }
-        });
+        })
+        .skip(skip)
+        .limit(limit);
 }
 
 function createComments(comment: Comment) {

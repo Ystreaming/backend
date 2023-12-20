@@ -35,8 +35,10 @@ async function loginUser(username: string, password: string) {
     return user;
 }
 
-function getAllUsers(page= 1, limit= 50) {
+function getAllUsers(skip: number, limit: number) {
     return UserModel.find()
+        .skip(skip)
+        .limit(limit)
         .populate('profileImage');
 }
 

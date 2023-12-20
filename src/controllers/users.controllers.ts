@@ -12,7 +12,7 @@ async function getAllUsers(req: Request, res: Response) {
     const skip = (page - 1) * limit;
 
     try {
-        const users = await UserModel.find().skip(skip).limit(limit);
+        const users = await UsersService.getAllUsers(skip, limit);
         const totalUsers = await UserModel.countDocuments();
         const totalPages = Math.ceil(totalUsers / limit);
 

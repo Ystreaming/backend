@@ -1,8 +1,10 @@
 import RoleModel from '../models/roles.models';
 import Role from '../interfaces/roles.interface';
 
-function getAllRoles() {
-    return RoleModel.find();
+function getAllRoles(skip: number, limit: number) {
+    return RoleModel.find()
+        .skip(skip)
+        .limit(limit);
 }
 
 function getRoleById(id: String) {
