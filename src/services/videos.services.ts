@@ -3,7 +3,7 @@ import Videos from '../interfaces/videos.interface';
 import ChannelModel from '../models/channels.models';
 import mongoose from 'mongoose';
 
-function getAllVideos() {
+function getAllVideos(skip: number, limit: number) {
     return VideosModel.find()
         .populate({
             path: 'idChannel',
@@ -19,7 +19,9 @@ function getAllVideos() {
                 model: 'Files',
             }
         })
-        .populate('img');
+        .populate('img')
+        .skip(skip)
+        .limit(limit);
 }
 
 function getVideoById(id: string) {
