@@ -1,4 +1,5 @@
 import UserModel from '../models/users.models';
+import ChannelModel from '../models/channels.models';
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 
@@ -34,12 +35,24 @@ async function loginUser(username: string, password: string) {
     return user;
 }
 
-function getAllUsers(page= 1, limit= 50) {
-    return UserModel.find();
+function getAllUsers(skip: number, limit: number) {
+    return UserModel.find()
+        .skip(skip)
+        .limit(limit)
+        .populate('profileImage');
 }
 
 function getUserById(id: string) {
-    return UserModel.findOne({ _id: id });
+    return UserModel.findOne({ _id: id })
+        .populate('profileImage')
+        .populate({
+            path: 'sub',
+            model: 'Channels',
+            populate: {
+                path: 'image',
+                model: 'Files'
+            }
+        });
 }
 
 function getUserByUsername(username: string) {
@@ -87,22 +100,27 @@ function deleteUser(id: string) {
     return UserModel.findOneAndDelete({ _id: id });
 }
 
-function addSub(userId: string, channelId: string) {
-    return UserModel.findById(userId)
-        .then(user => {
-            if (!user) {
-                throw new Error('User not found');
-            }
+async function addSub(channelId: string, userId: string) {
+    const channel = await ChannelModel.findById(channelId);
+    if (!channel) {
+        throw new Error('Channel not found');
+    }
+    channel.subNumber += 1;
+    await channel.save();
 
-            if (!Array.isArray(user.sub)) {
-                user.sub = [];
-            }
+    const user = await UserModel.findById(userId);
+    if (!user) {
+        throw new Error('User not found');
+    }
 
-            user.sub.push(new mongoose.Types.ObjectId(channelId));
+    if (!Array.isArray(user.sub)) {
+        user.sub = [];
+    }
 
-            return user.save();
-        });
+    user.sub.push(new mongoose.Types.ObjectId(channelId));
+    return await user.save();
 }
+
 
 module.exports = {
     createUser,

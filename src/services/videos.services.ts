@@ -1,13 +1,27 @@
 import VideosModel from '../models/videos.models';
 import Videos from '../interfaces/videos.interface';
 import ChannelModel from '../models/channels.models';
-import Channel from '../interfaces/channels.interface';
 import mongoose from 'mongoose';
 
-function getAllVideos() {
+function getAllVideos(skip: number, limit: number) {
     return VideosModel.find()
-        .populate('idChannel')
-        .populate('idCategory');
+        .populate({
+            path: 'idChannel',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate({
+            path: 'idCategory',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate('img')
+        .skip(skip)
+        .limit(limit);
 }
 
 function getVideoById(id: string) {
@@ -16,21 +30,59 @@ function getVideoById(id: string) {
         { $inc: { view: 1 } },
         { new: true }
     )
-    .populate('idComment')
-    .populate('idChannel')
-    .populate('idCategory');
+    .populate({
+        path: 'idChannel',
+        populate: {
+            path: 'image',
+            model: 'Files',
+        }
+    })
+    .populate({
+        path: 'idCategory',
+        populate: {
+            path: 'image',
+            model: 'Files',
+        }
+    })
+    .populate('img');
 }
 
 function getVideoByChannelId(id: string) {
     return VideosModel.find({idChannel: id})
-        .populate('idChannel')
-        .populate('idCategory');
+        .populate({
+            path: 'idChannel',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate({
+            path: 'idCategory',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate('img');
 }
 
 function getVideoByCategoryId(id: string) {
     return VideosModel.find({idCategory: id})
-        .populate('idChannel')
-        .populate('idCategory');
+        .populate({
+            path: 'idChannel',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate({
+            path: 'idCategory',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate('img');
 }
 
 function addVideo(video: Videos) {
@@ -72,7 +124,8 @@ function searchVideo(q: string) {
 
     return VideosModel.find({ title: searchRegex })
         .populate('idChannel')
-        .populate('idCategory');
+        .populate('idCategory')
+        .populate('img');
 }
 
 function searchVideoByCategory(id: string) {
@@ -120,7 +173,16 @@ function deleteVideo(id: string) {
 
 function getCommentsByVideoId(id: string) {
     return VideosModel.findById({ _id: id })
-        .populate('idComment')
+        .populate({
+            path: 'idComment',
+            populate: {
+                path: 'idUser',
+                populate: {
+                    path: 'profileImage',
+                    model: 'Files',
+                }
+            }
+        })
         .select('idComment')
         .then(video => {
             if (!video) {

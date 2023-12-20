@@ -1,9 +1,11 @@
 import CategoriesModel from '../models/categories.models';
 import Categories from '../interfaces/categories.interface';
 
-function getAllCategory() {
+function getAllCategory(skip: number, limit: number) {
     return CategoriesModel.find()
-        .populate('image');
+        .populate('image')
+        .skip(skip)
+        .limit(limit);
 }
 
 function getCategoryById(id: string) {

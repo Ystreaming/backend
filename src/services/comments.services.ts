@@ -1,19 +1,41 @@
 import CommentsModel from '../models/comments.models';
 import Comment from '../interfaces/comments.interface';
 
-function getAllComments() {
+function getAllComments(skip: number, limit: number) {
     return CommentsModel.find()
-        .populate('idUser');
+        .populate({
+            path: 'idUser',
+            populate: {
+                path: 'profileImage',
+                model: 'Files',
+            }
+        })
+        .skip(skip)
+        .limit(limit);
 }
 
 function getCommentsById(id: string) {
     return CommentsModel.findById({ _id: id })
-        .populate('idUser');
+        .populate({
+            path: 'idUser',
+            populate: {
+                path: 'profileImage',
+                model: 'Files',
+            }
+        });
 }
 
-function getCommentsByUserId(id: string) {
+function getCommentsByUserId(id: string, skip: number, limit: number) {
     return CommentsModel.find({idUser: id})
-        .populate('idUser');
+        .populate({
+            path: 'idUser',
+            populate: {
+                path: 'profileImage',
+                model: 'Files',
+            }
+        })
+        .skip(skip)
+        .limit(limit);
 }
 
 function createComments(comment: Comment) {

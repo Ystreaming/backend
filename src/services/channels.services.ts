@@ -1,24 +1,49 @@
 import ChannelModel from '../models/channels.models';
 import Channel from '../interfaces/channels.interface';
 
-function getAllChannels() {
+function getAllChannels(skip: number, limit: number) {
     return ChannelModel.find()
-        .populate('image');
+        .populate('image')
+        .skip(skip)
+        .limit(limit);
 }
 
 function getChannelById(id: string) {
     return ChannelModel.findOne({ _id: id })
         .populate('image')
-        .populate('idCategory')
-        .populate('idVideos')
-        .populate('idUser');
+        .populate({
+            path: 'idCategory',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate({
+            path: 'idVideos',
+            populate: {
+                path: 'img',
+                model: 'Files',
+            }
+        })
+        .populate({
+            path: 'idVideos',
+            populate: {
+                path: 'idChannel',
+                populate: {
+                    path: 'profileImage',
+                    model: 'Files',
+                }
+            }
+        });
 }
 
-function searchChannelByName(name: string) {
+function searchChannelByName(name: string, skip: number, limit: number) {
     const searchRegex = new RegExp('^' + name, 'i');
 
     return ChannelModel.find({ name: searchRegex })
-        .populate('image');
+        .populate('image')
+        .skip(skip)
+        .limit(limit);
 }
 
 function getChannelByUserId(id: string) {
@@ -36,6 +61,7 @@ function createChannel(channel: Channel) {
         name: channel.name,
         description: channel.description,
         image: channel.image,
+        subNumber: 0,
         idCategories: channel.idCategory,
         idVideos: channel.idVideos,
     });

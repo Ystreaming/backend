@@ -6,6 +6,7 @@ interface Channel extends Document {
     name: string;
     image: {type: Schema.Types.ObjectId, ref:'Files'};
     description: string;
+    subNumber: number;
     idCategory: mongoose.Types.ObjectId;
     idVideos: mongoose.Types.ObjectId[];
 }

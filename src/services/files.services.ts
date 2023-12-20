@@ -1,8 +1,10 @@
 import FileModel from '../models/files.models';
 import File from '../interfaces/files.interface';
 
-function getAllFiles() {
-    return FileModel.find();
+function getAllFiles(skip: number, limit: number) {
+    return FileModel.find()
+        .skip(skip)
+        .limit(limit);
 }
 
 function getFileById(id: string) {
