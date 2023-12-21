@@ -24,16 +24,6 @@ function getChannelById(id: string) {
                 path: 'img',
                 model: 'Files',
             }
-        })
-        .populate({
-            path: 'idVideos',
-            populate: {
-                path: 'idChannel',
-                populate: {
-                    path: 'profileImage',
-                    model: 'Files',
-                }
-            }
         });
 }
 
@@ -42,6 +32,13 @@ function searchChannelByName(name: string, skip: number, limit: number) {
 
     return ChannelModel.find({ name: searchRegex })
         .populate('image')
+        .populate({
+            path: 'idVideos',
+            populate: {
+                path: 'img',
+                model: 'Files',
+            }
+        })
         .skip(skip)
         .limit(limit);
 }

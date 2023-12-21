@@ -187,6 +187,16 @@ async function getRecommendVideo(req: Request, res: Response) {
     }
 }
 
+async function getMostViewedVideos(req: Request, res: Response) {
+    try {
+        const videos = await VideoService.getMostViewedVideos();
+        res.status(200).json(videos);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
 module.exports = {
     getAllVideo,
     searchVideo,
@@ -198,4 +208,5 @@ module.exports = {
     getCommentsByVideoId,
     addCommentOnVideo,
     getRecommendVideo,
+    getMostViewedVideos
 };

@@ -16,6 +16,10 @@ router.post('/', uploadSingleFile('img'), videoValidator, videoController.create
 
 router.get('/recommendation', videoController.getRecommendVideo);
 
+// => /video/mostviewed/
+
+router.get('/mostviewed', videoController.getMostViewedVideos);
+
 // => /Video/id
 
 router.get('/:id', videoController.getVideoById);

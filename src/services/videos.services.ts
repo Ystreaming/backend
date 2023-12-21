@@ -216,6 +216,12 @@ function getRecommendVideo() {
     ]);
 }
 
+function getMostViewedVideos() {
+    return VideosModel.find()
+        .sort({ view: -1 })
+        .limit(6);
+};
+
 module.exports = {
     searchVideoByCategory,
     searchVideo,
@@ -230,5 +236,6 @@ module.exports = {
     deleteVideo,
     getCommentsByVideoId,
     addCommentOnVideo,
-    getRecommendVideo
+    getRecommendVideo,
+    getMostViewedVideos
 };
