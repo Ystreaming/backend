@@ -38,17 +38,13 @@ async function createVideo(req: Request, res: Response) {
             if (req.file.mimetype.startsWith('image/')) {
                 const imgFile = await FileService.createFile(req.file);
                 imgFileId = imgFile._id;
+            } else if (req.file.mimetype.startsWith('video/')) {
+                const videoFile = await FileService.createFile(req.file);
+                videoFileId = videoFile._id;
             } else {
-                return res.status(400).json({ error: 'Invalid file type. Must be an image.' });
+                return res.status(400).json({ error: 'Invalid file type. Must be an image or a video.' });
             }
         }
-
-        if (req.file && req.file.mimetype) {
-            const video = req.file.mimetype;
-            const videoFile = await FileService.createFile(video);
-            videoFileId = videoFile._id;
-        }
-
         const videoData = {
             ...req.body,
             img: imgFileId,
@@ -63,7 +59,6 @@ async function createVideo(req: Request, res: Response) {
         return res.status(500).json({ message: 'Erreur interne du serveur' });
     }
 }
-
 
 async function searchVideo(req: Request, res: Response) {
     const page = parseInt(req.query.page as string, 10) || 1;
