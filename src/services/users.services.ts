@@ -52,6 +52,18 @@ function getUserById(id: string) {
                 path: 'image',
                 model: 'Files'
             }
+        })
+        .populate({
+            path: 'sub',
+            model: 'Channels',
+            populate: {
+                path: 'idVideos',
+                model: 'Videos',
+                populate: {
+                    path: 'img',
+                    model: 'Files'
+                }
+            }
         });
 }
 
