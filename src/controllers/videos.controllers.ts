@@ -28,7 +28,7 @@ async function getAllVideo(req: Request, res: Response) {
 async function createVideo(req: Request, res: Response) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ error: 'Échec de la validation', details: errors.array() });
+        return res.status(400).json({ error: 'Validation failed', details: errors.array() });
     }
     try {
         let imgFileId = null;
