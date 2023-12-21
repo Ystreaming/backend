@@ -70,7 +70,7 @@ function updateChannel(id: string, channel: Channel) {
         name: channel.name,
         description: channel.description,
         image: channel.image,
-        idCategories: channel.idCategory,
+        idCategory: channel.idCategory,
         idVideos: channel.idVideos,
     });
 }

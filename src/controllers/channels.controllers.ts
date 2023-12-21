@@ -7,15 +7,15 @@ const VideoService = require('../services/videos.services');
 async function getAllChannels(req: Request, res: Response) {
     try {
         const channel = await ChannelService.getAllChannels();
-        if (!channel) {
+        if (channel.length === 0) {
             res.status(204).json({ message: 'Channel not found' });
         } else {
             res.status(200).json(channel);
         }
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ message: 'Internal Server Error' });
-        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
 }
 
 async function createChannel(req: Request, res: Response) {
@@ -108,7 +108,7 @@ async function getChannelByCategoryId(req: Request, res: Response) {
 async function getViewByChannelId(req: Request, res: Response) {
     try {
         const channel = await VideoService.getViewByChannelId(req.params.id);
-        if (!channel) {
+        if (!channel.length) {
             res.status(204).json({ message: 'No channel found' });
         } else {
             res.status(200).json(channel);
@@ -122,7 +122,7 @@ async function getViewByChannelId(req: Request, res: Response) {
 async function getLikeByChannelId(req: Request, res: Response) {
     try {
         const channel = await VideoService.getLikeByChannelId(req.params.id);
-        if (!channel) {
+        if (!channel.length) {
             res.status(204).json({ message: 'No channel found' });
         } else {
             res.status(200).json(channel);
@@ -136,7 +136,7 @@ async function getLikeByChannelId(req: Request, res: Response) {
 async function updateChannel(req: Request, res: Response) {
     try {
         const channel = await ChannelService.updateChannel(req.params.id, req.body);
-        if (!channel) {
+        if (channel.length === 0) {
             res.status(204).json({ message: 'No channel found' });
         } else {
             res.status(200).json(channel);
