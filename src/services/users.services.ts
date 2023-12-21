@@ -52,13 +52,25 @@ function getUserById(id: string) {
                 path: 'image',
                 model: 'Files'
             }
+        })
+        .populate({
+            path: 'sub',
+            model: 'Channels',
+            populate: {
+                path: 'idVideos',
+                model: 'Videos',
+                populate: {
+                    path: 'img',
+                    model: 'Files'
+                }
+            }
         });
 }
 
 function getUserByUsername(username: string) {
     const searchRegex = new RegExp('^' + username, 'i');
 
-    return UserModel.find({ username: { $regex: searchRegex } });
+    return UserModel.find({ username: { $regex: searchRegex } }).populate('profileImage');
 }
 
 async function getSubByUser(userId: string, skip: number, limit: number) {

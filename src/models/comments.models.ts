@@ -18,6 +18,10 @@ const Comment = new Schema<Comment>({
       type: Date,
       required: true,
     },
+    idVideo: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Videos',
+    },
     idUser: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Users',
