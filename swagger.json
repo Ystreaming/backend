@@ -7,11 +7,11 @@
       "name": "YStream",
       "email": "dev@ystream.com"
     },
-    "version": "1.0.0"
+    "version": "1.6.0"
   },
   "servers": [
     {
-      "url": "http://localhost:3000/api/prod",
+      "url": "http://localhost:3000/",
       "description": "Production server",
       "variables": {
         "protocol": {
@@ -19,18 +19,6 @@
             "http"
           ],
           "default": "http"
-        }
-      }
-    },
-    {
-      "url": "https://dev.ystream.com/api/dev",
-      "description": "Development server",
-      "variables": {
-        "protocol": {
-          "enum": [
-            "https"
-          ],
-          "default": "https"
         }
       }
     }
@@ -382,6 +370,171 @@
         }
       }
     },
+    "/users/login": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Logs user into the system",
+        "description": "",
+        "operationId": "loginUser",
+        "requestBody": {
+          "description": "The user object that needs to be logged in",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "X-Rate-Limit": {
+                "description": "calls per hour allowed by the user",
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "example": 1000
+              },
+              "X-Expires-After": {
+                "description": "date in UTC when token expires",
+                "schema": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "example": "2021-01-01T00:00:00.000Z"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "string",
+                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid username/password supplied"
+          }
+        }
+      }
+    },
+    "/users/sub/{id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get user by sub",
+        "description": "Get user by sub",
+        "operationId": "getUserBySub",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Sub of user to return",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "patch": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Users"
+        ],
+        "summary": "Update user sub",
+        "description": "Update user sub",
+        "operationId": "updateUserSub",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Sub of user to return",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "User object that needs to be added",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/videos": {
       "get": {
         "tags": [
@@ -679,6 +832,81 @@
           },
           "500": {
             "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/videos/search/{search}": {
+      "get": {
+        "tags": [
+          "Videos"
+        ],
+        "summary": "Get video by search",
+        "description": "Get video by search",
+        "operationId": "getVideoBySearch",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "path",
+            "description": "Search of video to return",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Video"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/videos/comments/{id}": {
+      "get": {
+        "tags": [
+          "Videos"
+        ],
+        "summary": "Get video by comments id",
+        "description": "Get video by comments id",
+        "operationId": "getVideoByCommentsId",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of comments to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
           }
         }
       }
@@ -1414,7 +1642,7 @@
         }
       }
     },
-    "/channel/{name}": {
+    "/channel/search/{name}": {
       "get": {
         "tags": [
           "Channels"
@@ -1557,6 +1785,60 @@
         }
       }
     },
+    "/channel/view/{id}": {
+      "get": {
+        "tags": [
+          "Channels"
+        ],
+        "summary": "Get channel by view id",
+        "description": "Get channel by view id",
+        "operationId": "getChannelByViewId",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of view to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/channel/like/{id}": {
+      "get": {
+        "tags": [
+          "Channels"
+        ],
+        "summary": "Get channel by like id",
+        "description": "Get channel by like id",
+        "operationId": "getChannelByLikeId",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of like to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
     "/notifications": {
       "get": {
         "security": [
@@ -1687,66 +1969,6 @@
           },
           "404": {
             "description": "Not found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      },
-      "put": {
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "tags": [
-          "Notifications"
-        ],
-        "summary": "Update notifications",
-        "description": "Update notifications",
-        "operationId": "updateNotifications",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of notifications to return",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Notifications object that needs to be added",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Notifications"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Notifications"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           },
           "500": {
             "description": "Internal server error"
@@ -1949,66 +2171,6 @@
         "responses": {
           "200": {
             "description": "Successful operation"
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Not found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      },
-      "put": {
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "tags": [
-          "Historics"
-        ],
-        "summary": "Update historics",
-        "description": "Update historics",
-        "operationId": "updateHistorics",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of historics to return",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Historics object that needs to be added",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Historics"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Historics"
-                }
-              }
-            }
           },
           "400": {
             "description": "Bad request"
@@ -2384,47 +2546,6 @@
           }
         }
       }
-    },
-    "/comments/video/{id}": {
-      "get": {
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "tags": [
-          "Comments"
-        ],
-        "summary": "Get comments by video id",
-        "description": "Get comments by video id",
-        "operationId": "getCommentsByVideoId",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of video to return",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation"
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      }
     }
   },
   "components": {
@@ -2436,55 +2557,79 @@
       }
     },
     "schemas": {
+      "Login": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "User username",
+            "required": true
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "description": "User password",
+            "required": true
+          }
+        }
+      },
       "User": {
         "type": "object",
         "properties": {
           "firstName": {
             "type": "string",
-            "description": "User firstname"
+            "description": "User firstname",
+            "required": false
           },
           "lastName": {
             "type": "string",
-            "description": "User lastname"
+            "description": "User lastname",
+            "required": false
           },
           "email": {
             "type": "string",
             "format": "email",
-            "description": "User email"
+            "description": "User email",
+            "required": true
           },
           "dateOfBirth": {
             "type": "string",
             "format": "date",
-            "description": "User date of birth"
+            "description": "User date of birth",
+            "required": true
           },
           "username": {
             "type": "string",
-            "description": "User username"
+            "description": "User username",
+            "required": true
           },
           "password": {
             "type": "string",
             "format": "password",
-            "description": "User password"
+            "description": "User password",
+            "required": true
           },
           "createdAt": {
             "type": "string",
             "format": "date-time",
             "description": "User creation date"
           },
-          "status": {
-            "type": "boolean",
-            "default": true,
-            "description": "User status"
+          "sub": {
+            "type": "array",
+            "format": "string",
+            "description": "User sub",
+            "required": false
           },
           "language": {
             "type": "string",
             "format": "language",
-            "description": "User language"
+            "description": "User language",
+            "required": false
           },
           "profileImage": {
             "type": "string",
-            "format": "string",
-            "description": "User profile image"
+            "description": "User profile image",
+            "required": false
           }
         }
       },
@@ -2493,22 +2638,31 @@
         "properties": {
           "title": {
             "type": "string",
-            "description": "Video title"
+            "description": "Video title",
+            "required": true
           },
           "createdAt": {
             "type": "string",
             "format": "date",
             "description": "Video creation date"
           },
+          "view": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Video view",
+            "default": 0
+          },
           "like": {
             "type": "integer",
             "format": "int64",
-            "description": "Video like"
+            "description": "Video like",
+            "default": 0
           },
           "dislike": {
             "type": "integer",
             "format": "int64",
-            "description": "Video dislike"
+            "description": "Video dislike",
+            "default": 0
           },
           "description": {
             "type": "string",
@@ -2517,16 +2671,19 @@
           "language": {
             "type": "string",
             "format": "language",
-            "description": "Video language"
+            "description": "Video language",
+            "required": true
           },
           "time": {
             "type": "string",
-            "format": "time",
-            "description": "Video time"
+            "format": "number",
+            "description": "Video time",
+            "required": true
           },
           "img": {
             "type": "string",
-            "description": "Video image"
+            "description": "Video image",
+            "required": true
           },
           "url": {
             "type": "string",
@@ -2560,7 +2717,8 @@
         "properties": {
           "name": {
             "type": "string",
-            "description": "Rôles name"
+            "description": "Rôles name",
+            "required": true
           },
           "permission": {
             "type": "array",
@@ -2579,20 +2737,24 @@
         "properties": {
           "title": {
             "type": "string",
-            "description": "Notification title"
+            "description": "Notification title",
+            "required": true
           },
           "description": {
             "type": "string",
-            "description": "Notification description"
+            "description": "Notification description",
+            "required": true
           },
           "url": {
             "type": "string",
             "format": "url",
-            "description": "Notification url"
+            "description": "Notification url",
+            "required": true
           },
           "type": {
             "type": "string",
-            "description": "Notification type"
+            "description": "Notification type",
+            "required": true
           },
           "idUser": {
             "type": "string",
@@ -2621,22 +2783,30 @@
         "properties": {
           "texte": {
             "type": "string",
-            "description": "Comment texte"
+            "description": "Comment texte",
+            "required": true
           },
           "like": {
             "type": "integer",
             "format": "int64",
-            "description": "Comment like"
+            "description": "Comment like",
+            "default": 0
           },
           "dislike": {
             "type": "integer",
             "format": "int64",
-            "description": "Comment dislike"
+            "description": "Comment dislike",
+            "default": 0
           },
           "createdAt": {
             "type": "string",
             "format": "date",
             "description": "Comment creation date"
+          },
+          "idVideo": {
+            "type": "string",
+            "format": "string",
+            "description": "ObjectID of video"
           },
           "idUser": {
             "type": "string",
@@ -2650,16 +2820,25 @@
         "properties": {
           "name": {
             "type": "string",
-            "description": "Channel name"
+            "description": "Channel name",
+            "required": true
           },
           "description": {
             "type": "string",
-            "description": "Channel description"
+            "description": "Channel description",
+            "required": true
           },
           "image": {
             "type": "string",
             "format": "binary",
-            "description": "ObjectID of file image"
+            "description": "ObjectID of file image",
+            "required": true
+          },
+          "subNumber": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Channel sub number",
+            "default": 0
           },
           "idCategory": {
             "type": "array",
@@ -2678,12 +2857,14 @@
         "properties": {
           "name": {
             "type": "string",
-            "description": "Category name"
+            "description": "Category name",
+            "required": true
           },
           "image": {
             "type": "string",
-            "format": "object",
-            "description": "ObjectID of image file"
+            "format": "string",
+            "description": "ObjectID of image file",
+            "required": true
           }
         }
       },
@@ -2692,27 +2873,33 @@
         "properties": {
           "filename": {
             "type": "string",
-            "description": "File name"
+            "description": "File name",
+            "required": true
           },
           "contentType": {
             "type": "string",
-            "description": "File type"
+            "description": "File type",
+            "required": true
           },
           "lenght": {
             "type": "int64",
-            "description": "File size"
+            "description": "File size",
+            "required": true
           },
           "chunkSize": {
             "type": "int64",
-            "description": "File path"
+            "description": "File path",
+            "required": true
           },
           "uploadDate": {
             "type": "date",
-            "description": "File upload date"
+            "description": "File upload date",
+            "required": true
           },
           "md5": {
             "type": "string",
-            "description": "File md5"
+            "description": "File md5",
+            "required": true
           }
         }
       }
