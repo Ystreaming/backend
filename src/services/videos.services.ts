@@ -213,12 +213,33 @@ function addCommentOnVideo(id: string, idComment: string) {
 function getRecommendVideo(limit: number) {
     return VideosModel.aggregate([
         { $sample: { size: limit } }
-    ]);
+    ])
+    .exec()
+    .then(results => VideosModel.populate(results, [
+        { path: 'idChannel', populate: { path: 'image', model: 'Files' } },
+        { path: 'idCategory', populate: { path: 'image', model: 'Files' } },
+        { path: 'img' }
+    ]));
 }
 
 function getMostViewedVideos(limit: number, skip: number) {
     return VideosModel.find()
         .sort({ view: -1 })
+        .populate({
+            path: 'idChannel',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate({
+            path: 'idCategory',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate('img')
         .skip(skip)
         .limit(limit);
 };
