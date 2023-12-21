@@ -12,7 +12,8 @@ function getAllComments(skip: number, limit: number) {
             }
         })
         .skip(skip)
-        .limit(limit);
+        .limit(limit)
+        .sort({ createdAt: -1 });
 }
 
 function getCommentsById(id: string) {
@@ -36,7 +37,8 @@ function getCommentsByUserId(id: string, skip: number, limit: number) {
             }
         })
         .skip(skip)
-        .limit(limit);
+        .limit(limit)
+        .sort({ createdAt: -1 });
 }
 
 function createComments(comment: Comment) {

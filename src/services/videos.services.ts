@@ -184,6 +184,7 @@ function getCommentsByVideoId(id: string) {
             }
         })
         .select('idComment')
+        .sort({ createdAt: -1 })
         .then(video => {
             if (!video) {
                 throw new Error('Video not found');
