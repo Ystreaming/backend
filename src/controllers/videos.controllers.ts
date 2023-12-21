@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 const VideoService = require('../services/videos.services');
 import VideoModel from '../models/videos.models';
-const fileService = require('../services/files.services');
+const FileService = require('../services/files.services');
 
 async function getAllVideo(req: Request, res: Response) {
     const page = parseInt(req.query.page as string, 10) || 1;
@@ -25,23 +25,32 @@ async function getAllVideo(req: Request, res: Response) {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }
-
 async function createVideo(req: Request, res: Response) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ error: 'Validation failed', details: errors.array() });
     }
     try {
-        let fileId = null;
+        let imgFileId = null;
+        let videoFileId = null;
+
         if (req.file) {
-            const file = await fileService.createFile(req.file);
-            fileId = file._id;
+            const imgFile = await FileService.createFile(req.file);
+            imgFileId = imgFile._id;
+        }
+
+        if (req.files && req.files.videos) {
+            const video = req.files.videos;
+            const videoFile = await FileService.createFile(video);
+            videoFileId = videoFile._id;
         }
 
         const videoData = {
             ...req.body,
-            img: fileId
+            img: imgFileId,
+            video: videoFileId,
         };
+
         const newVideo = await VideoService.addVideo(videoData);
 
         return res.status(201).json(newVideo);
