@@ -28,19 +28,23 @@ async function getAllVideo(req: Request, res: Response) {
 async function createVideo(req: Request, res: Response) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ error: 'Validation failed', details: errors.array() });
+        return res.status(400).json({ error: 'Échec de la validation', details: errors.array() });
     }
     try {
         let imgFileId = null;
         let videoFileId = null;
 
         if (req.file) {
-            const imgFile = await FileService.createFile(req.file);
-            imgFileId = imgFile._id;
+            if (req.file.mimetype.startsWith('image/')) {
+                const imgFile = await FileService.createFile(req.file);
+                imgFileId = imgFile._id;
+            } else {
+                return res.status(400).json({ error: 'Invalid file type. Must be an image.' });
+            }
         }
 
-        if (req.files && req.files.videos) {
-            const video = req.files.videos;
+        if (req.file && req.file.mimetype) {
+            const video = req.file.mimetype;
             const videoFile = await FileService.createFile(video);
             videoFileId = videoFile._id;
         }
@@ -56,9 +60,10 @@ async function createVideo(req: Request, res: Response) {
         return res.status(201).json(newVideo);
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ message: 'Internal Server Error' });
+        return res.status(500).json({ message: 'Erreur interne du serveur' });
     }
 }
+
 
 async function searchVideo(req: Request, res: Response) {
     const page = parseInt(req.query.page as string, 10) || 1;
