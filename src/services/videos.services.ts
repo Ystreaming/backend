@@ -2,6 +2,10 @@ import VideosModel from '../models/videos.models';
 import Videos from '../interfaces/videos.interface';
 import ChannelModel from '../models/channels.models';
 import mongoose from 'mongoose';
+import fs from 'fs';
+import path from 'path';
+
+const uploadsDirectory = path.join(__dirname, '../../uploads/video');
 
 function getAllVideos(skip: number, limit: number) {
     return VideosModel.find()
@@ -147,7 +151,6 @@ function getLikeByChannelId(id: string) {
         { $group: { _id: null, like: { $sum: "$like" } }}
     ]);
 }
-
 function updateVideo(id: string, video: Videos) {
     return VideosModel.findOneAndUpdate({ _id: id }, {
         title: video.title,
@@ -170,7 +173,6 @@ function updateVideo(id: string, video: Videos) {
 function deleteVideo(id: string) {
     return VideosModel.findOneAndDelete({ _id: id });
 }
-
 function getCommentsByVideoId(id: string) {
     return VideosModel.findById({ _id: id })
         .populate({
@@ -205,13 +207,38 @@ function addCommentOnVideo(id: string, idComment: string) {
             }
 
             video.idComment.push(new mongoose.Types.ObjectId(idComment));
-
             return video.save();
         });
 }
+async function saveVideo(video: Videos) {
+    try {
+        const newVideo = new VideosModel({
+            title: video.title,
+            created_at: new Date(),
+            view: 0,
+            like: 0,
+            dislike: 0,
+            description: video.description,
+            language: video.language,
+            time: video.time,
+            img: video.img,
+            url: video.url,
+            urllocal: video.urllocal,
+            idComment: null,
+            idChannel: video.idChannel,
+            idCategory: video.idCategory,
+        });
 
+        const savedVideo = await newVideo.save();
+
+        return savedVideo;
+    } catch (error) {
+        throw error;
+    }
+}
 module.exports = {
     searchVideoByCategory,
+    saveVideo,
     searchVideo,
     getAllVideos,
     getVideoById,

@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 const VideoService = require('../services/videos.services');
 import VideoModel from '../models/videos.models';
-const fileService = require('../services/files.services');
+const FileService = require('../services/files.services');
 
 async function getAllVideo(req: Request, res: Response) {
     const page = parseInt(req.query.page as string, 10) || 1;
@@ -25,31 +25,45 @@ async function getAllVideo(req: Request, res: Response) {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }
-
 async function createVideo(req: Request, res: Response) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ error: 'Validation failed', details: errors.array() });
     }
     try {
-        let fileId = null;
+        let imgFileId = null;
+        let videoFileId = null;
+
         if (req.file) {
-            const file = await fileService.createFile(req.file);
-            fileId = file._id;
+            if (req.file.mimetype.startsWith('image/')) {
+                const imgFile = await FileService.createFile(req.file);
+                imgFileId = imgFile._id;
+            } else {
+                return res.status(400).json({ error: 'Invalid file type. Must be an image.' });
+            }
+        }
+
+        if (req.file && req.file.mimetype) {
+            const video = req.file.mimetype;
+            const videoFile = await FileService.createFile(video);
+            videoFileId = videoFile._id;
         }
 
         const videoData = {
             ...req.body,
-            img: fileId
+            img: imgFileId,
+            video: videoFileId,
         };
+
         const newVideo = await VideoService.addVideo(videoData);
 
         return res.status(201).json(newVideo);
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ message: 'Internal Server Error' });
+        return res.status(500).json({ message: 'Erreur interne du serveur' });
     }
 }
+
 
 async function searchVideo(req: Request, res: Response) {
     const page = parseInt(req.query.page as string, 10) || 1;
