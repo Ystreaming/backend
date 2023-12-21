@@ -1,5 +1,6 @@
 import CommentsModel from '../models/comments.models';
 import Comment from '../interfaces/comments.interface';
+import VideoModel from '../models/videos.models';
 
 function getAllComments(skip: number, limit: number) {
     return CommentsModel.find()
@@ -45,7 +46,13 @@ function createComments(comment: Comment) {
         dislike: 0,
         createdAt: new Date(),
         idUser: comment.idUser,
+        idVideo: comment.idVideo,
     });
+    VideoModel.findByIdAndUpdate(comment.idVideo, {
+        $push: {
+            comments: newComment._id,
+        }
+    }).exec();
     return newComment.save();
 }
 
