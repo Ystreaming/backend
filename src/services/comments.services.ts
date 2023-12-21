@@ -48,11 +48,19 @@ function createComments(comment: Comment) {
         idUser: comment.idUser,
         idVideo: comment.idVideo,
     });
-    VideoModel.findByIdAndUpdate(comment.idVideo, {
-        $push: {
-            comments: newComment._id,
+    VideoModel.findById(comment.idVideo).then((video) => {
+        if (!video) {
+            return;
+        } else if (!video.idComment) {
+          VideoModel.findByIdAndUpdate(comment.idVideo, {
+            $set: { idComment: [newComment._id] }
+          }).exec();
+        } else {
+          VideoModel.findByIdAndUpdate(comment.idVideo, {
+            $push: { idComment: newComment._id }
+          }).exec();
         }
-    }).exec();
+      });
     return newComment.save();
 }
 
