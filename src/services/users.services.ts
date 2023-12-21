@@ -58,7 +58,7 @@ function getUserById(id: string) {
 function getUserByUsername(username: string) {
     const searchRegex = new RegExp('^' + username, 'i');
 
-    return UserModel.find({ username: { $regex: searchRegex } });
+    return UserModel.find({ username: { $regex: searchRegex } }).populate('profileImage');
 }
 
 async function getSubByUser(userId: string, skip: number, limit: number) {

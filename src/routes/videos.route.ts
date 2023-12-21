@@ -12,6 +12,10 @@ router.get('/', videoController.getAllVideo);
 
 router.post('/', uploadSingleFile('img'), videoValidator, videoController.createVideo);
 
+// => /video/recommend/
+
+router.get('/recommendation', videoController.getRecommendVideo);
+
 // => /Video/id
 
 router.get('/:id', videoController.getVideoById);
@@ -33,9 +37,5 @@ router.get('/category/:id', videoController.getVideoByCategoryId);
 // => /video/comments/:id
 
 router.get('/comments/:id', videoController.getCommentsByVideoId);
-
-// => /video/recommend/
-
-router.get('/recommend', videoController.getRecommendVideo);
 
 module.exports = router;
