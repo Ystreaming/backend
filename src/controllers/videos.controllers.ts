@@ -177,6 +177,16 @@ async function addCommentOnVideo(req: Request, res: Response) {
     }
 }
 
+async function getRecommendVideo(req: Request, res: Response) {
+    try {
+        const videos = await VideoService.getRecommendVideo();
+        res.status(200).json(videos);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
 module.exports = {
     getAllVideo,
     searchVideo,
@@ -187,4 +197,5 @@ module.exports = {
     deleteVideo,
     getCommentsByVideoId,
     addCommentOnVideo,
+    getRecommendVideo,
 };

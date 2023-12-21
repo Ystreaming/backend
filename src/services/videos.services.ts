@@ -210,6 +210,12 @@ function addCommentOnVideo(id: string, idComment: string) {
         });
 }
 
+function getRecommendVideo() {
+    return VideosModel.aggregate([
+        { $sample: { size: 10 } }
+    ]);
+}
+
 module.exports = {
     searchVideoByCategory,
     searchVideo,
@@ -224,4 +230,5 @@ module.exports = {
     deleteVideo,
     getCommentsByVideoId,
     addCommentOnVideo,
+    getRecommendVideo
 };
