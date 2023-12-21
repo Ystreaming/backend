@@ -34,4 +34,8 @@ router.get('/category/:id', videoController.getVideoByCategoryId);
 
 router.get('/comments/:id', videoController.getCommentsByVideoId);
 
+// => /video/recommend/
+
+router.get('/recommend', videoController.getRecommendVideo);
+
 module.exports = router;
