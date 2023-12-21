@@ -178,8 +178,10 @@ async function addCommentOnVideo(req: Request, res: Response) {
 }
 
 async function getRecommendVideo(req: Request, res: Response) {
+    const limit = parseInt(req.query.limit as string, 10) || 50;
+
     try {
-        const videos = await VideoService.getRecommendVideo();
+        const videos = await VideoService.getRecommendVideo(limit);
         res.status(200).json(videos);
     } catch (error) {
         console.error(error);
@@ -188,8 +190,12 @@ async function getRecommendVideo(req: Request, res: Response) {
 }
 
 async function getMostViewedVideos(req: Request, res: Response) {
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const limit = parseInt(req.query.limit as string, 10) || 50;
+    const skip = (page - 1) * limit;
+
     try {
-        const videos = await VideoService.getMostViewedVideos();
+        const videos = await VideoService.getMostViewedVideos(limit, skip);
         res.status(200).json(videos);
     } catch (error) {
         console.error(error);

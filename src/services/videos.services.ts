@@ -210,16 +210,17 @@ function addCommentOnVideo(id: string, idComment: string) {
         });
 }
 
-function getRecommendVideo() {
+function getRecommendVideo(limit: number) {
     return VideosModel.aggregate([
-        { $sample: { size: 10 } }
+        { $sample: { size: limit } }
     ]);
 }
 
-function getMostViewedVideos() {
+function getMostViewedVideos(limit: number, skip: number) {
     return VideosModel.find()
         .sort({ view: -1 })
-        .limit(6);
+        .skip(skip)
+        .limit(limit);
 };
 
 module.exports = {
