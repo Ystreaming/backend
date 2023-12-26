@@ -123,13 +123,42 @@ function searchVideo(q: string) {
     const searchRegex = new RegExp('^' + q, 'i');
 
     return VideosModel.find({ title: searchRegex })
-        .populate('idChannel')
-        .populate('idCategory')
+        .populate({
+            path: 'idChannel',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate({
+            path: 'idCategory',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
         .populate('img');
 }
 
-function searchVideoByCategory(id: string) {
-    return VideosModel.find({ idCategory: id });
+function searchVideoByCategory(id: string, skip: number, limit: number) {
+    return VideosModel.find({ idCategory: id })
+        .populate({
+            path: 'idChannel',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate({
+            path: 'idCategory',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate('img')
+        .skip(skip)
+        .limit(limit);
 }
 
 function getViewByChannelId(id: string) {
