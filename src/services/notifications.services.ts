@@ -1,6 +1,7 @@
 import NotificationsModels from '../models/notifications.models';
 import Notifications from '../interfaces/notifications.interface';
 import mongoose from 'mongoose';
+import { sendNotificationViaSocket } from '../app';
 
 function getAllNotifications(skip: number, limit: number) {
     return NotificationsModels.find().skip(skip).limit(limit)
@@ -26,7 +27,6 @@ function createNotification(notification: Notifications) {
         idUser: new mongoose.Types.ObjectId(notification.idUser),
         created_at: new Date(),
     });
-    console.log(newNotification);
     return newNotification.save();
 }
 
