@@ -7,7 +7,7 @@ function getAllChannels(skip: number, limit: number) {
         .populate({
             path: 'idUser',
             populate: {
-                path: 'image',
+                path: 'profileImage',
                 model: 'Files',
             }
         })
@@ -28,7 +28,7 @@ function getChannelById(id: string) {
         .populate({
             path: 'idUser',
             populate: {
-                path: 'image',
+                path: 'profileImage',
                 model: 'Files',
             }
         })
@@ -56,7 +56,7 @@ function searchChannelByName(name: string, skip: number, limit: number) {
         .populate({
             path: 'idUser',
             populate: {
-                path: 'image',
+                path: 'profileImage',
                 model: 'Files',
             }
         })
