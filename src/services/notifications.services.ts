@@ -26,7 +26,6 @@ function createNotification(notification: Notifications) {
         idUser: new mongoose.Types.ObjectId(notification.idUser),
         created_at: new Date(),
     });
-    console.log(newNotification);
     return newNotification.save();
 }
 

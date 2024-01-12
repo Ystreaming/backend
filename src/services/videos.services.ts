@@ -273,6 +273,32 @@ function getMostViewedVideos(limit: number, skip: number) {
         .limit(limit);
 };
 
+async function findUserIdByChannelIdWithVideoId(id: string): Promise<Object | null> {
+    try {
+        const video = await VideosModel.findById(id)
+            .populate({
+                path: 'idChannel',
+                populate: {
+                    path: 'idUser',
+                    model: 'Users',
+                }
+            })
+            .exec();
+
+        if (!video) {
+            throw new Error('Video not found');
+        }
+
+        const channel = video.idChannel as any;
+        const user = channel.idUser;
+        return user;
+    } catch (error) {
+        console.error('Error in findUserIdByChannelIdWithVideoId:', error);
+        throw error;
+    }
+}
+
+
 module.exports = {
     searchVideoByCategory,
     searchVideo,
@@ -288,5 +314,6 @@ module.exports = {
     getCommentsByVideoId,
     addCommentOnVideo,
     getRecommendVideo,
-    getMostViewedVideos
+    getMostViewedVideos,
+    findUserIdByChannelIdWithVideoId
 };

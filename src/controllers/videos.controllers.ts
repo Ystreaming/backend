@@ -3,6 +3,8 @@ import { validationResult } from 'express-validator';
 const VideoService = require('../services/videos.services');
 import VideoModel from '../models/videos.models';
 const fileService = require('../services/files.services');
+const NotificationService = require('../services/notifications.services');
+import { sendNotificationViaSocket } from '../app';
 
 async function getAllVideo(req: Request, res: Response) {
     const page = parseInt(req.query.page as string, 10) || 1;
@@ -43,6 +45,17 @@ async function createVideo(req: Request, res: Response) {
             img: fileId
         };
         const newVideo = await VideoService.addVideo(videoData);
+
+        const notificationData = {
+            title: 'Une nouvelle vidéo a été ajoutée',
+            description: `La vidéo ${newVideo.title} a été publiée par ${newVideo.idChannel.name}`,
+            url: `/videos/${newVideo._id}`,
+            type: 'video',
+            idUser: null
+        };
+
+        await NotificationService.createNotification(notificationData);
+        sendNotificationViaSocket(notificationData);
 
         return res.status(201).json(newVideo);
     } catch (error) {
@@ -166,9 +179,22 @@ async function getCommentsByVideoId(req: Request, res: Response) {
 async function addCommentOnVideo(req: Request, res: Response) {
     try {
         const video = await VideoService.addCommentOnVideo(req.params.id, req.body.idComment);
+        const userId = await VideoService.findUserIdByChannelIdWithVideoId(req.params.id);
+
         if (!video) {
             res.status(204).json({ message: 'No video found' });
         } else {
+            const notificationData = {
+                title: 'Un nouveau commentaire a été ajouté',
+                description: `Un commentaire a été ajouté sur la vidéo ${video.title} par ${userId.username}`,
+                url: `/videos/${video._id}`,
+                type: 'video',
+                idUser: userId._id
+            };
+
+            await NotificationService.createNotification(notificationData);
+            sendNotificationViaSocket(notificationData);
+
             res.status(200).json(video);
         }
     } catch (error) {
