@@ -1,7 +1,6 @@
 import NotificationsModels from '../models/notifications.models';
 import Notifications from '../interfaces/notifications.interface';
 import mongoose from 'mongoose';
-import { sendNotificationViaSocket } from '../app';
 
 function getAllNotifications(skip: number, limit: number) {
     return NotificationsModels.find().skip(skip).limit(limit)

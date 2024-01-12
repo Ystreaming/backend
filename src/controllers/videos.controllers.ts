@@ -179,15 +179,17 @@ async function getCommentsByVideoId(req: Request, res: Response) {
 async function addCommentOnVideo(req: Request, res: Response) {
     try {
         const video = await VideoService.addCommentOnVideo(req.params.id, req.body.idComment);
+        const userId = await VideoService.findUserIdByChannelIdWithVideoId(req.params.id);
+
         if (!video) {
             res.status(204).json({ message: 'No video found' });
         } else {
             const notificationData = {
                 title: 'Un nouveau commentaire a été ajouté',
-                description: `Un commentaire a été ajouté sur la vidéo ${video.title} par ${video.idUser.username}`,
+                description: `Un commentaire a été ajouté sur la vidéo ${video.title} par ${userId.username}`,
                 url: `/videos/${video._id}`,
                 type: 'video',
-                idUser: null
+                idUser: userId._id
             };
 
             await NotificationService.createNotification(notificationData);
