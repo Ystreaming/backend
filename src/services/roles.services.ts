@@ -39,6 +39,17 @@ function deleteRole(id: String) {
     return RoleModel.findByIdAndDelete(id);
 }
 
+function isUserInRole(idUser: String, nameRole: String) {
+    return RoleModel.findOne({ name: nameRole, idUsers: idUser })
+        .then((role) => {
+            if (role) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+}
+
 export {
     getAllRoles,
     getRoleById,
@@ -46,4 +57,5 @@ export {
     createRole,
     updateRole,
     deleteRole,
+    isUserInRole,
 };
