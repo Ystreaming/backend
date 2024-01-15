@@ -38,6 +38,12 @@ router.get('/search/:search', videoController.searchVideo);
 
 router.get('/category/:id', videoController.getVideoByCategoryId);
 
+// => /view/channel/:id
+router.get('/view/channel/:id', videoController.getViewByChannelId);
+
+// => /like/channel/:id
+router.get('/like/channel/:id', videoController.getLikeByChannelId);
+
 // => /video/comments/:id
 
 router.get('/comments/:id', videoController.getCommentsByVideoId);
