@@ -1,0 +1,10 @@
+type: object
+properties:
+  idUser:
+    type: string
+    format: string
+    description: "ObjectID of user"
+  idVideo:
+    type: string
+    format: string
+    description: "Array of string of video id"

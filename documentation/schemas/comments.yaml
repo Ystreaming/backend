@@ -1,0 +1,28 @@
+type: object
+properties:
+  texte:
+    type: string
+    description: "Comment texte"
+    required: true
+  like:
+    type: integer
+    format: int64
+    description: "Comment like"
+    default: 0
+  dislike:
+    type: integer
+    format: int64
+    description: "Comment dislike"
+    default: 0
+  createdAt:
+    type: string
+    format: date
+    description: "Comment creation date"
+  idVideo:
+    type: string
+    format: string
+    description: "ObjectID of video"
+  idUser:
+    type: string
+    format: string
+    description: "ObjectID of user"

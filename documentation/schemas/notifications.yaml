@@ -1,0 +1,23 @@
+type: object
+properties:
+  title:
+    type: string
+    description: "Notification title"
+    required: true
+  description:
+    type: string
+    description: "Notification description"
+    required: true
+  url:
+    type: string
+    format: url
+    description: "Notification url"
+    required: true
+  type:
+    type: string
+    description: "Notification type"
+    required: true
+  idUser:
+    type: string
+    format: string
+    description: "ObjectID of user"

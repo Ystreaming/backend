@@ -1,0 +1,62 @@
+type: object
+properties:
+  title:
+    type: string
+    description: "Video title"
+    required: true
+  createdAt:
+    type: string
+    format: date
+    description: "Video creation date"
+  view:
+    type: integer
+    format: int64
+    description: "Video view"
+    default: 0
+  like:
+    type: integer
+    format: int64
+    description: "Video like"
+    default: 0
+  dislike:
+    type: integer
+    format: int64
+    description: "Video dislike"
+    default: 0
+  description:
+    type: string
+    description: "Video description"
+  language:
+    type: string
+    format: language
+    description: "Video language"
+    required: true
+  time:
+    type: integer
+    format: number
+    description: "Video time"
+    required: true
+  img:
+    type: string
+    description: "Video image"
+    required: true
+  url:
+    type: string
+    format: url
+    description: "Video url"
+  urllocal:
+    type: string
+    format: url
+    description: "Video url local"
+  idComment:
+    type: array
+    format: string
+    description: "Video comment id"
+  idChannel:
+    type: string
+    format: string
+    description: "Video channel id"
+  idCategory:
+    type: string
+    format: string
+    description: "Video category id"
