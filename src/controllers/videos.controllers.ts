@@ -181,22 +181,18 @@ async function addCommentOnVideo(req: Request, res: Response) {
         const video = await VideoService.addCommentOnVideo(req.params.id, req.body.idComment);
         const userId = await VideoService.findUserIdByChannelIdWithVideoId(req.params.id);
 
-        if (!video) {
-            res.status(204).json({ message: 'No video found' });
-        } else {
-            const notificationData = {
-                title: 'Un nouveau commentaire a été ajouté',
-                description: `Un commentaire a été ajouté sur la vidéo ${video.title} par ${userId.username}`,
-                url: `/videos/${video._id}`,
-                type: 'video',
-                idUser: userId._id
-            };
+        const notificationData = {
+            title: 'Un nouveau commentaire a été ajouté',
+            description: `Un commentaire a été ajouté sur la vidéo ${video.title} par ${userId.username}`,
+            url: `/videos/${video._id}`,
+            type: 'video',
+            idUser: userId._id
+        };
 
-            await NotificationService.createNotification(notificationData);
-            sendNotificationViaSocket(notificationData);
+        await NotificationService.createNotification(notificationData);
+        sendNotificationViaSocket(notificationData);
 
-            res.status(200).json(video);
-        }
+        res.status(200).json(video);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal Server Error' });
@@ -229,6 +225,26 @@ async function getMostViewedVideos(req: Request, res: Response) {
     }
 }
 
+async function getViewByChannelId(req: Request, res: Response) {
+    try {
+        const videos = await VideoService.getViewByChannelId(req.params.id);
+        res.status(200).json(videos);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+async function getLikeByChannelId(req: Request, res: Response) {
+    try {
+        const videos = await VideoService.getLikeByChannelId(req.params.id);
+        res.status(200).json(videos);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
 module.exports = {
     getAllVideo,
     searchVideo,
@@ -240,5 +256,7 @@ module.exports = {
     getCommentsByVideoId,
     addCommentOnVideo,
     getRecommendVideo,
-    getMostViewedVideos
+    getMostViewedVideos,
+    getViewByChannelId,
+    getLikeByChannelId
 };
