@@ -4,7 +4,7 @@ import { Server } from 'socket.io';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import path from 'path';
-const yamlFilePath = path.resolve(__dirname, '../documentation/openapi.yaml');
+const yamlFilePath = path.resolve(__dirname, '../_build/openapi.yaml');
 const swaggerDocument = YAML.load(yamlFilePath);
 import cors from 'cors';
 
