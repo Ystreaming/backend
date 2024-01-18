@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
-import { validationResult } from 'express-validator';
 const HistoricService = require('../services/historics.services');
 import HistoricModel from '../models/historics.models';
 
 async function getAllHistoric(req: Request, res: Response) {
+    /* #swagger.tags = ['Historics']
+      #swagger.description = 'Endpoint to get all historics' */
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 50;
     const skip = (page - 1) * limit;
@@ -30,6 +31,16 @@ async function getAllHistoric(req: Request, res: Response) {
 }
 
 async function createHistoric(req: Request, res: Response) {
+    /* #swagger.tags = ['Historics']
+      #swagger.description = 'Endpoint to create a new historic' */
+
+    /* #swagger.parameters['Historics'] = {
+            in: 'body',
+            description: 'Historic information.',
+            required: true,
+            type: 'object',
+            schema: { $ref: "#/definitions/Historics" }
+        } */
     try {
         const newHistoric = await HistoricService.createHistorics(req.body);
         return res.status(201).json(newHistoric);
@@ -40,6 +51,8 @@ async function createHistoric(req: Request, res: Response) {
 }
 
 async function getHistoricById(req: Request, res: Response) {
+    /* #swagger.tags = ['Historics']
+      #swagger.description = 'Endpoint to get historic by id' */
     try {
         const historic = await HistoricService.getHistoricsById(req.params.id);
         if (!historic) {
@@ -54,6 +67,8 @@ async function getHistoricById(req: Request, res: Response) {
 }
 
 async function getHistoricByUserId(req: Request, res: Response) {
+    /* #swagger.tags = ['Historics']
+      #swagger.description = 'Endpoint to get historic by user id' */
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 50;
     const skip = (page - 1) * limit;
@@ -80,6 +95,8 @@ async function getHistoricByUserId(req: Request, res: Response) {
 }
 
 async function deleteHistoric(req: Request, res: Response) {
+    /* #swagger.tags = ['Historics']
+      #swagger.description = 'Endpoint to delete historic by id' */
     try {
         const historic = await HistoricService.deleteHistorics(req.params.id);
         if (!historic) {

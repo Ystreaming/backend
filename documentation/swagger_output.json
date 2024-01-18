@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.3",
   "info": {
     "version": "1.0.0",
     "title": "YStream API",
@@ -7,18 +7,18 @@
   },
   "servers": [
     {
-      "url": "",
-      "description": ""
+      "url": "http://localhost:3000",
+      "description": "Local server"
+    },
+    {
+      "url": "https://ystream-api.herokuapp.com",
+      "description": "Heroku server"
     }
   ],
   "tags": [
     {
-      "name": "Users",
-      "description": ""
-    },
-    {
       "name": "Videos",
-      "description": ""
+      "description": "Videos Endpoints"
     }
   ],
   "paths": {
@@ -34,7 +34,10 @@
     },
     "/users/": {
       "get": {
-        "description": "",
+        "tags": [
+          "Users"
+        ],
+        "description": "Endpoint to get all users",
         "parameters": [
           {
             "name": "page",
@@ -61,7 +64,21 @@
         }
       },
       "post": {
-        "description": "",
+        "tags": [
+          "Users"
+        ],
+        "description": "Endpoint to create users",
+        "parameters": [
+          {
+            "name": "User",
+            "in": "body",
+            "description": "User information",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/User"
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": "Created"
@@ -74,7 +91,10 @@
     },
     "/users/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Users"
+        ],
+        "description": "Endpoint to get users by id",
         "parameters": [
           {
             "name": "id",
@@ -101,7 +121,10 @@
         }
       },
       "put": {
-        "description": "",
+        "tags": [
+          "Users"
+        ],
+        "description": "Endpoint to update users",
         "parameters": [
           {
             "name": "id",
@@ -145,7 +168,10 @@
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Users"
+        ],
+        "description": "Endpoint to delete users",
         "parameters": [
           {
             "name": "id",
@@ -171,7 +197,10 @@
     },
     "/users/username/{username}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Users"
+        ],
+        "description": "Endpoint to get users by username",
         "parameters": [
           {
             "name": "username",
@@ -211,7 +240,10 @@
     },
     "/users/sub/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Users"
+        ],
+        "description": "Endpoint to get sub by userId",
         "parameters": [
           {
             "name": "id",
@@ -240,6 +272,9 @@
           "200": {
             "description": "OK"
           },
+          "400": {
+            "description": "Bad Request"
+          },
           "404": {
             "description": "Not Found"
           },
@@ -249,7 +284,10 @@
         }
       },
       "patch": {
-        "description": "",
+        "tags": [
+          "Users"
+        ],
+        "description": "Endpoint to add sub",
         "parameters": [
           {
             "name": "id",
@@ -292,7 +330,10 @@
     },
     "/users/login": {
       "post": {
-        "description": "",
+        "tags": [
+          "Users"
+        ],
+        "description": "Endpoint to login users",
         "responses": {
           "200": {
             "description": "OK"
@@ -328,7 +369,10 @@
     },
     "/roles/": {
       "get": {
-        "description": "",
+        "tags": [
+          "Roles"
+        ],
+        "description": "Endpoint to get all roles",
         "parameters": [
           {
             "name": "page",
@@ -358,7 +402,21 @@
         }
       },
       "post": {
-        "description": "",
+        "tags": [
+          "Roles"
+        ],
+        "description": "Endpoint to create a new role",
+        "parameters": [
+          {
+            "name": "Roles",
+            "in": "body",
+            "description": "Role information",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Roles"
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": "Created"
@@ -374,7 +432,10 @@
     },
     "/roles/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Roles"
+        ],
+        "description": "Endpoint to get roles by id",
         "parameters": [
           {
             "name": "id",
@@ -398,7 +459,10 @@
         }
       },
       "put": {
-        "description": "",
+        "tags": [
+          "Roles"
+        ],
+        "description": "Endpoint to update roles by id",
         "parameters": [
           {
             "name": "id",
@@ -425,7 +489,10 @@
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Roles"
+        ],
+        "description": "Endpoint to delete roles by id",
         "parameters": [
           {
             "name": "id",
@@ -451,7 +518,10 @@
     },
     "/category/": {
       "get": {
-        "description": "",
+        "tags": [
+          "Categories"
+        ],
+        "description": "Endpoint to get all categories",
         "parameters": [
           {
             "name": "page",
@@ -481,10 +551,17 @@
         }
       },
       "post": {
-        "description": "",
+        "tags": [
+          "Categories"
+        ],
+        "description": "Endpoint to create a new category",
+        "parameters": [],
         "responses": {
           "201": {
             "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "500": {
             "description": "Internal Server Error"
@@ -508,7 +585,10 @@
     },
     "/category/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Categories"
+        ],
+        "description": "Endpoint to get categories by id",
         "parameters": [
           {
             "name": "id",
@@ -532,7 +612,10 @@
         }
       },
       "put": {
-        "description": "",
+        "tags": [
+          "Categories"
+        ],
+        "description": "Endpoint to update categories by id",
         "parameters": [
           {
             "name": "id",
@@ -570,7 +653,10 @@
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Categories"
+        ],
+        "description": "Endpoint to delete categories by id",
         "parameters": [
           {
             "name": "id",
@@ -596,7 +682,10 @@
     },
     "/videos/": {
       "get": {
-        "description": "",
+        "tags": [
+          "Videos"
+        ],
+        "description": "Endpoint to get all videos",
         "parameters": [
           {
             "name": "page",
@@ -623,7 +712,21 @@
         }
       },
       "post": {
-        "description": "",
+        "tags": [
+          "Videos"
+        ],
+        "description": "Endpoint to get all videos",
+        "parameters": [
+          {
+            "name": "Videos",
+            "in": "body",
+            "description": "Video information",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Videos"
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": "Created"
@@ -639,7 +742,10 @@
     },
     "/videos/recommendation": {
       "get": {
-        "description": "",
+        "tags": [
+          "Videos"
+        ],
+        "description": "Endpoint to get all videos",
         "parameters": [
           {
             "name": "limit",
@@ -661,7 +767,10 @@
     },
     "/videos/mostviewed": {
       "get": {
-        "description": "",
+        "tags": [
+          "Videos"
+        ],
+        "description": "Endpoint to get all videos",
         "parameters": [
           {
             "name": "page",
@@ -690,7 +799,10 @@
     },
     "/videos/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Videos"
+        ],
+        "description": "Endpoint to get all videos",
         "parameters": [
           {
             "name": "id",
@@ -714,7 +826,10 @@
         }
       },
       "put": {
-        "description": "",
+        "tags": [
+          "Videos"
+        ],
+        "description": "Endpoint to get all videos",
         "parameters": [
           {
             "name": "id",
@@ -738,7 +853,10 @@
         }
       },
       "patch": {
-        "description": "",
+        "tags": [
+          "Videos"
+        ],
+        "description": "Endpoint to get all videos",
         "parameters": [
           {
             "name": "id",
@@ -773,7 +891,10 @@
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Videos"
+        ],
+        "description": "Endpoint to get all videos",
         "parameters": [
           {
             "name": "id",
@@ -799,7 +920,10 @@
     },
     "/videos/search/{search}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Videos"
+        ],
+        "description": "Endpoint to get all videos",
         "parameters": [
           {
             "name": "search",
@@ -836,7 +960,10 @@
     },
     "/videos/category/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Videos"
+        ],
+        "description": "Endpoint to get all videos",
         "parameters": [
           {
             "name": "id",
@@ -873,7 +1000,10 @@
     },
     "/videos/view/channel/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Videos"
+        ],
+        "description": "Endpoint to get all videos",
         "parameters": [
           {
             "name": "id",
@@ -896,7 +1026,10 @@
     },
     "/videos/like/channel/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Videos"
+        ],
+        "description": "Endpoint to get all videos",
         "parameters": [
           {
             "name": "id",
@@ -919,7 +1052,10 @@
     },
     "/videos/comments/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Videos"
+        ],
+        "description": "Endpoint to get all videos",
         "parameters": [
           {
             "name": "id",
@@ -959,7 +1095,10 @@
     },
     "/channels/": {
       "get": {
-        "description": "",
+        "tags": [
+          "Channels"
+        ],
+        "description": "Endpoint to get all channels",
         "responses": {
           "200": {
             "description": "OK"
@@ -973,7 +1112,11 @@
         }
       },
       "post": {
-        "description": "",
+        "tags": [
+          "Channels"
+        ],
+        "description": "Endpoint to create a new channel",
+        "parameters": [],
         "responses": {
           "201": {
             "description": "Created"
@@ -1006,7 +1149,10 @@
     },
     "/channels/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Channels"
+        ],
+        "description": "Endpoint to get channel by id",
         "parameters": [
           {
             "name": "id",
@@ -1030,7 +1176,10 @@
         }
       },
       "put": {
-        "description": "",
+        "tags": [
+          "Channels"
+        ],
+        "description": "Endpoint to update channel by id",
         "parameters": [
           {
             "name": "id",
@@ -1054,7 +1203,10 @@
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Channels"
+        ],
+        "description": "Endpoint to delete channel by id",
         "parameters": [
           {
             "name": "id",
@@ -1080,7 +1232,10 @@
     },
     "/channels/search/{name}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Channels"
+        ],
+        "description": "Endpoint to search channel by name",
         "parameters": [
           {
             "name": "name",
@@ -1120,7 +1275,10 @@
     },
     "/channels/category/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Channels"
+        ],
+        "description": "Endpoint to get channel by category id",
         "parameters": [
           {
             "name": "id",
@@ -1160,7 +1318,10 @@
     },
     "/channels/view/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Channels"
+        ],
+        "description": "Endpoint to get view by channel id",
         "parameters": [
           {
             "name": "id",
@@ -1186,7 +1347,10 @@
     },
     "/channels/like/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Channels"
+        ],
+        "description": "Endpoint to get like by channel id",
         "parameters": [
           {
             "name": "id",
@@ -1212,7 +1376,10 @@
     },
     "/comments/": {
       "get": {
-        "description": "",
+        "tags": [
+          "Comments"
+        ],
+        "description": "Endpoint to get all comments",
         "parameters": [
           {
             "name": "page",
@@ -1242,7 +1409,21 @@
         }
       },
       "post": {
-        "description": "",
+        "tags": [
+          "Comments"
+        ],
+        "description": "Endpoint to create a new comment",
+        "parameters": [
+          {
+            "name": "Comments",
+            "in": "body",
+            "description": "Comment information.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Comments"
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": "Created"
@@ -1258,7 +1439,10 @@
     },
     "/comments/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Comments"
+        ],
+        "description": "Endpoint to get comments by id",
         "parameters": [
           {
             "name": "id",
@@ -1282,7 +1466,10 @@
         }
       },
       "put": {
-        "description": "",
+        "tags": [
+          "Comments"
+        ],
+        "description": "Endpoint to get comments by id",
         "parameters": [
           {
             "name": "id",
@@ -1306,7 +1493,10 @@
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Comments"
+        ],
+        "description": "Endpoint to delete comments by id",
         "parameters": [
           {
             "name": "id",
@@ -1332,7 +1522,10 @@
     },
     "/comments/user/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Comments"
+        ],
+        "description": "Endpoint to get comments by user id",
         "parameters": [
           {
             "name": "id",
@@ -1372,7 +1565,10 @@
     },
     "/historics/": {
       "get": {
-        "description": "",
+        "tags": [
+          "Historics"
+        ],
+        "description": "Endpoint to get all historics",
         "parameters": [
           {
             "name": "page",
@@ -1402,7 +1598,21 @@
         }
       },
       "post": {
-        "description": "",
+        "tags": [
+          "Historics"
+        ],
+        "description": "Endpoint to create a new historic",
+        "parameters": [
+          {
+            "name": "Historics",
+            "in": "body",
+            "description": "Historic information.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Historics"
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": "Created"
@@ -1415,7 +1625,10 @@
     },
     "/historics/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Historics"
+        ],
+        "description": "Endpoint to get historic by id",
         "parameters": [
           {
             "name": "id",
@@ -1439,7 +1652,10 @@
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Historics"
+        ],
+        "description": "Endpoint to delete historic by id",
         "parameters": [
           {
             "name": "id",
@@ -1465,7 +1681,10 @@
     },
     "/historics/user/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Historics"
+        ],
+        "description": "Endpoint to get historic by user id",
         "parameters": [
           {
             "name": "id",
@@ -1505,7 +1724,10 @@
     },
     "/notifications/": {
       "get": {
-        "description": "",
+        "tags": [
+          "Notifications"
+        ],
+        "description": "Endpoint to get all notifications",
         "parameters": [
           {
             "name": "page",
@@ -1535,7 +1757,21 @@
         }
       },
       "post": {
-        "description": "",
+        "tags": [
+          "Notifications"
+        ],
+        "description": "Endpoint to create a new notification",
+        "parameters": [
+          {
+            "name": "Notifications",
+            "in": "body",
+            "description": "Notification information",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Notifications"
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": "Created"
@@ -1551,7 +1787,10 @@
     },
     "/notifications/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Notifications"
+        ],
+        "description": "Endpoint to get notifications by id",
         "parameters": [
           {
             "name": "id",
@@ -1575,7 +1814,10 @@
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Notifications"
+        ],
+        "description": "Endpoint to delete notifications by id",
         "parameters": [
           {
             "name": "id",
@@ -1601,7 +1843,10 @@
     },
     "/notifications/users/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Notifications"
+        ],
+        "description": "Endpoint to get notifications by user id",
         "parameters": [
           {
             "name": "id",
@@ -1637,6 +1882,342 @@
             "description": "Internal Server Error"
           }
         }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "Category": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Cuisine"
+          },
+          "image": {
+            "type": "string",
+            "example": "65a8f77318788511f9effda8"
+          }
+        },
+        "required": [
+          "name",
+          "image"
+        ]
+      },
+      "Videos": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Je suis mon titre"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2021-06-10T13:22:41.000Z"
+          },
+          "view": {
+            "type": "number",
+            "example": 0
+          },
+          "like": {
+            "type": "number",
+            "example": 0
+          },
+          "dislike": {
+            "type": "number",
+            "example": 0
+          },
+          "description": {
+            "type": "string",
+            "example": "Je suis ma description"
+          },
+          "language": {
+            "type": "string",
+            "example": "fr"
+          },
+          "time": {
+            "type": "number",
+            "example": 0
+          },
+          "img": {
+            "type": "string",
+            "example": "65a8f77318788511f9effda8"
+          },
+          "url": {
+            "type": "string",
+            "example": "Je suis mon url"
+          },
+          "urllocal": {
+            "type": "string",
+            "example": "Je suis mon urllocal"
+          },
+          "idComment": {
+            "type": "array",
+            "example": [
+              "65a8f77318788511f9effda8",
+              "65a8f77318788511f9effda8"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "idChannel": {
+            "type": "string",
+            "example": "65a8f77318788511f9effda8"
+          },
+          "idCategory": {
+            "type": "string",
+            "example": "65a8f77318788511f9effda8"
+          }
+        },
+        "required": [
+          "title",
+          "view",
+          "like",
+          "dislike",
+          "description",
+          "language",
+          "time",
+          "img",
+          "url",
+          "urllocal",
+          "idChannel",
+          "idCategory"
+        ]
+      },
+      "Users": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "example": "John"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Doe"
+          },
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "example": "1999-12-31"
+          },
+          "username": {
+            "type": "string",
+            "example": "johndoe"
+          },
+          "password": {
+            "type": "string",
+            "example": "password"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2021-06-10T13:22:41.000Z"
+          },
+          "status": {
+            "type": "boolean",
+            "example": true
+          },
+          "sub": {
+            "type": "array",
+            "example": [
+              "65a8f77318788511f9effda8",
+              "65a8f77318788511f9effda8"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "language": {
+            "type": "string",
+            "example": "fr"
+          },
+          "profileImage": {
+            "type": "string",
+            "example": "65a8f77318788511f9effda8"
+          }
+        },
+        "required": [
+          "firstName",
+          "lastName",
+          "email",
+          "dateOfBirth",
+          "username",
+          "password",
+          "language",
+          "profileImage"
+        ]
+      },
+      "Channel": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Cuisine"
+          },
+          "description": {
+            "type": "string",
+            "example": "65a8f77318788511f9effda8"
+          },
+          "image": {
+            "type": "string",
+            "example": "65a8f77318788511f9effda8"
+          },
+          "subNumber": {
+            "type": "number",
+            "example": 0
+          },
+          "idCategory": {
+            "type": "string",
+            "example": "65a8f77318788511f9effda8"
+          },
+          "idVideos": {
+            "type": "array",
+            "example": [
+              "65a8f77318788511f9effda8"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "idUser": {
+            "type": "string",
+            "example": "65a8f77318788511f9effda8"
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "image",
+          "idCategory",
+          "idUser"
+        ]
+      },
+      "Roles": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Administrateur"
+          },
+          "permission": {
+            "type": "array",
+            "example": [
+              "DELETE",
+              "UPDATE",
+              "CREATE",
+              "READ"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "idUsers": {
+            "type": "array",
+            "example": [
+              "65a8f77318788511f9effda8"
+            ],
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "permission",
+          "idUsers"
+        ]
+      },
+      "Comments": {
+        "type": "object",
+        "properties": {
+          "texte": {
+            "type": "string",
+            "example": "Je suis mon texte"
+          },
+          "like": {
+            "type": "number",
+            "example": 0
+          },
+          "dislike": {
+            "type": "number",
+            "example": 0
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2021-06-10T13:22:41.000Z"
+          },
+          "idVideo": {
+            "type": "string",
+            "example": "65a8f77318788511f9effda8"
+          },
+          "idUser": {
+            "type": "string",
+            "example": "65a8f77318788511f9effda8"
+          }
+        },
+        "required": [
+          "texte",
+          "idVideo",
+          "idUser"
+        ]
+      },
+      "Historics": {
+        "type": "object",
+        "properties": {
+          "idUser": {
+            "type": "string",
+            "example": "65a8f77318788511f9effda8"
+          },
+          "idVideo": {
+            "type": "string",
+            "example": "65a8f77318788511f9effda8"
+          }
+        },
+        "required": [
+          "idUser",
+          "idVideo"
+        ]
+      },
+      "Notifications": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Je suis mon titre"
+          },
+          "description": {
+            "type": "string",
+            "example": "Je suis ma description"
+          },
+          "url": {
+            "type": "string",
+            "example": "Je suis mon url"
+          },
+          "type": {
+            "type": "string",
+            "example": "Je suis mon type"
+          },
+          "idUser": {
+            "type": "string",
+            "example": "65a8f77318788511f9effda8"
+          }
+        },
+        "required": [
+          "title",
+          "description",
+          "url",
+          "type",
+          "idUser"
+        ]
       }
     }
   }

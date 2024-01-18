@@ -7,6 +7,8 @@ const NotificationService = require('../services/notifications.services');
 import { sendNotificationViaSocket } from '../app';
 
 async function getAllVideo(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 50;
     const skip = (page - 1) * limit;
@@ -29,6 +31,16 @@ async function getAllVideo(req: Request, res: Response) {
 }
 
 async function createVideo(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
+
+    /* #swagger.parameters['Videos'] = {
+            in: 'body',
+            description: 'Video information',
+            required: true,
+            type: 'object',
+            schema: { $ref: "#/definitions/Videos" }
+    } */
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ error: 'Validation failed', details: errors.array() });
@@ -65,6 +77,8 @@ async function createVideo(req: Request, res: Response) {
 }
 
 async function searchVideo(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 50;
     const skip = (page - 1) * limit;
@@ -87,6 +101,8 @@ async function searchVideo(req: Request, res: Response) {
 }
 
 async function getVideoByCategoryId(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 50;
     const skip = (page - 1) * limit;
@@ -109,6 +125,8 @@ async function getVideoByCategoryId(req: Request, res: Response) {
 }
 
 async function getVideoById(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
     try {
         const video = await VideoService.getVideoById(req.params.id);
         if (!video) {
@@ -123,6 +141,8 @@ async function getVideoById(req: Request, res: Response) {
 }
 
 async function updateVideo(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
     try {
         const video = await VideoService.updateVideo(req.params.id, req.body);
         if (!video) {
@@ -137,6 +157,8 @@ async function updateVideo(req: Request, res: Response) {
 }
 
 async function deleteVideo(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
     try {
         const video = await VideoService.deleteVideo(req.params.id);
         if (!video) {
@@ -151,6 +173,8 @@ async function deleteVideo(req: Request, res: Response) {
 }
 
 async function getCommentsByVideoId(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 50;
     const skip = (page - 1) * limit;
@@ -177,6 +201,8 @@ async function getCommentsByVideoId(req: Request, res: Response) {
 }
 
 async function addCommentOnVideo(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
     try {
         const video = await VideoService.addCommentOnVideo(req.params.id, req.body.idComment);
         const userId = await VideoService.findUserIdByChannelIdWithVideoId(req.params.id);
@@ -200,6 +226,8 @@ async function addCommentOnVideo(req: Request, res: Response) {
 }
 
 async function getRecommendVideo(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
     const limit = parseInt(req.query.limit as string, 10) || 50;
 
     try {
@@ -212,6 +240,8 @@ async function getRecommendVideo(req: Request, res: Response) {
 }
 
 async function getMostViewedVideos(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 50;
     const skip = (page - 1) * limit;
@@ -226,6 +256,8 @@ async function getMostViewedVideos(req: Request, res: Response) {
 }
 
 async function getViewByChannelId(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
     try {
         const videos = await VideoService.getViewByChannelId(req.params.id);
         res.status(200).json(videos);
@@ -236,6 +268,8 @@ async function getViewByChannelId(req: Request, res: Response) {
 }
 
 async function getLikeByChannelId(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
     try {
         const videos = await VideoService.getLikeByChannelId(req.params.id);
         res.status(200).json(videos);

@@ -2,12 +2,8 @@ import express, { Application, Request, Response } from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 import swaggerUi from 'swagger-ui-express';
-// import YAML from 'yamljs';
-// import path from 'path';
-// const yamlFilePath = path.resolve(__dirname, '../documentation/openapi.yaml');
-// const swaggerDocument = YAML.load(yamlFilePath);
 import cors from 'cors';
-const swaggerOutput = require("./swagger_output.json");
+const swaggerOutput = require("../documentation/swagger_output.json");
 
 const app: Application = express();
 const server = http.createServer(app);
@@ -37,7 +33,6 @@ const NotificationsRoute = require('./routes/notifications.route');
 
 app.use(express.json());
 app.use(cors());
-// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerOutput));
 
 app.use('/home/ubuntu/backend/uploads/files', express.static('/home/ubuntu/backend/uploads/files'));

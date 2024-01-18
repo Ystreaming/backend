@@ -4,6 +4,8 @@ const NotificationService = require('../services/notifications.services');
 import NotificationModel from '../models/notifications.models';
 
 async function getAllNotification(req: Request, res: Response) {
+    /* #swagger.tags = ['Notifications']
+        #swagger.description = 'Endpoint to get all notifications' */
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 50;
     const skip = (page - 1) * limit;
@@ -30,6 +32,16 @@ async function getAllNotification(req: Request, res: Response) {
 }
 
 async function createNotification(req: Request, res: Response) {
+    /* #swagger.tags = ['Notifications']
+        #swagger.description = 'Endpoint to create a new notification' */
+
+    /* #swagger.parameters['Notifications'] = {
+            in: 'body',
+            description: 'Notification information',
+            required: true,
+            type: 'object',
+            schema: { $ref: "#/definitions/Notifications" }
+    } */
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ error: 'Validation failed', details: errors.array() });
@@ -45,6 +57,8 @@ async function createNotification(req: Request, res: Response) {
 }
 
 async function getNotificationById(req: Request, res: Response) {
+    /* #swagger.tags = ['Notifications']
+        #swagger.description = 'Endpoint to get notifications by id' */
     try {
         const notification = await NotificationService.getNotificationById(req.params.id);
         if (!notification) {
@@ -59,6 +73,8 @@ async function getNotificationById(req: Request, res: Response) {
 }
 
 async function getNotificationByUserId(req: Request, res: Response) {
+    /* #swagger.tags = ['Notifications']
+        #swagger.description = 'Endpoint to get notifications by user id' */
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 50;
     const skip = (page - 1) * limit;
@@ -85,6 +101,8 @@ async function getNotificationByUserId(req: Request, res: Response) {
 }
 
 async function deleteNotification(req: Request, res: Response) {
+    /* #swagger.tags = ['Notifications']
+        #swagger.description = 'Endpoint to delete notifications by id' */
     try {
         const notification = await NotificationService.deleteNotification(req.params.id);
         if (!notification) {
