@@ -37,7 +37,9 @@ const videoSchema = new Schema<Video>({
       required: true,
     },
     url: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Files',
+      required: true,
     },
     urllocal: {
       type: String,

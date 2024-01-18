@@ -13,7 +13,7 @@ interface Video extends Document {
     language: string;
     time: Number;
     img: {type: Schema.Types.ObjectId, ref:'Files'};
-    url: string;
+    url: {type: Schema.Types.ObjectId, ref:'Files'};
     urllocal: string;
     idComment: mongoose.Types.ObjectId[];
     idChannel: mongoose.Types.ObjectId;

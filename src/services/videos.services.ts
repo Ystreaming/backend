@@ -192,21 +192,18 @@ function getCommentsByVideoId(id: string) {
         });
 }
 
-function addCommentOnVideo(id: string, idComment: string) {
-    return VideosModel.findById(id)
-        .then(video => {
-            if (!video) {
-                throw new Error('Video not found');
-            }
-
-            if (!Array.isArray(video.idComment)) {
-                video.idComment = [];
-            }
-
-            video.idComment.push(new mongoose.Types.ObjectId(idComment));
-            return video.save();
-        });
+async function addCommentOnVideo(id: string, idComment: string) {
+    const video = await VideosModel.findById(id);
+    if (!video) {
+        throw new Error('Video not found');
+    }
+    if (!Array.isArray(video.idComment)) {
+        video.idComment = [];
+    }
+    video.idComment.push(new mongoose.Types.ObjectId(idComment));
+    return await video.save();
 }
+
 module.exports = {
     searchVideoByCategory,
     searchVideo,

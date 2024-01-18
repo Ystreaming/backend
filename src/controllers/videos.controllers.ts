@@ -25,20 +25,27 @@ async function getAllVideo(req: Request, res: Response) {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }
+
 async function createVideo(req: Request, res: Response) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ error: 'Validation failed', details: errors.array() });
     }
+
     try {
         let imgFileId = null;
         let videoFileId = null;
-
         if (req.file) {
+            console.log(req.file.mimetype)
+
             if (req.file.mimetype.startsWith('image/')) {
                 const imgFile = await FileService.createFile(req.file);
                 imgFileId = imgFile._id;
-            } else if (req.file.mimetype.startsWith('video/')) {
+            } else {
+                return res.status(400).json({ error: 'Invalid file type. Must be an image or a video.' });
+            }
+
+            if (req.file.mimetype.startsWith('video/')) {
                 const videoFile = await FileService.createFile(req.file);
                 videoFileId = videoFile._id;
             } else {
@@ -48,7 +55,7 @@ async function createVideo(req: Request, res: Response) {
         const videoData = {
             ...req.body,
             img: imgFileId,
-            video: videoFileId,
+            url: videoFileId,
         };
 
         const newVideo = await VideoService.addVideo(videoData);
@@ -56,7 +63,7 @@ async function createVideo(req: Request, res: Response) {
         return res.status(201).json(newVideo);
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ message: 'Erreur interne du serveur' });
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
