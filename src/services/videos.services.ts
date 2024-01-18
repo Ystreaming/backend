@@ -23,7 +23,8 @@ function getAllVideos() {
                 model: 'Files',
             }
         })
-        .populate('img');
+        .populate('img')
+        .populate('url');
 }
 
 function getVideoById(id: string) {
@@ -46,7 +47,8 @@ function getVideoById(id: string) {
             model: 'Files',
         }
     })
-    .populate('img');
+    .populate('img')
+    .populate('url');
 }
 
 function getVideoByChannelId(id: string) {
@@ -65,7 +67,8 @@ function getVideoByChannelId(id: string) {
                 model: 'Files',
             }
         })
-        .populate('img');
+        .populate('img')
+        .populate('url');
 }
 
 function getVideoByCategoryId(id: string) {
@@ -84,7 +87,8 @@ function getVideoByCategoryId(id: string) {
                 model: 'Files',
             }
         })
-        .populate('img');
+        .populate('img')
+        .populate('url');
 }
 
 function addVideo(video: Videos) {
@@ -98,7 +102,7 @@ function addVideo(video: Videos) {
         language: video.language,
         time: video.time,
         img: video.img,
-        url: video._id,
+        url: video.url,
         urllocal: video.urllocal,
         idComment: null,
         idChannel: video.idChannel,
@@ -127,7 +131,8 @@ function searchVideo(q: string) {
     return VideosModel.find({ title: searchRegex })
         .populate('idChannel')
         .populate('idCategory')
-        .populate('img');
+        .populate('img')
+        .populate('url');
 }
 
 function searchVideoByCategory(id: string) {

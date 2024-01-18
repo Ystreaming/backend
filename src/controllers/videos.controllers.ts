@@ -3,6 +3,17 @@ import { validationResult } from 'express-validator';
 const VideoService = require('../services/videos.services');
 import VideoModel from '../models/videos.models';
 const FileService = require('../services/files.services');
+import { FileArray } from 'express-fileupload';
+
+interface FileWithMimetype extends Express.Multer.File {
+    mimetype: string;
+}
+
+// interface MulterRequest extends Request {
+//     files: {
+//         [fieldname: string]: FileWithMimetype[];
+//     } | FileArray | undefined;
+// }
 
 async function getAllVideo(req: Request, res: Response) {
     const page = parseInt(req.query.page as string, 10) || 1;
@@ -35,37 +46,39 @@ async function createVideo(req: Request, res: Response) {
     try {
         let imgFileId = null;
         let videoFileId = null;
-        if (req.file) {
-            console.log(req.file.mimetype)
+        if (req.files && typeof req.files === 'object' && !Array.isArray(req.files)) {
+            const files = req.files as unknown as { [fieldname: string]: FileWithMimetype[] };
 
-            if (req.file.mimetype.startsWith('image/')) {
-                const imgFile = await FileService.createFile(req.file);
+            if (files.img && files.img[0].mimetype.startsWith('image/')) {
+                const imgFile = await FileService.createFile(files.img[0]);
                 imgFileId = imgFile._id;
-            } else {
-                return res.status(400).json({ error: 'Invalid file type. Must be an image or a video.' });
+                console.log("imgFileId", imgFileId);
             }
-
-            if (req.file.mimetype.startsWith('video/')) {
-                const videoFile = await FileService.createFile(req.file);
+            if (files.url && files.url[0].mimetype.startsWith('video/')) {
+                const videoFile = await FileService.createFile(files.url[0]);
                 videoFileId = videoFile._id;
-            } else {
-                return res.status(400).json({ error: 'Invalid file type. Must be an image or a video.' });
+                console.log("videoFileId", videoFileId);
             }
+            if (!imgFileId || !videoFileId) {
+                return res.status(400).json({ error: 'Both image and video files are required.' });
+            }
+
+            const videoData = {
+                ...req.body,
+                img: imgFileId,
+                url: videoFileId,
+            };
+
+            const newVideo = await VideoService.addVideo(videoData);
+
+            return res.status(201).json(newVideo);
         }
-        const videoData = {
-            ...req.body,
-            img: imgFileId,
-            url: videoFileId,
-        };
-
-        const newVideo = await VideoService.addVideo(videoData);
-
-        return res.status(201).json(newVideo);
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
+
 
 async function searchVideo(req: Request, res: Response) {
     const page = parseInt(req.query.page as string, 10) || 1;
