@@ -4,26 +4,31 @@ const router = express.Router();
 const { videoValidator } = require('../validators/videos.validator');
 const videoController = require('../controllers/videos.controllers');
 const { uploadMultipleFiles } = require('../middlewares/file.middleware');
-
+import { streamVideo } from '../tools/streamVideo';
 
 // => /Video
 
 router.get('/', videoController.getAllVideo);
 
-router.post('/',
-    uploadMultipleFiles([{ name: 'img', maxCount: 1 }, { name: 'url', maxCount: 1 }]),
-    videoController.createVideo
+router.post(
+  '/',
+  uploadMultipleFiles([{ name: 'img', maxCount: 1 }, { name: 'url', maxCount: 1 }]),
+  videoController.createVideo
 );
-
-// => /Video/id
-
-router.get('/:id', videoController.getVideoById);
 
 router.put('/:id', videoValidator, videoController.updateVideo);
 
 router.patch('/:id', videoController.addCommentOnVideo);
 
 router.delete('/:id', videoController.deleteVideo);
+
+// => /Video/id
+
+router.get('/:id', videoController.getVideoById);
+
+// => /Video/stream/:id
+
+router.get('/stream/:id', streamVideo);
 
 // => /Video/search
 
