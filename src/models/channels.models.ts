@@ -27,6 +27,10 @@ const Channel = new Schema<Channel>({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Videos',
     }],
+    idUser: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Users',
+    },
 });
 
 const ChannelModel = mongoose.model<Channel>('Channels', Channel);

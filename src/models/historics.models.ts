@@ -4,7 +4,7 @@ import Historics from '../interfaces/historics.interface';
 const HistoricSchema = new Schema<Historics>({
     idUser: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Channels',
+        ref: 'Users',
     },
     idVideo: {
         type: mongoose.Schema.Types.ObjectId,

@@ -4,20 +4,21 @@ const router = express.Router();
 const { channelValidator } = require('../validators/channels.validator');
 const channelController = require('../controllers/channels.controllers');
 const { uploadSingleFile } = require('../middlewares/file.middleware');
+const { isAuthenticated } = require('../middlewares/users.middleware');
 
 // => /Channel
 
-router.get('/', channelController.getAllChannels);
+router.get('/', isAuthenticated, channelController.getAllChannels);
 
-router.post('/', uploadSingleFile('image'), channelValidator, channelController.createChannel);
+router.post('/', isAuthenticated, uploadSingleFile('image'), channelValidator, channelController.createChannel);
 
 // => /Channel/id
 
 router.get('/:id', channelController.getChannelById);
 
-router.put('/:id', channelValidator, channelController.updateChannel);
+router.put('/:id', isAuthenticated, channelValidator, channelController.updateChannel);
 
-router.delete('/:id', channelController.deleteChannel);
+router.delete('/:id', isAuthenticated, channelController.deleteChannel);
 
 // => /Channel/search/name
 

@@ -1,4 +1,4 @@
-import app from './app';
+import server from './app';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { connectToDatabase } from './tools/database';
@@ -11,7 +11,7 @@ async function startServer() {
     console.log("Connexion à la base de données établie");
 
     const port = process.env.PORT || 3000;
-    app.listen(port, () => {
+    server.listen(port, () => {
       console.log(`Serveur démarré sur le port ${port}`);
     });
   } catch (error) {
@@ -28,7 +28,10 @@ export async function gracefulShutdown(signal: AbortSignal) {
     await mongoose.disconnect();
     console.log('Connexion à la base de données fermée.');
 
-    process.exit(0);
+    server.close(() => {
+      console.log('Serveur fermé.');
+      process.exit(0);
+      });
   } catch (error) {
     console.error('Erreur lors de la fermeture des connexions:', error);
     process.exit(1);

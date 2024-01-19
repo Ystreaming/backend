@@ -4,6 +4,13 @@ import Channel from '../interfaces/channels.interface';
 function getAllChannels(skip: number, limit: number) {
     return ChannelModel.find()
         .populate('image')
+        .populate({
+            path: 'idUser',
+            populate: {
+                path: 'profileImage',
+                model: 'Files',
+            }
+        })
         .skip(skip)
         .limit(limit);
 }
@@ -15,6 +22,13 @@ function getChannelById(id: string) {
             path: 'idCategory',
             populate: {
                 path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate({
+            path: 'idUser',
+            populate: {
+                path: 'profileImage',
                 model: 'Files',
             }
         })
@@ -36,6 +50,13 @@ function searchChannelByName(name: string, skip: number, limit: number) {
             path: 'idVideos',
             populate: {
                 path: 'img',
+                model: 'Files',
+            }
+        })
+        .populate({
+            path: 'idUser',
+            populate: {
+                path: 'profileImage',
                 model: 'Files',
             }
         })
@@ -61,6 +82,7 @@ function createChannel(channel: Channel) {
         subNumber: 0,
         idCategories: channel.idCategory,
         idVideos: channel.idVideos,
+        idUser: channel.idUser,
     });
     return newChannel.save();
 }

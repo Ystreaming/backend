@@ -2,13 +2,18 @@ import request from 'supertest';
 import app from '../app';
 import mongoose from 'mongoose';
 import path from 'path';
+import jwt from 'jsonwebtoken';
 
 describe('Channels API Endpoints', () => {
   let channelId: string;
   let userId: string;
   let categoriesId: string;
+  let testAuthToken: string;
+  let JWT_SECRET: string = "jRPiCoTYgg7URsPRCv-43gHh1M6vtbqKmAZg-aOkvag153mR_25jFeGWdKMbdhUNtFZDg5sjhstU6xCzq4JUcA";
 
   beforeAll(async () => {
+    const testUser = { _id: 'user_test_id', email: 'test@example.com' };
+    testAuthToken = jwt.sign(testUser, JWT_SECRET, { expiresIn: '1h' });
     const newUser = {
       username: 'testUser',
       password: 'password123',
@@ -18,6 +23,7 @@ describe('Channels API Endpoints', () => {
 
     const userRes = await request(app)
       .post('/users')
+      .set('Authorization', `Bearer ${testAuthToken}`)
       .send(newUser);
 
     userId = userRes.body._id;
@@ -29,6 +35,7 @@ describe('Channels API Endpoints', () => {
 
     const categoryRes = await request(app)
       .post('/category')
+      .set('Authorization', `Bearer ${testAuthToken}`)
       .send(newCategory);
 
     categoriesId = categoryRes.body._id;
@@ -44,6 +51,7 @@ describe('Channels API Endpoints', () => {
 
     const res = await request(app)
       .post('/channels')
+      .set('Authorization', `Bearer ${testAuthToken}`)
       .send(newChannel);
 
       expect(res.statusCode).toEqual(201);
@@ -57,7 +65,7 @@ describe('Channels API Endpoints', () => {
 
   describe('GET /channels', () => {
     it('should get all channels', async () => {
-      const res = await request(app).get('/channels');
+      const res = await request(app).get('/channels').set('Authorization', `Bearer ${testAuthToken}`);
 
       expect(res.statusCode).toEqual(200);
       expect(res.body[0]).toHaveProperty('_id');
@@ -66,21 +74,21 @@ describe('Channels API Endpoints', () => {
 
   describe('GET /channels/:id', () => {
     it('should get one channel', async () => {
-      const res = await request(app).get(`/channels/${channelId}`);
+      const res = await request(app).get(`/channels/${channelId}`).set('Authorization', `Bearer ${testAuthToken}`);
 
       expect(res.statusCode).toEqual(200);
       expect(res.body).toHaveProperty('_id');
     });
 
     it('should not get one channel with wrong id', async () => {
-      const res = await request(app).get(`/channels/123`);
+      const res = await request(app).get(`/channels/123`).set('Authorization', `Bearer ${testAuthToken}`);
 
       expect(res.statusCode).toEqual(500);
       expect(res.body).toHaveProperty('message', 'Internal Server Error');
     });
 
     it('should return 204 if channel not found', async () => {
-      const res = await request(app).get(`/channels/6565fcf55c7d8a60ff6742cb`);
+      const res = await request(app).get(`/channels/6565fcf55c7d8a60ff6742cb`).set('Authorization', `Bearer ${testAuthToken}`);
 
       expect(res.statusCode).toEqual(204);
     });
@@ -99,6 +107,7 @@ describe('Channels API Endpoints', () => {
 
       const res = await request(app)
         .post('/channels')
+        .set('Authorization', `Bearer ${testAuthToken}`)
         .send(newChannel);
 
       expect(res.statusCode).toEqual(201);
@@ -115,6 +124,7 @@ describe('Channels API Endpoints', () => {
 
       const res = await request(app)
         .post('/channels')
+        .set('Authorization', `Bearer ${testAuthToken}`)
         .send(newChannel);
 
       expect(res.statusCode).toEqual(400);
@@ -126,6 +136,7 @@ describe('Channels API Endpoints', () => {
 
       const res = await request(app)
         .post('/channels')
+        .set('Authorization', `Bearer ${testAuthToken}`)
         .attach('image', filePath)
         .field('name', 'Test Channel')
         .field('description', 'Test Channel Description')
@@ -151,6 +162,7 @@ describe('Channels API Endpoints', () => {
 
       const res = await request(app)
         .put(`/channels/${channelId}`)
+        .set('Authorization', `Bearer ${testAuthToken}`)
         .send(newChannel);
 
       expect(res.statusCode).toEqual(200);
@@ -169,6 +181,7 @@ describe('Channels API Endpoints', () => {
 
       const res = await request(app)
         .put(`/channels/6565fcf55c7d8a60ff6742cb`)
+        .set('Authorization', `Bearer ${testAuthToken}`)
         .send(newChannel);
 
       expect(res.statusCode).toEqual(500);
@@ -177,13 +190,13 @@ describe('Channels API Endpoints', () => {
 
   describe('GET /channels/search/:name', () => {
     it('should search a channel by name', async () => {
-      const res = await request(app).get(`/channels/search/Test`);
+      const res = await request(app).get(`/channels/search/Test`).set('Authorization', `Bearer ${testAuthToken}`);
 
       expect(res.statusCode).toEqual(200);
     });
 
     it('should return 204 if channel not found', async () => {
-      const res = await request(app).get(`/channels/search/6565fcf55c7d8a60ff6742cb`);
+      const res = await request(app).get(`/channels/search/6565fcf55c7d8a60ff6742cb`).set('Authorization', `Bearer ${testAuthToken}`);
 
       expect(res.statusCode).toEqual(204);
     });
@@ -191,13 +204,13 @@ describe('Channels API Endpoints', () => {
 
   describe('GET /channels/category/:id', () => {
     it('should get all channels by category', async () => {
-      const res = await request(app).get(`/channels/category/${categoriesId}`);
+      const res = await request(app).get(`/channels/category/${categoriesId}`).set('Authorization', `Bearer ${testAuthToken}`);
 
       expect(res.statusCode).toEqual(200);
     });
 
     it('should return 204 if channel not found', async () => {
-      const res = await request(app).get(`/channels/category/6565fcf55c7d8a60ff6742cb`);
+      const res = await request(app).get(`/channels/category/6565fcf55c7d8a60ff6742cb`).set('Authorization', `Bearer ${testAuthToken}`);
 
       expect(res.statusCode).toEqual(204);
     });
@@ -205,7 +218,7 @@ describe('Channels API Endpoints', () => {
 
   describe('GET /channels/view/:id', () => {
     it('should return 204 if channel not found', async () => {
-      const res = await request(app).get(`/channels/view/6565fcf55c7d8a60ff6742cb`);
+      const res = await request(app).get(`/channels/view/6565fcf55c7d8a60ff6742cb`).set('Authorization', `Bearer ${testAuthToken}`);
 
       expect(res.statusCode).toEqual(204);
     });
@@ -213,7 +226,7 @@ describe('Channels API Endpoints', () => {
 
   describe('GET /channels/like/:id', () => {
     it('should return 204 if channel not found', async () => {
-      const res = await request(app).get(`/channels/like/6565fcf55c7d8a60ff6742cb`);
+      const res = await request(app).get(`/channels/like/6565fcf55c7d8a60ff6742cb`).set('Authorization', `Bearer ${testAuthToken}`);
 
       expect(res.statusCode).toEqual(204);
     });
@@ -221,27 +234,27 @@ describe('Channels API Endpoints', () => {
 
   describe('DELETE /channels/:id', () => {
     it('should delete a channel', async () => {
-      const res = await request(app).delete(`/channels/${channelId}`);
+      const res = await request(app).delete(`/channels/${channelId}`).set('Authorization', `Bearer ${testAuthToken}`);
 
       expect(res.statusCode).toEqual(200);
       expect(res.body).toHaveProperty('_id');
     });
 
     it('should return 204', async () => {
-      const res = await request(app).delete(`/channels/6565fcf55c7d8a60ff6742cb`);
+      const res = await request(app).delete(`/channels/6565fcf55c7d8a60ff6742cb`).set('Authorization', `Bearer ${testAuthToken}`);
 
       expect(res.statusCode).toEqual(204);
     });
 
     it('should return 500', async () => {
-      const res = await request(app).delete(`/channels/123`);
+      const res = await request(app).delete(`/channels/123`).set('Authorization', `Bearer ${testAuthToken}`);
 
       expect(res.statusCode).toEqual(500);
     });
 
     it('should return 204 if no channel found', async () => {
       await mongoose.model('Channels').deleteMany({});
-      const res = await request(app).get('/channels');
+      const res = await request(app).get('/channels').set('Authorization', `Bearer ${testAuthToken}`);
 
       expect(res.statusCode).toEqual(204);
     });

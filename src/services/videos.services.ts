@@ -2,6 +2,10 @@ import VideosModel from '../models/videos.models';
 import Videos from '../interfaces/videos.interface';
 import ChannelModel from '../models/channels.models';
 import mongoose from 'mongoose';
+import fs from 'fs';
+import path from 'path';
+
+const uploadsDirectory = path.join(__dirname, '../../uploads/video');
 
 function getAllVideos(skip: number, limit: number) {
     return VideosModel.find()
@@ -20,8 +24,8 @@ function getAllVideos(skip: number, limit: number) {
             }
         })
         .populate('img')
-        .skip(skip)
-        .limit(limit);
+        .populate('url')
+        .skip(skip);
 }
 
 function getVideoById(id: string) {
@@ -44,7 +48,8 @@ function getVideoById(id: string) {
             model: 'Files',
         }
     })
-    .populate('img');
+    .populate('img')
+    .populate('url');
 }
 
 function getVideoByChannelId(id: string) {
@@ -63,7 +68,8 @@ function getVideoByChannelId(id: string) {
                 model: 'Files',
             }
         })
-        .populate('img');
+        .populate('img')
+        .populate('url');
 }
 
 function getVideoByCategoryId(id: string) {
@@ -82,7 +88,8 @@ function getVideoByCategoryId(id: string) {
                 model: 'Files',
             }
         })
-        .populate('img');
+        .populate('img')
+        .populate('url');
 }
 
 function addVideo(video: Videos) {
@@ -96,7 +103,7 @@ function addVideo(video: Videos) {
         language: video.language,
         time: video.time,
         img: video.img,
-        url: video._id,
+        url: video.url,
         urllocal: video.urllocal,
         idComment: null,
         idChannel: video.idChannel,
@@ -123,13 +130,42 @@ function searchVideo(q: string) {
     const searchRegex = new RegExp('^' + q, 'i');
 
     return VideosModel.find({ title: searchRegex })
-        .populate('idChannel')
-        .populate('idCategory')
+        .populate({
+            path: 'idChannel',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate({
+            path: 'idCategory',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
         .populate('img');
 }
 
-function searchVideoByCategory(id: string) {
-    return VideosModel.find({ idCategory: id });
+function searchVideoByCategory(id: string, skip: number, limit: number) {
+    return VideosModel.find({ idCategory: id })
+        .populate({
+            path: 'idChannel',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate({
+            path: 'idCategory',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate('img')
+        .skip(skip)
+        .limit(limit);
 }
 
 function getViewByChannelId(id: string) {
@@ -147,7 +183,6 @@ function getLikeByChannelId(id: string) {
         { $group: { _id: null, like: { $sum: "$like" } }}
     ]);
 }
-
 function updateVideo(id: string, video: Videos) {
     return VideosModel.findOneAndUpdate({ _id: id }, {
         title: video.title,
@@ -170,7 +205,6 @@ function updateVideo(id: string, video: Videos) {
 function deleteVideo(id: string) {
     return VideosModel.findOneAndDelete({ _id: id });
 }
-
 function getCommentsByVideoId(id: string) {
     return VideosModel.findById({ _id: id })
         .populate({
@@ -193,21 +227,16 @@ function getCommentsByVideoId(id: string) {
         });
 }
 
-function addCommentOnVideo(id: string, idComment: string) {
-    return VideosModel.findById(id)
-        .then(video => {
-            if (!video) {
-                throw new Error('Video not found');
-            }
-
-            if (!Array.isArray(video.idComment)) {
-                video.idComment = [];
-            }
-
-            video.idComment.push(new mongoose.Types.ObjectId(idComment));
-
-            return video.save();
-        });
+async function addCommentOnVideo(id: string, idComment: string) {
+    const video = await VideosModel.findById(id);
+    if (!video) {
+        throw new Error('Video not found');
+    }
+    if (!Array.isArray(video.idComment)) {
+        video.idComment = [];
+    }
+    video.idComment.push(new mongoose.Types.ObjectId(idComment));
+    return await video.save();
 }
 
 function getRecommendVideo(limit: number) {
@@ -244,6 +273,32 @@ function getMostViewedVideos(limit: number, skip: number) {
         .limit(limit);
 };
 
+async function findUserIdByChannelIdWithVideoId(id: string): Promise<Object | null> {
+    try {
+        const video = await VideosModel.findById(id)
+            .populate({
+                path: 'idChannel',
+                populate: {
+                    path: 'idUser',
+                    model: 'Users',
+                }
+            })
+            .exec();
+
+        if (!video) {
+            throw new Error('Video not found');
+        }
+
+        const channel = video.idChannel as any;
+        const user = channel.idUser;
+        return user;
+    } catch (error) {
+        console.error('Error in findUserIdByChannelIdWithVideoId:', error);
+        throw error;
+    }
+}
+
+
 module.exports = {
     searchVideoByCategory,
     searchVideo,
@@ -259,5 +314,6 @@ module.exports = {
     getCommentsByVideoId,
     addCommentOnVideo,
     getRecommendVideo,
-    getMostViewedVideos
+    getMostViewedVideos,
+    findUserIdByChannelIdWithVideoId
 };

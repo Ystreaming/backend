@@ -3,19 +3,20 @@ const express = require('express');
 const router = express.Router();
 const { rolesValidator } = require('../validators/roles.validator');
 const rolesController = require('../controllers/roles.controllers');
+const { isAuthenticated } = require('../middlewares/users.middleware');
 
 // => /Role
 
-router.get('/', rolesController.getAllRoles);
+router.get('/', isAuthenticated, rolesController.getAllRoles);
 
-router.post('/', rolesValidator, rolesController.createRoles);
+router.post('/', isAuthenticated, rolesValidator, rolesController.createRoles);
 
 // => /Role/id
 
 router.get('/:id', rolesController.getRolesById);
 
-router.put('/:id', rolesValidator, rolesController.updateRoles);
+router.put('/:id', isAuthenticated, rolesValidator, rolesController.updateRoles);
 
-router.delete('/:id', rolesController.deleteRoles);
+router.delete('/:id', isAuthenticated, rolesController.deleteRoles);
 
 module.exports = router;

@@ -2,13 +2,14 @@ import { Request, Response, NextFunction } from 'express';
 import multer, { StorageEngine } from 'multer';
 import fs from 'fs';
 import path from 'path';
+import rangeParser from 'range-parser';
 
 declare module 'express-serve-static-core' {
     interface Request {
-      filesList?: { name: string; url: string }[];
-      filePath?: string;
+        filesList?: { name: string; url: string }[];
+        filePath?: string;
     }
-  }
+}
 
 const uploadsDirectory = path.join(__dirname, '../../uploads/video');
 
@@ -64,10 +65,24 @@ function deleteVideo(req: Request, res: Response, next: NextFunction) {
         next();
     });
 }
+// Middleware pour enregistrer une vidéo
+function saveVideo(req: Request, res: Response, next: NextFunction) {
+    const fieldName = 'video';
+    const upload = uploadSingleVideo(fieldName);
+
+    upload(req, res, (err: any) => {
+        if (err) {
+            return res.status(500).send({ message: 'Error uploading video' });
+        }
+        res.status(200).send({ message: 'Video saved successfully' });
+    });
+}
 
 export {
     uploadSingleVideo,
     listVideo,
     checkVideoExists,
-    deleteVideo
+    deleteVideo,
+    saveVideo,
 };
+

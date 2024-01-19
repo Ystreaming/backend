@@ -7,6 +7,8 @@ import UserModel from '../models/users.models';
 import mongoose from 'mongoose';
 
 async function getAllUsers(req: Request, res: Response) {
+    /* #swagger.tags = ['Users']
+      #swagger.description = 'Endpoint to get all users' */
     const page = parseInt(req.query.page as string ?? '1', 10);
     const limit = parseInt(req.query.limit as string ?? '50', 10);
     const skip = (page - 1) * limit;
@@ -29,6 +31,16 @@ async function getAllUsers(req: Request, res: Response) {
 }
 
 async function createUser(req: Request, res: Response) {
+    /* #swagger.tags = ['Users']
+      #swagger.description = 'Endpoint to create users' */
+
+    /* #swagger.parameters['User'] = {
+            in: 'body',
+            description: 'User information',
+            required: true,
+            type: 'object',
+            schema: { $ref: "#/definitions/User" }
+    } */
     try {
         let fileId = null;
         if (req.file) {
@@ -50,6 +62,8 @@ async function createUser(req: Request, res: Response) {
 }
 
 async function getUserById(req: Request, res: Response) {
+    /* #swagger.tags = ['Users']
+        #swagger.description = 'Endpoint to get users by id' */
     try {
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
             return res.status(400).json({ message: 'Invalid id' });
@@ -68,6 +82,8 @@ async function getUserById(req: Request, res: Response) {
 }
 
 async function getUserByUsername(req: Request, res: Response) {
+    /* #swagger.tags = ['Users']
+      #swagger.description = 'Endpoint to get users by username' */
     const page = parseInt(req.query.page as string ?? '1', 10);
     const limit = parseInt(req.query.limit as string ?? '50', 10);
     const skip = (1 - 1) * limit;
@@ -94,6 +110,8 @@ async function getUserByUsername(req: Request, res: Response) {
 }
 
 async function getSubByUser(req: Request, res: Response) {
+    /* #swagger.tags = ['Users']
+      #swagger.description = 'Endpoint to get sub by userId */
     const page = parseInt(req.query.page as string ?? '1', 10);
     const limit = parseInt(req.query.limit as string ?? '50', 10);
     const skip = (page - 1) * limit;
@@ -123,12 +141,14 @@ async function getSubByUser(req: Request, res: Response) {
 }
 
 async function loginUser(req: Request, res: Response) {
+    /* #swagger.tags = ['Users']
+      #swagger.description = 'Endpoint to login users' */
     try {
         if (!req.body.username || !req.body.password) {
             return res.status(400).json({ message: 'username and password are required' });
         } else {
             const user = await UsersService.loginUser(req.body.username, req.body.password);
-            const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET || 'jRPiCoTYgg7URsPRCv-43gHh1M6vtbqKmAZg-aOkvag153mR_25jFeGWdKMbdhUNtFZDg5sjhstU6xCzq4JUcA', { expiresIn: '100000000h' });
             res.json(token);
         }
     } catch (error) {
@@ -141,6 +161,8 @@ async function loginUser(req: Request, res: Response) {
 }
 
 async function updateUser(req: Request, res: Response) {
+    /* #swagger.tags = ['Users']
+      #swagger.description = 'Endpoint to update users' */
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -159,6 +181,8 @@ async function updateUser(req: Request, res: Response) {
 }
 
 async function deleteUser(req: Request, res: Response) {
+    /* #swagger.tags = ['Users']
+      #swagger.description = 'Endpoint to delete users' */
     try {
         const deletedUser = await UsersService.deleteUser(req.params.id);
         if (!deletedUser) {
@@ -173,6 +197,8 @@ async function deleteUser(req: Request, res: Response) {
 }
 
 async function addSub(req: Request, res: Response) {
+    /* #swagger.tags = ['Users']
+      #swagger.description = 'Endpoint to add sub' */
     if (!req.body.subId) {
         return res.status(400).json({ message: 'Sub is required' });
     }

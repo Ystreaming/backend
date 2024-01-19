@@ -4,6 +4,8 @@ const RolesService = require('../services/roles.services');
 import RolesModel from '../models/roles.models';
 
 async function getAllRoles(req: Request, res: Response) {
+    /* #swagger.tags = ['Roles']
+      #swagger.description = 'Endpoint to get all roles' */
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 50;
     const skip = (page - 1) * limit;
@@ -30,6 +32,16 @@ async function getAllRoles(req: Request, res: Response) {
 }
 
 async function createRoles(req: Request, res: Response) {
+    /* #swagger.tags = ['Roles']
+      #swagger.description = 'Endpoint to create a new role' */
+
+    /* #swagger.parameters['Roles'] = {
+            in: 'body',
+            description: 'Role information',
+            required: true,
+            type: 'object',
+            schema: { $ref: "#/definitions/Roles" }
+    } */
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ error: 'Validation failed', details: errors.array() });
@@ -45,6 +57,8 @@ async function createRoles(req: Request, res: Response) {
 }
 
 async function getRolesById(req: Request, res: Response) {
+    /* #swagger.tags = ['Roles']
+      #swagger.description = 'Endpoint to get roles by id' */
     try {
         const roles = await RolesService.getRoleById(req.params.id);
         if (!roles) {
@@ -59,6 +73,8 @@ async function getRolesById(req: Request, res: Response) {
 }
 
 async function updateRoles(req: Request, res: Response) {
+    /* #swagger.tags = ['Roles']
+      #swagger.description = 'Endpoint to update roles by id' */
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -78,6 +94,8 @@ async function updateRoles(req: Request, res: Response) {
 }
 
 async function deleteRoles(req: Request, res: Response) {
+    /* #swagger.tags = ['Roles']
+      #swagger.description = 'Endpoint to delete roles by id' */
     try {
         const roles = await RolesService.deleteRole(req.params.id);
         if (!roles) {

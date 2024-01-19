@@ -5,6 +5,8 @@ const fileService = require('../services/files.services');
 import CategoryModel from '../models/categories.models';
 
 async function getAllCategory(req: Request, res: Response) {
+    /* #swagger.tags = ['Categories']
+        #swagger.description = 'Endpoint to get all categories' */
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 50;
     const skip = (page - 1) * limit;
@@ -31,7 +33,20 @@ async function getAllCategory(req: Request, res: Response) {
 }
 
 async function createCategory(req: Request, res: Response) {
+    /* #swagger.tags = ['Categories']
+        #swagger.description = 'Endpoint to create a new category' */
+
+    /* #swagger.parameters['Category'] = {
+            in: 'body',
+            description: 'Category information',
+            required: true,
+            type: 'object',
+            schema: { $ref: "#/definitions/Category" }
+    } */
     const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ error: 'Validation failed', details: errors.array() });
+    }
 
     try {
         let categoryData = req.body;
@@ -50,6 +65,8 @@ async function createCategory(req: Request, res: Response) {
 }
 
 async function getCategoryById(req: Request, res: Response) {
+    /* #swagger.tags = ['Categories']
+        #swagger.description = 'Endpoint to get categories by id' */
     try {
         const category = await CategoryService.getCategoryById(req.params.id);
 
@@ -65,6 +82,8 @@ async function getCategoryById(req: Request, res: Response) {
 }
 
 async function updateCategory(req: Request, res: Response) {
+    /* #swagger.tags = ['Categories']
+        #swagger.description = 'Endpoint to update categories by id' */
     try {
         let categoryData = req.body;
 
@@ -87,6 +106,8 @@ async function updateCategory(req: Request, res: Response) {
 }
 
 async function deleteCategory(req: Request, res: Response) {
+    /* #swagger.tags = ['Categories']
+        #swagger.description = 'Endpoint to delete categories by id' */
     try {
         const category = await CategoryService.deleteCategory(req.params.id);
 

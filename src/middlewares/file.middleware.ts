@@ -24,9 +24,12 @@ const storage: StorageEngine = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Middleware pour l'upload d'un fichier
-function uploadSingleFile(fieldName: string) {
-    return upload.single(fieldName);
+function uploadMultipleFiles(fields: Array<{ name: string; maxCount: number }>) {
+    return upload.fields(fields);
+}
+
+function uploadSingleFile(field: string) {
+    return upload.single(field);
 }
 
 // Middleware pour lister tous les fichiers
@@ -66,8 +69,9 @@ function deleteFile(req: Request, res: Response, next: NextFunction) {
 }
 
 export {
+    uploadMultipleFiles,
     uploadSingleFile,
     listFiles,
     checkFileExists,
-    deleteFile
+    deleteFile,
 };
