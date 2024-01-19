@@ -3,17 +3,10 @@ import { validationResult } from 'express-validator';
 const VideoService = require('../services/videos.services');
 import VideoModel from '../models/videos.models';
 const FileService = require('../services/files.services');
-import { FileArray } from 'express-fileupload';
 
 interface FileWithMimetype extends Express.Multer.File {
     mimetype: string;
 }
-
-// interface MulterRequest extends Request {
-//     files: {
-//         [fieldname: string]: FileWithMimetype[];
-//     } | FileArray | undefined;
-// }
 
 async function getAllVideo(req: Request, res: Response) {
     const page = parseInt(req.query.page as string, 10) || 1;
