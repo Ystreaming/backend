@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 const express = require('express');
 const router = express.Router();
-const secretKey = process.env.SECRET_KEY as string;
+const secretKey = "jRPiCoTYgg7URsPRCv-43gHh1M6vtbqKmAZg-aOkvag153mR_25jFeGWdKMbdhUNtFZDg5sjhstU6xCzq4JUcA";
 const { getUserById } = require('../services/users.services');
 import bcrypt from 'bcrypt';
 
@@ -11,10 +11,13 @@ export interface CustomRequest extends Request {
 }
 
 function isAuthenticated(req: Request, res: Response, next: NextFunction) {
-    const token = req.headers.authorization;
-    if (!token) {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
         return res.status(401).json({ message: 'Non authentifié' });
     }
+
+    const token = authHeader.split(' ')[1];
 
     jwt.verify(token, secretKey, (err: any, decoded: any) => {
         if (err) {
@@ -25,6 +28,7 @@ function isAuthenticated(req: Request, res: Response, next: NextFunction) {
         }
     });
 }
+
 
 async function verifyPassword(req: Request, res: Response, next: NextFunction) {
     const submittedPassword = req.body.password;

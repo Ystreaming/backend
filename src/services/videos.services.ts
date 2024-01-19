@@ -24,8 +24,8 @@ function getAllVideos(skip: number, limit: number) {
             }
         })
         .populate('img')
-        .populate('url');
-        .skip(skip)
+        .populate('url')
+        .skip(skip);
 }
 
 function getVideoById(id: string) {

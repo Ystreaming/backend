@@ -3,21 +3,21 @@ const express = require('express');
 const router = express.Router();
 const { userValidator } = require('../validators/users.validator');
 const { uploadSingleFile } = require('../middlewares/file.middleware');
-const { verifyPassword } = require('../middlewares/users.middleware');
+const { verifyPassword, isAuthenticated } = require('../middlewares/users.middleware');
 
 // => /User
 
-router.get('/', userController.getAllUsers);
+router.get('/', isAuthenticated, userController.getAllUsers);
 
 router.post('/', uploadSingleFile('profileImage'), userController.createUser);
 
 // => /User/id
 
-router.get('/:id', userController.getUserById);
+router.get('/:id', isAuthenticated, userController.getUserById);
 
-router.put('/:id', verifyPassword, userController.updateUser);
+router.put('/:id', isAuthenticated, verifyPassword, userController.updateUser);
 
-router.delete('/:id', userController.deleteUser);
+router.delete('/:id', isAuthenticated, userController.deleteUser);
 
 // => /User/username/:username
 

@@ -59,12 +59,10 @@ async function createVideo(req: Request, res: Response) {
             if (files.img && files.img[0].mimetype.startsWith('image/')) {
                 const imgFile = await FileService.createFile(files.img[0]);
                 imgFileId = imgFile._id;
-                console.log("imgFileId", imgFileId);
             }
             if (files.url && files.url[0].mimetype.startsWith('video/')) {
                 const videoFile = await FileService.createFile(files.url[0]);
                 videoFileId = videoFile._id;
-                console.log("videoFileId", videoFileId);
             }
             if (!imgFileId || !videoFileId) {
                 return res.status(400).json({ error: 'Both image and video files are required.' });
@@ -78,27 +76,21 @@ async function createVideo(req: Request, res: Response) {
 
             const newVideo = await VideoService.addVideo(videoData);
 
+            const notificationData = {
+                title: 'Une nouvelle vidéo a été ajoutée',
+                description: `La vidéo ${newVideo.title} a été publiée par ${newVideo.idChannel.name}`,
+                url: `/videos/${newVideo._id}`,
+                type: 'video',
+                idUser: null
+            };
+
+            await NotificationService.createNotification(notificationData);
+            sendNotificationViaSocket(notificationData);
+
             return res.status(201).json(newVideo);
+        } else {
+            return res.status(400).json({ error: 'Both image and video files are required.' });
         }
-
-        const videoData = {
-            ...req.body,
-            img: fileId
-        };
-        const newVideo = await VideoService.addVideo(videoData);
-
-        const notificationData = {
-            title: 'Une nouvelle vidéo a été ajoutée',
-            description: `La vidéo ${newVideo.title} a été publiée par ${newVideo.idChannel.name}`,
-            url: `/videos/${newVideo._id}`,
-            type: 'video',
-            idUser: null
-        };
-
-        await NotificationService.createNotification(notificationData);
-        sendNotificationViaSocket(notificationData);
-
-        return res.status(201).json(newVideo);
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Internal Server Error' });

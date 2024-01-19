@@ -3,19 +3,20 @@ const express = require('express');
 const router = express.Router();
 const { videoValidator } = require('../validators/videos.validator');
 const videoController = require('../controllers/videos.controllers');
-const { uploadMultipleFiles } = require('../middlewares/file.middleware');
 import { streamVideo } from '../tools/streamVideo';
+const { uploadSingleFile, uploadMultipleFiles } = require('../middlewares/file.middleware');
+const { isAuthenticated } = require('../middlewares/users.middleware');
+
 
 // => /Video
 
 router.get('/', videoController.getAllVideo);
 
 router.post(
-  '/',
+  '/', isAuthenticated,
   uploadMultipleFiles([{ name: 'img', maxCount: 1 }, { name: 'url', maxCount: 1 }]),
   videoController.createVideo
 );
-router.post('/', uploadSingleFile('img'), videoValidator, videoController.createVideo);
 
 // => /video/recommend/
 
@@ -29,11 +30,11 @@ router.get('/mostviewed', videoController.getMostViewedVideos);
 
 router.get('/:id', videoController.getVideoById);
 
-router.put('/:id', videoValidator, videoController.updateVideo);
+router.put('/:id', isAuthenticated, videoValidator, videoController.updateVideo);
 
-router.patch('/:id', videoController.addCommentOnVideo);
+router.patch('/:id', isAuthenticated, videoController.addCommentOnVideo);
 
-router.delete('/:id', videoController.deleteVideo);
+router.delete('/:id', isAuthenticated, videoController.deleteVideo);
 
 // => /Video/id
 

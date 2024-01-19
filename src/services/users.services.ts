@@ -112,7 +112,7 @@ function deleteUser(id: string) {
     return UserModel.findOneAndDelete({ _id: id });
 }
 
-async function addSub(channelId: string, userId: string) {
+async function addSub(userId: string, channelId: string) {
     const channel = await ChannelModel.findById(channelId);
     if (!channel) {
         throw new Error('Channel not found');
