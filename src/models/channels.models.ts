@@ -15,6 +15,10 @@ const Channel = new Schema<Channel>({
       ref: 'Files',
       required: true,
     },
+    subNumber: {
+        type: Number,
+        default: 0,
+    },
     idCategory: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
@@ -23,6 +27,10 @@ const Channel = new Schema<Channel>({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Videos',
     }],
+    idUser: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Users',
+    },
 });
 
 const ChannelModel = mongoose.model<Channel>('Channels', Channel);

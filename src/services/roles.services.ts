@@ -1,16 +1,21 @@
 import RoleModel from '../models/roles.models';
 import Role from '../interfaces/roles.interface';
 
-function getAllRoles() {
-    return RoleModel.find();
+function getAllRoles(skip: number, limit: number) {
+    return RoleModel.find()
+        .skip(skip)
+        .limit(limit)
+        .populate('idUsers', 'name email');
 }
 
 function getRoleById(id: String) {
-    return RoleModel.findOne({ _id: id });
+    return RoleModel.findOne({ _id: id })
+        .populate('idUsers', 'name email');
 }
 
 function getRoleByName(name: string) {
-    return RoleModel.findOne({ name: name });
+    return RoleModel.findOne({ name: name })
+        .populate('idUsers', 'name email');
 }
 
 function createRole(role: Role) {

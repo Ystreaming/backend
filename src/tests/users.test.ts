@@ -2,7 +2,6 @@ import request from 'supertest';
 import app from '../app';
 import mongoose from 'mongoose';
 const path = require('path');
-const fs = require('fs');
 import { Request, Response } from 'express';
 
 describe('User API Endpoints', () => {
@@ -258,31 +257,60 @@ describe('User API Endpoints', () => {
         expect(userResponse.body).toHaveProperty('message', 'User not found');
       });
 
-    //   it('should sub by userId', async () => {
-    //     const newUser = {
-    //         username: 'newTestUser2',
-    //         password: 'password123',
-    //         email: 'test@example.com',
-    //         dateOfBirth: '1990-01-01',
-    //     };
+      it('should sub by userId', async () => {
+        const UserChannel = {
+            username: 'newTestUser',
+            password: 'password123',
+            email: 'user@example.com',
+            dateOfBirth: '1990-01-01',
+        };
 
-    //     const response = await request(app)
-    //         .post('/users')
-    //         .send(newUser);
+        const UserChannelResponse = await request(app)
+            .post('/users')
+            .send(UserChannel);
 
-    //     expect(response.statusCode).toBe(201);
-    //     expect(response.body).toHaveProperty('_id');
+        expect(UserChannelResponse.statusCode).toBe(201);
+        expect(UserChannelResponse.body).toHaveProperty('_id');
 
-    //     const userAddSub = await request(app).patch(`/users/sub/${response.body._id}`).send({ subId: '60b9b0b9e0f94bc9b5a5976f' });
+        const newChannel = {
+            name: 'newChannel',
+            description: 'description',
+            image: '507f1f77bcf86cd799439011',
+            idUser: UserChannelResponse.body._id,
+            idVideo: [],
+        };
 
-    //     expect(userAddSub.statusCode).toBe(200);
+        const responseChannel = await request(app)
+            .post('/channels')
+            .send(newChannel);
 
-    //     const userResponse = await request(app).get(`/users/sub/${response.body._id}`);
+        expect(responseChannel.statusCode).toBe(201);
+        expect(responseChannel.body).toHaveProperty('_id');
 
-    //     expect(userResponse.statusCode).toBe(200);
+        const newUser = {
+            username: 'newTestUser2',
+            password: 'password123',
+            email: 'test@example.com',
+            dateOfBirth: '1990-01-01',
+        };
 
-    //     await mongoose.model('Users').deleteOne({ _id: response.body._id });
-    //   });
+        const response = await request(app)
+            .post('/users')
+            .send(newUser);
+
+        expect(response.statusCode).toBe(201);
+        expect(response.body).toHaveProperty('_id');
+
+        const userAddSub = await request(app).patch(`/users/sub/${responseChannel.body._id}`).send({ subId: response.body._id });
+
+        expect(userAddSub.statusCode).toBe(200);
+
+        const userResponse = await request(app).get(`/users/sub/${response.body._id}`);
+
+        expect(userResponse.statusCode).toBe(200);
+
+        await mongoose.model('Users').deleteOne({ _id: response.body._id });
+      });
     });
 
     describe('POST /users/login', () => {
@@ -389,14 +417,58 @@ describe('User API Endpoints', () => {
             expect(response.statusCode).toBe(201);
             expect(response.body).toHaveProperty('_id');
 
-            const userAddSub = await request(app).patch(`/users/sub/${response.body._id}`).send({ subId: '60b9b0b9e0f94bc9b5a5976f' });
+            const newChannel = {
+                name: 'newChannel',
+                description: 'description',
+                image: '507f1f77bcf86cd799439011',
+                idUser: response.body._id,
+                idVideo: [],
+            };
+
+            const responseChannel = await request(app)
+                .post('/channels')
+                .send(newChannel);
+
+            expect(responseChannel.statusCode).toBe(201);
+            expect(responseChannel.body).toHaveProperty('_id');
+
+            const userAddSub = await request(app).patch(`/users/sub/${responseChannel.body._id}`).send({ subId: response.body._id });
 
             expect(userAddSub.statusCode).toBe(200);
 
         });
 
         it('should return 404', async () => {
-            const userAddSub = await request(app).patch(`/users/sub/507f1f77bcf86cd799439011`).send({ subId: '60b9b0b9e0f94bc9b5a5976f' });
+            const newUser = {
+                username: 'newTestUser',
+                password: 'password123',
+                email: 'user@example.com',
+                dateOfBirth: '1990-01-01',
+            };
+
+            const response = await request(app)
+                .post('/users')
+                .send(newUser);
+
+            expect(response.statusCode).toBe(201);
+            expect(response.body).toHaveProperty('_id');
+
+            const newChannel = {
+                name: 'newChannel',
+                description: 'description',
+                image: '507f1f77bcf86cd799439011',
+                idUser: response.body._id,
+                idVideo: [],
+            };
+
+            const responseChannel = await request(app)
+                .post('/channels')
+                .send(newChannel);
+
+            expect(responseChannel.statusCode).toBe(201);
+            expect(responseChannel.body).toHaveProperty('_id');
+
+            const userAddSub = await request(app).patch(`/users/sub/${responseChannel.body._id}`).send({ subId: '60b9b0b9e0f94bc9b5a5976f' });
 
             expect(userAddSub.statusCode).toBe(404);
             expect(userAddSub.body).toHaveProperty('message', 'User not found');

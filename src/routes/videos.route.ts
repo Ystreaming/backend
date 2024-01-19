@@ -15,6 +15,19 @@ router.post(
   uploadMultipleFiles([{ name: 'img', maxCount: 1 }, { name: 'url', maxCount: 1 }]),
   videoController.createVideo
 );
+router.post('/', uploadSingleFile('img'), videoValidator, videoController.createVideo);
+
+// => /video/recommend/
+
+router.get('/recommendation', videoController.getRecommendVideo);
+
+// => /video/mostviewed/
+
+router.get('/mostviewed', videoController.getMostViewedVideos);
+
+// => /Video/id
+
+router.get('/:id', videoController.getVideoById);
 
 router.put('/:id', videoValidator, videoController.updateVideo);
 
@@ -37,6 +50,12 @@ router.get('/search/:search', videoController.searchVideo);
 // => /video/category/:id
 
 router.get('/category/:id', videoController.getVideoByCategoryId);
+
+// => /view/channel/:id
+router.get('/view/channel/:id', videoController.getViewByChannelId);
+
+// => /like/channel/:id
+router.get('/like/channel/:id', videoController.getLikeByChannelId);
 
 // => /video/comments/:id
 

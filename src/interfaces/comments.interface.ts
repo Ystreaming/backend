@@ -6,6 +6,7 @@ interface Comment extends Document {
     dislike: number;
     texte: string;
     createdAt: Date;
+    idVideo: mongoose.Types.ObjectId;
     idUser: mongoose.Types.ObjectId;
 }
 

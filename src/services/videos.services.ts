@@ -7,7 +7,7 @@ import path from 'path';
 
 const uploadsDirectory = path.join(__dirname, '../../uploads/video');
 
-function getAllVideos() {
+function getAllVideos(skip: number, limit: number) {
     return VideosModel.find()
         .populate({
             path: 'idChannel',
@@ -25,6 +25,7 @@ function getAllVideos() {
         })
         .populate('img')
         .populate('url');
+        .skip(skip)
 }
 
 function getVideoById(id: string) {
@@ -129,14 +130,42 @@ function searchVideo(q: string) {
     const searchRegex = new RegExp('^' + q, 'i');
 
     return VideosModel.find({ title: searchRegex })
-        .populate('idChannel')
-        .populate('idCategory')
-        .populate('img')
-        .populate('url');
+        .populate({
+            path: 'idChannel',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate({
+            path: 'idCategory',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate('img');
 }
 
-function searchVideoByCategory(id: string) {
-    return VideosModel.find({ idCategory: id });
+function searchVideoByCategory(id: string, skip: number, limit: number) {
+    return VideosModel.find({ idCategory: id })
+        .populate({
+            path: 'idChannel',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate({
+            path: 'idCategory',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate('img')
+        .skip(skip)
+        .limit(limit);
 }
 
 function getViewByChannelId(id: string) {
@@ -189,6 +218,7 @@ function getCommentsByVideoId(id: string) {
             }
         })
         .select('idComment')
+        .sort({ createdAt: -1 })
         .then(video => {
             if (!video) {
                 throw new Error('Video not found');
@@ -209,6 +239,66 @@ async function addCommentOnVideo(id: string, idComment: string) {
     return await video.save();
 }
 
+function getRecommendVideo(limit: number) {
+    return VideosModel.aggregate([
+        { $sample: { size: limit } }
+    ])
+    .exec()
+    .then(results => VideosModel.populate(results, [
+        { path: 'idChannel', populate: { path: 'image', model: 'Files' } },
+        { path: 'idCategory', populate: { path: 'image', model: 'Files' } },
+        { path: 'img' }
+    ]));
+}
+
+function getMostViewedVideos(limit: number, skip: number) {
+    return VideosModel.find()
+        .sort({ view: -1 })
+        .populate({
+            path: 'idChannel',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate({
+            path: 'idCategory',
+            populate: {
+                path: 'image',
+                model: 'Files',
+            }
+        })
+        .populate('img')
+        .skip(skip)
+        .limit(limit);
+};
+
+async function findUserIdByChannelIdWithVideoId(id: string): Promise<Object | null> {
+    try {
+        const video = await VideosModel.findById(id)
+            .populate({
+                path: 'idChannel',
+                populate: {
+                    path: 'idUser',
+                    model: 'Users',
+                }
+            })
+            .exec();
+
+        if (!video) {
+            throw new Error('Video not found');
+        }
+
+        const channel = video.idChannel as any;
+        const user = channel.idUser;
+        return user;
+    } catch (error) {
+        console.error('Error in findUserIdByChannelIdWithVideoId:', error);
+        throw error;
+    }
+}
+
+
 module.exports = {
     searchVideoByCategory,
     searchVideo,
@@ -223,4 +313,7 @@ module.exports = {
     deleteVideo,
     getCommentsByVideoId,
     addCommentOnVideo,
+    getRecommendVideo,
+    getMostViewedVideos,
+    findUserIdByChannelIdWithVideoId
 };

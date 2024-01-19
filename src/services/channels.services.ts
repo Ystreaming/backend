@@ -1,9 +1,18 @@
 import ChannelModel from '../models/channels.models';
 import Channel from '../interfaces/channels.interface';
 
-function getAllChannels() {
+function getAllChannels(skip: number, limit: number) {
     return ChannelModel.find()
-        .populate('image');
+        .populate('image')
+        .populate({
+            path: 'idUser',
+            populate: {
+                path: 'profileImage',
+                model: 'Files',
+            }
+        })
+        .skip(skip)
+        .limit(limit);
 }
 
 function getChannelById(id: string) {
@@ -17,6 +26,27 @@ function getChannelById(id: string) {
             }
         })
         .populate({
+            path: 'idUser',
+            populate: {
+                path: 'profileImage',
+                model: 'Files',
+            }
+        })
+        .populate({
+            path: 'idVideos',
+            populate: {
+                path: 'img',
+                model: 'Files',
+            }
+        });
+}
+
+function searchChannelByName(name: string, skip: number, limit: number) {
+    const searchRegex = new RegExp('^' + name, 'i');
+
+    return ChannelModel.find({ name: searchRegex })
+        .populate('image')
+        .populate({
             path: 'idVideos',
             populate: {
                 path: 'img',
@@ -24,22 +54,14 @@ function getChannelById(id: string) {
             }
         })
         .populate({
-            path: 'idVideos',
+            path: 'idUser',
             populate: {
-                path: 'idChannel',
-                populate: {
-                    path: 'profileImage',
-                    model: 'Files',
-                }
+                path: 'profileImage',
+                model: 'Files',
             }
-        });
-}
-
-function searchChannelByName(name: string) {
-    const searchRegex = new RegExp('^' + name, 'i');
-
-    return ChannelModel.find({ name: searchRegex })
-        .populate('image');
+        })
+        .skip(skip)
+        .limit(limit);
 }
 
 function getChannelByUserId(id: string) {
@@ -57,8 +79,10 @@ function createChannel(channel: Channel) {
         name: channel.name,
         description: channel.description,
         image: channel.image,
+        subNumber: 0,
         idCategories: channel.idCategory,
         idVideos: channel.idVideos,
+        idUser: channel.idUser,
     });
     return newChannel.save();
 }
@@ -68,7 +92,7 @@ function updateChannel(id: string, channel: Channel) {
         name: channel.name,
         description: channel.description,
         image: channel.image,
-        idCategories: channel.idCategory,
+        idCategory: channel.idCategory,
         idVideos: channel.idVideos,
     });
 }

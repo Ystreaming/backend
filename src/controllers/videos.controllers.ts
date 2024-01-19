@@ -7,8 +7,12 @@ const FileService = require('../services/files.services');
 interface FileWithMimetype extends Express.Multer.File {
     mimetype: string;
 }
+const NotificationService = require('../services/notifications.services');
+import { sendNotificationViaSocket } from '../app';
 
 async function getAllVideo(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 50;
     const skip = (page - 1) * limit;
@@ -31,6 +35,16 @@ async function getAllVideo(req: Request, res: Response) {
 }
 
 async function createVideo(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
+
+    /* #swagger.parameters['Videos'] = {
+            in: 'body',
+            description: 'Video information',
+            required: true,
+            type: 'object',
+            schema: { $ref: "#/definitions/Videos" }
+    } */
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ error: 'Validation failed', details: errors.array() });
@@ -66,6 +80,25 @@ async function createVideo(req: Request, res: Response) {
 
             return res.status(201).json(newVideo);
         }
+
+        const videoData = {
+            ...req.body,
+            img: fileId
+        };
+        const newVideo = await VideoService.addVideo(videoData);
+
+        const notificationData = {
+            title: 'Une nouvelle vidéo a été ajoutée',
+            description: `La vidéo ${newVideo.title} a été publiée par ${newVideo.idChannel.name}`,
+            url: `/videos/${newVideo._id}`,
+            type: 'video',
+            idUser: null
+        };
+
+        await NotificationService.createNotification(notificationData);
+        sendNotificationViaSocket(notificationData);
+
+        return res.status(201).json(newVideo);
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Internal Server Error' });
@@ -74,6 +107,8 @@ async function createVideo(req: Request, res: Response) {
 
 
 async function searchVideo(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 50;
     const skip = (page - 1) * limit;
@@ -96,6 +131,8 @@ async function searchVideo(req: Request, res: Response) {
 }
 
 async function getVideoByCategoryId(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 50;
     const skip = (page - 1) * limit;
@@ -118,6 +155,8 @@ async function getVideoByCategoryId(req: Request, res: Response) {
 }
 
 async function getVideoById(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
     try {
         const video = await VideoService.getVideoById(req.params.id);
         if (!video) {
@@ -132,6 +171,8 @@ async function getVideoById(req: Request, res: Response) {
 }
 
 async function updateVideo(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
     try {
         const video = await VideoService.updateVideo(req.params.id, req.body);
         if (!video) {
@@ -146,6 +187,8 @@ async function updateVideo(req: Request, res: Response) {
 }
 
 async function deleteVideo(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
     try {
         const video = await VideoService.deleteVideo(req.params.id);
         if (!video) {
@@ -160,6 +203,8 @@ async function deleteVideo(req: Request, res: Response) {
 }
 
 async function getCommentsByVideoId(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 50;
     const skip = (page - 1) * limit;
@@ -186,13 +231,78 @@ async function getCommentsByVideoId(req: Request, res: Response) {
 }
 
 async function addCommentOnVideo(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
     try {
         const video = await VideoService.addCommentOnVideo(req.params.id, req.body.idComment);
-        if (!video) {
-            res.status(204).json({ message: 'No video found' });
-        } else {
-            res.status(200).json(video);
-        }
+        const userId = await VideoService.findUserIdByChannelIdWithVideoId(req.params.id);
+
+        const notificationData = {
+            title: 'Un nouveau commentaire a été ajouté',
+            description: `Un commentaire a été ajouté sur la vidéo ${video.title} par ${userId.username}`,
+            url: `/videos/${video._id}`,
+            type: 'video',
+            idUser: userId._id
+        };
+
+        await NotificationService.createNotification(notificationData);
+        sendNotificationViaSocket(notificationData);
+
+        res.status(200).json(video);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+async function getRecommendVideo(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
+    const limit = parseInt(req.query.limit as string, 10) || 50;
+
+    try {
+        const videos = await VideoService.getRecommendVideo(limit);
+        res.status(200).json(videos);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+async function getMostViewedVideos(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const limit = parseInt(req.query.limit as string, 10) || 50;
+    const skip = (page - 1) * limit;
+
+    try {
+        const videos = await VideoService.getMostViewedVideos(limit, skip);
+        res.status(200).json(videos);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+async function getViewByChannelId(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
+    try {
+        const videos = await VideoService.getViewByChannelId(req.params.id);
+        res.status(200).json(videos);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+async function getLikeByChannelId(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'Endpoint to get all videos' */
+    try {
+        const videos = await VideoService.getLikeByChannelId(req.params.id);
+        res.status(200).json(videos);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal Server Error' });
@@ -209,4 +319,8 @@ module.exports = {
     deleteVideo,
     getCommentsByVideoId,
     addCommentOnVideo,
+    getRecommendVideo,
+    getMostViewedVideos,
+    getViewByChannelId,
+    getLikeByChannelId
 };

@@ -5,20 +5,32 @@ const fileService = require('../services/files.services');
 const VideoService = require('../services/videos.services');
 
 async function getAllChannels(req: Request, res: Response) {
+    /* #swagger.tags = ['Channels']
+        #swagger.description = 'Endpoint to get all channels' */
     try {
         const channel = await ChannelService.getAllChannels();
-        if (!channel) {
+        if (channel.length === 0) {
             res.status(204).json({ message: 'Channel not found' });
         } else {
             res.status(200).json(channel);
         }
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ message: 'Internal Server Error' });
-        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
 }
 
 async function createChannel(req: Request, res: Response) {
+    /* #swagger.tags = ['Channels']
+        #swagger.description = 'Endpoint to create a new channel' */
+
+    /*    #swagger.parameters['Channel'] = {
+            in: 'body',
+            description: 'Channel information.',
+            required: true,
+            type: 'object',
+            schema: { $ref: "#/definitions/Channel" }
+    } */
     if (!req.body.idUser || !req.body.idVideo) {
         return res.status(400).json({ message: 'idUser, idVideo are required' });
     } else {
@@ -40,6 +52,8 @@ async function createChannel(req: Request, res: Response) {
 }
 
 async function getChannelById(req: Request, res: Response) {
+    /* #swagger.tags = ['Channels']
+        #swagger.description = 'Endpoint to get channel by id' */
     try {
         const channel = await ChannelService.getChannelById(req.params.id);
         if (!channel) {
@@ -54,6 +68,8 @@ async function getChannelById(req: Request, res: Response) {
 }
 
 async function searchChannelByName(req: Request, res: Response) {
+    /* #swagger.tags = ['Channels']
+        #swagger.description = 'Endpoint to search channel by name' */
     const page = parseInt(req.query.page as string);
     const limit = parseInt(req.query.limit as string);
     const skip = (page - 1) * limit;
@@ -80,6 +96,8 @@ async function searchChannelByName(req: Request, res: Response) {
 }
 
 async function getChannelByCategoryId(req: Request, res: Response) {
+    /* #swagger.tags = ['Channels']
+        #swagger.description = 'Endpoint to get channel by category id' */
     const page = parseInt(req.query.page as string);
     const limit = parseInt(req.query.limit as string);
     const skip = (page - 1) * limit;
@@ -106,9 +124,11 @@ async function getChannelByCategoryId(req: Request, res: Response) {
 }
 
 async function getViewByChannelId(req: Request, res: Response) {
+    /* #swagger.tags = ['Channels']
+        #swagger.description = 'Endpoint to get view by channel id' */
     try {
         const channel = await VideoService.getViewByChannelId(req.params.id);
-        if (!channel) {
+        if (!channel.length) {
             res.status(204).json({ message: 'No channel found' });
         } else {
             res.status(200).json(channel);
@@ -120,9 +140,11 @@ async function getViewByChannelId(req: Request, res: Response) {
 }
 
 async function getLikeByChannelId(req: Request, res: Response) {
+    /* #swagger.tags = ['Channels']
+        #swagger.description = 'Endpoint to get like by channel id' */
     try {
         const channel = await VideoService.getLikeByChannelId(req.params.id);
-        if (!channel) {
+        if (!channel.length) {
             res.status(204).json({ message: 'No channel found' });
         } else {
             res.status(200).json(channel);
@@ -134,9 +156,11 @@ async function getLikeByChannelId(req: Request, res: Response) {
 }
 
 async function updateChannel(req: Request, res: Response) {
+    /* #swagger.tags = ['Channels']
+        #swagger.description = 'Endpoint to update channel by id' */
     try {
         const channel = await ChannelService.updateChannel(req.params.id, req.body);
-        if (!channel) {
+        if (channel.length === 0) {
             res.status(204).json({ message: 'No channel found' });
         } else {
             res.status(200).json(channel);
@@ -148,6 +172,8 @@ async function updateChannel(req: Request, res: Response) {
 }
 
 async function deleteChannel(req: Request, res: Response) {
+    /* #swagger.tags = ['Channels']
+        #swagger.description = 'Endpoint to delete channel by id' */
     try {
         const channel = await ChannelService.deleteChannel(req.params.id);
         if (!channel) {

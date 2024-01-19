@@ -1,7 +1,8 @@
 import CommentsModel from '../models/comments.models';
 import Comment from '../interfaces/comments.interface';
+import VideoModel from '../models/videos.models';
 
-function getAllComments() {
+function getAllComments(skip: number, limit: number) {
     return CommentsModel.find()
         .populate({
             path: 'idUser',
@@ -9,7 +10,10 @@ function getAllComments() {
                 path: 'profileImage',
                 model: 'Files',
             }
-        });
+        })
+        .skip(skip)
+        .limit(limit)
+        .sort({ createdAt: -1 });
 }
 
 function getCommentsById(id: string) {
@@ -23,7 +27,7 @@ function getCommentsById(id: string) {
         });
 }
 
-function getCommentsByUserId(id: string) {
+function getCommentsByUserId(id: string, skip: number, limit: number) {
     return CommentsModel.find({idUser: id})
         .populate({
             path: 'idUser',
@@ -31,7 +35,10 @@ function getCommentsByUserId(id: string) {
                 path: 'profileImage',
                 model: 'Files',
             }
-        });
+        })
+        .skip(skip)
+        .limit(limit)
+        .sort({ createdAt: -1 });
 }
 
 function createComments(comment: Comment) {
@@ -41,7 +48,21 @@ function createComments(comment: Comment) {
         dislike: 0,
         createdAt: new Date(),
         idUser: comment.idUser,
+        idVideo: comment.idVideo,
     });
+    VideoModel.findById(comment.idVideo).then((video) => {
+        if (!video) {
+            return;
+        } else if (!video.idComment) {
+          VideoModel.findByIdAndUpdate(comment.idVideo, {
+            $set: { idComment: [newComment._id] }
+          }).exec();
+        } else {
+          VideoModel.findByIdAndUpdate(comment.idVideo, {
+            $push: { idComment: newComment._id }
+          }).exec();
+        }
+      });
     return newComment.save();
 }
 
