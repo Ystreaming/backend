@@ -2,7 +2,11 @@ import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 const VideoService = require('../services/videos.services');
 import VideoModel from '../models/videos.models';
-const fileService = require('../services/files.services');
+const FileService = require('../services/files.services');
+
+interface FileWithMimetype extends Express.Multer.File {
+    mimetype: string;
+}
 const NotificationService = require('../services/notifications.services');
 import { sendNotificationViaSocket } from '../app';
 
@@ -45,36 +49,54 @@ async function createVideo(req: Request, res: Response) {
     if (!errors.isEmpty()) {
         return res.status(400).json({ error: 'Validation failed', details: errors.array() });
     }
+
     try {
-        let fileId = null;
-        if (req.file) {
-            const file = await fileService.createFile(req.file);
-            fileId = file._id;
+        let imgFileId = null;
+        let videoFileId = null;
+        if (req.files && typeof req.files === 'object' && !Array.isArray(req.files)) {
+            const files = req.files as unknown as { [fieldname: string]: FileWithMimetype[] };
+
+            if (files.img && files.img[0].mimetype.startsWith('image/')) {
+                const imgFile = await FileService.createFile(files.img[0]);
+                imgFileId = imgFile._id;
+            }
+            if (files.url && files.url[0].mimetype.startsWith('video/')) {
+                const videoFile = await FileService.createFile(files.url[0]);
+                videoFileId = videoFile._id;
+            }
+            if (!imgFileId || !videoFileId) {
+                return res.status(400).json({ error: 'Both image and video files are required.' });
+            }
+
+            const videoData = {
+                ...req.body,
+                img: imgFileId,
+                url: videoFileId,
+            };
+
+            const newVideo = await VideoService.addVideo(videoData);
+
+            const notificationData = {
+                title: 'Une nouvelle vidéo a été ajoutée',
+                description: `La vidéo ${newVideo.title} a été publiée par ${newVideo.idChannel.name}`,
+                url: `/videos/${newVideo._id}`,
+                type: 'video',
+                idUser: null
+            };
+
+            await NotificationService.createNotification(notificationData);
+            sendNotificationViaSocket(notificationData);
+
+            return res.status(201).json(newVideo);
+        } else {
+            return res.status(400).json({ error: 'Both image and video files are required.' });
         }
-
-        const videoData = {
-            ...req.body,
-            img: fileId
-        };
-        const newVideo = await VideoService.addVideo(videoData);
-
-        const notificationData = {
-            title: 'Une nouvelle vidéo a été ajoutée',
-            description: `La vidéo ${newVideo.title} a été publiée par ${newVideo.idChannel.name}`,
-            url: `/videos/${newVideo._id}`,
-            type: 'video',
-            idUser: null
-        };
-
-        await NotificationService.createNotification(notificationData);
-        sendNotificationViaSocket(notificationData);
-
-        return res.status(201).json(newVideo);
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
+
 
 async function searchVideo(req: Request, res: Response) {
     /* #swagger.tags = ['Videos']

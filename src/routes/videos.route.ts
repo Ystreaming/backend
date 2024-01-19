@@ -3,7 +3,8 @@ const express = require('express');
 const router = express.Router();
 const { videoValidator } = require('../validators/videos.validator');
 const videoController = require('../controllers/videos.controllers');
-const { uploadSingleFile } = require('../middlewares/file.middleware');
+import { streamVideo } from '../tools/streamVideo';
+const { uploadSingleFile, uploadMultipleFiles } = require('../middlewares/file.middleware');
 const { isAuthenticated } = require('../middlewares/users.middleware');
 
 
@@ -11,7 +12,11 @@ const { isAuthenticated } = require('../middlewares/users.middleware');
 
 router.get('/', videoController.getAllVideo);
 
-router.post('/', isAuthenticated, uploadSingleFile('img'), videoValidator, videoController.createVideo);
+router.post(
+  '/', isAuthenticated,
+  uploadMultipleFiles([{ name: 'img', maxCount: 1 }, { name: 'url', maxCount: 1 }]),
+  videoController.createVideo
+);
 
 // => /video/recommend/
 
@@ -30,6 +35,14 @@ router.put('/:id', isAuthenticated, videoValidator, videoController.updateVideo)
 router.patch('/:id', isAuthenticated, videoController.addCommentOnVideo);
 
 router.delete('/:id', isAuthenticated, videoController.deleteVideo);
+
+// => /Video/id
+
+router.get('/:id', videoController.getVideoById);
+
+// => /Video/stream/:id
+
+router.get('/stream/:id', streamVideo);
 
 // => /Video/search
 

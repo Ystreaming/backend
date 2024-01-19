@@ -63,11 +63,13 @@ describe('Videos API Endpoints', () => {
     channelId = channelRes.body._id;
 
     const filePath = path.resolve('./src/tests/ressources/fichier_tests_create_user.jpg');
+    const filePathVideo = path.resolve('./src/tests/ressources/video_test.mp4');
 
     const res = await request(app)
       .post('/videos')
       .set('Authorization', `Bearer ${testAuthToken}`)
       .attach('img', filePath)
+      .attach('url', filePathVideo)
       .field('title', 'testVideo')
       .field('view', 0)
       .field('like', 0)
@@ -75,7 +77,6 @@ describe('Videos API Endpoints', () => {
       .field('description', 'testDescription')
       .field('language', 'testLanguage')
       .field('time', 1000)
-      .field('url', 'http://testUrl.com/')
       .field('urllocal', 'http://testUrlLocal.com/')
       .field('idChannel', channelId)
       .field('idCategory', categoryId);
@@ -194,11 +195,13 @@ describe('Videos API Endpoints', () => {
     it('should return 204 if no comments found', async () => {
       //create video without comments
       const filePath = path.resolve('./src/tests/ressources/fichier_tests_create_user.jpg');
+      const filePathVideo = path.resolve('./src/tests/ressources/video_test.mp4');
 
       const resVideo = await request(app)
         .post('/videos')
         .set('Authorization', `Bearer ${testAuthToken}`)
         .attach('img', filePath)
+        .attach('url', filePathVideo)
         .field('title', 'testVideo')
         .field('view', 0)
         .field('like', 0)
@@ -206,7 +209,6 @@ describe('Videos API Endpoints', () => {
         .field('description', 'testDescription')
         .field('language', 'testLanguage')
         .field('time', 1000)
-        .field('url', 'http://testUrl.com/')
         .field('urllocal', 'http://testUrlLocal.com/')
         .field('idChannel', channelId)
         .field('idCategory', categoryId);
@@ -352,11 +354,13 @@ describe('Videos API Endpoints', () => {
   describe('POST /videos', () => {
     it('should create a video', async () => {
       const filePath = path.resolve('./src/tests/ressources/fichier_tests_create_user.jpg');
+      const filePathVideo = path.resolve('./src/tests/ressources/video_test.mp4');
 
       const res = await request(app)
         .post('/videos')
         .set('Authorization', `Bearer ${testAuthToken}`)
         .attach('img', filePath)
+        .attach('url', filePathVideo)
         .field('title', 'testVideo')
         .field('view', 0)
         .field('like', 0)
@@ -364,7 +368,6 @@ describe('Videos API Endpoints', () => {
         .field('description', 'testDescription')
         .field('language', 'testLanguage')
         .field('time', 1000)
-        .field('url', 'http://testUrl.com/')
         .field('urllocal', 'http://testUrlLocal.com/')
         .field('idChannel', channelId)
         .field('idCategory', categoryId);
@@ -381,11 +384,13 @@ describe('Videos API Endpoints', () => {
 
     it('should return 500', async () => {
       const filePath = path.resolve('./src/tests/ressources/fichier_tests_create_user.jpg');
+      const filePathVideo = path.resolve('./src/tests/ressources/video_test.mp4');
 
       const res = await request(app)
         .post('/videos')
         .set('Authorization', `Bearer ${testAuthToken}`)
         .attach('img', filePath)
+        .attach('url', filePathVideo)
         .field('title', 'testVideo')
         .field('view', 0)
         .field('like', 0)
@@ -393,7 +398,6 @@ describe('Videos API Endpoints', () => {
         .field('description', 'testDescription')
         .field('language', 'testLanguage')
         .field('time', 1000)
-        .field('url', 'http://testUrl.com/')
         .field('urllocal', 'http://testUrlLocal.com/')
         .field('idChannel', channelId)
         .field('idCategory', '123');
