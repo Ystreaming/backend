@@ -1,17 +1,26 @@
 import request from 'supertest';
 import app from '../app';
 import mongoose from 'mongoose';
+import jwt from 'jsonwebtoken';
 
 describe('Roles API Endpoints', () => {
   let roleId: any;
+  let testAuthToken: string;
+  let JWT_SECRET: string = "jRPiCoTYgg7URsPRCv-43gHh1M6vtbqKmAZg-aOkvag153mR_25jFeGWdKMbdhUNtFZDg5sjhstU6xCzq4JUcA";
 
   beforeAll(async () => {
+    const testUser = { _id: 'user_test_id', email: 'test@example.com' };
+    testAuthToken = jwt.sign(testUser, JWT_SECRET, { expiresIn: '1h' });
+
     const newRole = {
       name: 'Admin',
       permission: ['ADMIN'],
     };
 
-    const response = await request(app).post('/roles').send(newRole);
+    const response = await request(app)
+      .post('/roles')
+      .set('Authorization', `Bearer ${testAuthToken}`)
+      .send(newRole);
 
     expect(response.statusCode).toBe(201);
     expect(response.body).toHaveProperty('_id');
@@ -31,6 +40,7 @@ describe('Roles API Endpoints', () => {
 
       const response = await request(app)
           .post('/roles')
+          .set('Authorization', `Bearer ${testAuthToken}`)
           .send(newRole);
 
       expect(response.statusCode).toBe(201);
@@ -44,6 +54,7 @@ describe('Roles API Endpoints', () => {
 
       const response = await request(app)
           .post('/roles')
+          .set('Authorization', `Bearer ${testAuthToken}`)
           .send(newRole);
 
       expect(response.statusCode).toBe(400);
@@ -53,14 +64,16 @@ describe('Roles API Endpoints', () => {
   describe('GET /roles', () => {
     it('should get all roles', async () => {
       const response = await request(app)
-          .get('/roles');
+          .get('/roles')
+          .set('Authorization', `Bearer ${testAuthToken}`);
 
       expect(response.statusCode).toBe(200);
     });
 
     it('should get all roles with pagination', async () => {
       const response = await request(app)
-          .get('/roles?page=1&limit=2');
+          .get('/roles?page=1&limit=2')
+          .set('Authorization', `Bearer ${testAuthToken}`);
 
       expect(response.statusCode).toBe(200);
     });
@@ -69,7 +82,8 @@ describe('Roles API Endpoints', () => {
   describe('GET /roles/:id', () => {
     it('should get role by id', async () => {
       const response = await request(app)
-          .get(`/roles/${roleId}`);
+          .get(`/roles/${roleId}`)
+          .set('Authorization', `Bearer ${testAuthToken}`);
 
       expect(response.statusCode).toBe(200);
       expect(response.body).toHaveProperty('_id');
@@ -77,7 +91,8 @@ describe('Roles API Endpoints', () => {
 
     it('should not get role by id with wrong id', async () => {
       const response = await request(app)
-          .get('/roles/123');
+          .get('/roles/123')
+          .set('Authorization', `Bearer ${testAuthToken}`);
 
       expect(response.statusCode).toBe(500);
       expect(response.body).toHaveProperty('message', 'Internal Server Error');
@@ -85,7 +100,8 @@ describe('Roles API Endpoints', () => {
 
     it('should return 404 if role not found', async () => {
       const response = await request(app)
-          .get('/roles/60c2c9b5c7e6b42d9c2c4c8e');
+          .get('/roles/60c2c9b5c7e6b42d9c2c4c8e')
+          .set('Authorization', `Bearer ${testAuthToken}`);
 
       expect(response.statusCode).toBe(204);
     });
@@ -100,6 +116,7 @@ describe('Roles API Endpoints', () => {
 
       const response = await request(app)
           .put(`/roles/${roleId}`)
+          .set('Authorization', `Bearer ${testAuthToken}`)
           .send(newRole);
 
       expect(response.statusCode).toBe(200);
@@ -114,6 +131,7 @@ describe('Roles API Endpoints', () => {
 
       const response = await request(app)
           .put('/roles/123')
+          .set('Authorization', `Bearer ${testAuthToken}`)
           .send(newRole);
 
       expect(response.statusCode).toBe(500);
@@ -126,6 +144,7 @@ describe('Roles API Endpoints', () => {
 
       const response = await request(app)
           .put(`/roles/${roleId}`)
+          .set('Authorization', `Bearer ${testAuthToken}`)
           .send(newRole);
 
       expect(response.statusCode).toBe(400);
@@ -139,6 +158,7 @@ describe('Roles API Endpoints', () => {
 
       const response = await request(app)
           .put('/roles/60c2c9b5c7e6b42d9c2c4c8e')
+          .set('Authorization', `Bearer ${testAuthToken}`)
           .send(newRole);
 
       expect(response.statusCode).toBe(404);
@@ -148,7 +168,8 @@ describe('Roles API Endpoints', () => {
   describe('DELETE /roles/:id', () => {
     it('should delete role by id', async () => {
       const response = await request(app)
-          .delete(`/roles/${roleId}`);
+          .delete(`/roles/${roleId}`)
+          .set('Authorization', `Bearer ${testAuthToken}`);
 
       expect(response.statusCode).toBe(200);
       expect(response.body).toHaveProperty('_id');
@@ -156,7 +177,8 @@ describe('Roles API Endpoints', () => {
 
     it('should not delete role by id with wrong id', async () => {
       const response = await request(app)
-          .delete('/roles/123');
+          .delete('/roles/123')
+          .set('Authorization', `Bearer ${testAuthToken}`);
 
       expect(response.statusCode).toBe(500);
       expect(response.body).toHaveProperty('message', 'Internal Server Error');
@@ -164,7 +186,8 @@ describe('Roles API Endpoints', () => {
 
     it('should return 404 if role not found', async () => {
       const response = await request(app)
-          .delete('/roles/60c2c9b5c7e6b42d9c2c4c8e');
+          .delete('/roles/60c2c9b5c7e6b42d9c2c4c8e')
+          .set('Authorization', `Bearer ${testAuthToken}`);
 
       expect(response.statusCode).toBe(204);
     });
@@ -173,7 +196,8 @@ describe('Roles API Endpoints', () => {
       await mongoose.model('Roles').deleteMany({});
 
       const response = await request(app)
-          .delete(`/roles/${roleId}`);
+          .delete(`/roles/${roleId}`)
+          .set('Authorization', `Bearer ${testAuthToken}`);
 
       expect(response.statusCode).toBe(204);
     });

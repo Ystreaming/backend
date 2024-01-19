@@ -2,22 +2,23 @@ import { Request, Response } from 'express';
 const express = require('express');
 const router = express.Router();
 const historicController = require('../controllers/historics.controllers');
+const { isAuthenticated } = require('../middlewares/users.middleware');
 
 // => /historic
 
-router.get('/', historicController.getAllHistoric);
+router.get('/', isAuthenticated, historicController.getAllHistoric);
 
-router.post('/', historicController.createHistoric);
+router.post('/', isAuthenticated, historicController.createHistoric);
 
 // => /historic/id
 
-router.get('/:id', historicController.getHistoricById);
+router.get('/:id', isAuthenticated, historicController.getHistoricById);
 
 
-router.delete('/:id', historicController.deleteHistoric);
+router.delete('/:id', isAuthenticated, historicController.deleteHistoric);
 
 // => /historic/user/id
 
-router.get('/user/:id', historicController.getHistoricByUserId);
+router.get('/user/:id', isAuthenticated, historicController.getHistoricByUserId);
 
 module.exports = router;

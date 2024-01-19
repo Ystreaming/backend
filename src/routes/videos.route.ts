@@ -4,13 +4,14 @@ const router = express.Router();
 const { videoValidator } = require('../validators/videos.validator');
 const videoController = require('../controllers/videos.controllers');
 const { uploadSingleFile } = require('../middlewares/file.middleware');
+const { isAuthenticated } = require('../middlewares/users.middleware');
 
 
 // => /Video
 
 router.get('/', videoController.getAllVideo);
 
-router.post('/', uploadSingleFile('img'), videoValidator, videoController.createVideo);
+router.post('/', isAuthenticated, uploadSingleFile('img'), videoValidator, videoController.createVideo);
 
 // => /video/recommend/
 
@@ -24,11 +25,11 @@ router.get('/mostviewed', videoController.getMostViewedVideos);
 
 router.get('/:id', videoController.getVideoById);
 
-router.put('/:id', videoValidator, videoController.updateVideo);
+router.put('/:id', isAuthenticated, videoValidator, videoController.updateVideo);
 
-router.patch('/:id', videoController.addCommentOnVideo);
+router.patch('/:id', isAuthenticated, videoController.addCommentOnVideo);
 
-router.delete('/:id', videoController.deleteVideo);
+router.delete('/:id', isAuthenticated, videoController.deleteVideo);
 
 // => /Video/search
 
