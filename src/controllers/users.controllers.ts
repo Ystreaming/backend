@@ -148,7 +148,7 @@ async function loginUser(req: Request, res: Response) {
             return res.status(400).json({ message: 'username and password are required' });
         } else {
             const user = await UsersService.loginUser(req.body.username, req.body.password);
-            const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET || 'jRPiCoTYgg7URsPRCv-43gHh1M6vtbqKmAZg-aOkvag153mR_25jFeGWdKMbdhUNtFZDg5sjhstU6xCzq4JUcA', { expiresIn: '100000000h' });
             res.json(token);
         }
     } catch (error) {

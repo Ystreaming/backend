@@ -3,23 +3,24 @@ const express = require('express');
 const router = express.Router();
 const { commentsValidator } = require('../validators/comments.validator');
 const commentController = require('../controllers/comments.controllers');
+const { isAuthenticated } = require('../middlewares/users.middleware');
 
 // => /Comment
 
-router.get('/', commentController.getAllComment);
+router.get('/', isAuthenticated, commentController.getAllComment);
 
-router.post('/', commentsValidator, commentController.createComment);
+router.post('/', isAuthenticated, commentsValidator, commentController.createComment);
 
 // => /Comment/id
 
 router.get('/:id', commentController.getCommentById);
 
-router.put('/:id', commentsValidator, commentController.updateComment);
+router.put('/:id', isAuthenticated, commentsValidator, commentController.updateComment);
 
-router.delete('/:id', commentController.deleteComment);
+router.delete('/:id', isAuthenticated, commentController.deleteComment);
 
 // => /Comment/user/id
 
-router.get('/user/:id', commentController.getCommentByUserId);
+router.get('/user/:id', isAuthenticated, commentController.getCommentByUserId);
 
 module.exports = router;
