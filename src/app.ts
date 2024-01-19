@@ -6,6 +6,7 @@ const yamlFilePath = path.resolve(__dirname, '../documentation/openapi.yaml');
 const swaggerDocument = YAML.load(yamlFilePath);
 import cors from 'cors';
 
+
 const app: Application = express();
 
 const UsersRoute = require('./routes/users.route');
@@ -17,11 +18,12 @@ const CommentsRoute = require('./routes/comments.route');
 const HistoricsRoute = require('./routes/historics.route');
 const NotificationsRoute = require('./routes/notifications.route');
 
+
 app.use(express.json());
 app.use(cors());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.use('/home/ubuntu/backend/uploads/files', express.static('/home/ubuntu/backend/uploads/files'));
+app.use('/Users/kingjone31/Desktop/backend/uploads/files', express.static('/Users/kingjone31/Desktop/backend/uploads/files'));
 
 app.use('/users', UsersRoute);
 app.use('/roles', RolesRoute);
@@ -38,6 +40,7 @@ app.get('/test/error', (req, res, next) => {
 });
 
 app.use((err: Error, req: Request, res: Response, next: Function) => {
+  console.log(req.url)
   res.status(500).json({
     message: err.message,
   });
