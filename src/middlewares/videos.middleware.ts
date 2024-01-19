@@ -65,46 +65,6 @@ function deleteVideo(req: Request, res: Response, next: NextFunction) {
         next();
     });
 }
-
-// Middleware pour le streaming vidéo
-function streamVideo(req: Request, res: Response) {
-    const filePath = req.filePath as string;
-
-    const stat = fs.statSync(filePath);
-    const fileSize = stat.size;
-    const range = req.headers.range;
-
-    if (range) {
-        const parts = rangeParser(fileSize, range);
-
-        if (parts instanceof Array) {
-            const start = parts[0].start;
-            const end = parts[0].end;
-            const chunksize = (end - start) + 1;
-
-            const fileStream = fs.createReadStream(filePath, { start, end });
-            const headers = {
-                'Content-Range': `bytes ${start}-${end}/${fileSize}`,
-                'Accept-Ranges': 'bytes',
-                'Content-Length': chunksize,
-                'Content-Type': 'video/mp4',
-            };
-
-            res.writeHead(206, headers);
-            fileStream.pipe(res);
-        } else {
-            res.status(416).send('Range not satisfiable');
-        }
-    } else {
-        const headers = {
-            'Content-Length': fileSize,
-            'Content-Type': 'video/mp4',
-        };
-
-        res.writeHead(200, headers);
-        fs.createReadStream(filePath).pipe(res);
-    }
-}
 // Middleware pour enregistrer une vidéo
 function saveVideo(req: Request, res: Response, next: NextFunction) {
     const fieldName = 'video';
@@ -123,7 +83,6 @@ export {
     listVideo,
     checkVideoExists,
     deleteVideo,
-    streamVideo,
     saveVideo,
 };
 
