@@ -11,7 +11,7 @@ interface Video extends Document {
     dislike: number;
     description: string;
     language: string;
-    time: Number;
+    time: number;
     img: {type: Schema.Types.ObjectId, ref:'Files'};
     url: {type: Schema.Types.ObjectId, ref:'Files'};
     urllocal: string;
