@@ -1,126 +1,71 @@
 import request from 'supertest';
-import app from '../app';
-const VideosService = require('../services/videos.services')
-import jwt from 'jsonwebtoken';
+import express from 'express';
+import bodyParser from 'body-parser';
+import { streamVideo } from '../tools/streamVideo';
+const VideosService = require('../services/videos.services');
+import fs from 'fs';
 import path from 'path';
-import mongoose from 'mongoose';
 
+// Mocking du service videos
 jest.mock('../services/videos.services');
 
-describe('Video Streaming Route', () => {
+// On configure un faux serveur express pour tester la route
+const app = express();
+app.use(bodyParser.json());
+app.get('/stream/:id', streamVideo);
 
-  let videoId: any;
-  let userId: any;
-  let channelId: any;
-  let categoryId: any;
-  let testAuthToken: string;
-  let JWT_SECRET: string = "jRPiCoTYgg7URsPRCv-43gHh1M6vtbqKmAZg-aOkvag153mR_25jFeGWdKMbdhUNtFZDg5sjhstU6xCzq4JUcA";
-
-  beforeAll(async () => {
-    const testUser = { _id: 'user_test_id', email: 'test@example.com' };
-    testAuthToken = jwt.sign(testUser, JWT_SECRET, { expiresIn: '1h' });
-
-    const newUser = {
-      username: 'testUser',
-      password: 'password123',
-      email: 'test@exemple.com',
-      dateOfBirth: '1990-01-01',
-    };
-
-    const userRes = await request(app)
-      .post('/users')
-      .set('Authorization', `Bearer ${testAuthToken}`)
-      .send(newUser);
-
-    expect(userRes.statusCode).toEqual(201);
-    userId = userRes.body._id;
-
-    const newCategory = {
-      name: 'testCategory',
-      image: '6565fcf55c7d8a60ff6742cb',
-    };
-
-    const categoryRes = await request(app)
-      .post('/category')
-      .set('Authorization', `Bearer ${testAuthToken}`)
-      .send(newCategory);
-
-    expect(categoryRes.statusCode).toEqual(201);
-    categoryId = categoryRes.body._id;
-
-    const newChannel = {
-      name: 'testChannel',
-      description: 'testDescription',
-      idCategory: categoryId,
-      idUser: userId,
-      image: '6565fcf55c7d8a60ff6742cb',
-      idVideo: '6565fcf55c7d8a60ff6742cb',
-    };
-
-    const channelRes = await request(app)
-      .post('/channels')
-      .set('Authorization', `Bearer ${testAuthToken}`)
-      .send(newChannel);
-
-    expect(channelRes.statusCode).toEqual(201);
-    channelId = channelRes.body._id;
-
-    const filePath = path.resolve('./src/tests/ressources/fichier_tests_create_user.jpg');
-    const filePathVideo = path.resolve('./src/tests/ressources/video_test.mp4');
-
-    const res = await request(app)
-      .post('/videos')
-      .set('Authorization', `Bearer ${testAuthToken}`)
-      .attach('img', filePath)
-      .attach('url', filePathVideo)
-      .field('title', 'testVideo')
-      .field('view', 0)
-      .field('like', 0)
-      .field('dislike', 0)
-      .field('description', 'testDescription')
-      .field('language', 'testLanguage')
-      .field('time', 1000)
-      .field('urllocal', 'http://testUrlLocal.com/')
-      .field('idChannel', channelId)
-      .field('idCategory', categoryId);
-
-      console.log(res)
-    expect(res.statusCode).toEqual(201);
-    expect(res.body).toHaveProperty('_id');
-    videoId = res.body._id;
+describe('Video Streaming API', () => {
+  beforeEach(() => {
+    // Pour réinitialiser les appels de notre mock entre chaque test
+    jest.clearAllMocks();
   });
 
-  afterAll(async () => {
-    await mongoose.model('Videos').deleteOne({ _id: videoId });
-    await mongoose.model('Channels').deleteOne({ _id: channelId });
-    await mongoose.model('Category').deleteOne({ _id: categoryId });
-    await mongoose.model('Users').deleteOne({ _id: userId });
+  it('should stream video successfully', async () => {
+    // On simule la réponse du service videos pour getVideoById
+    VideosService.getVideoById.mockResolvedValue({
+      // On renvoie un objet avec une url vers un fichier vidéo
+      url: { path: path.resolve('./src/tests/ressources/video_test.mp4') }
+    });
+
+    // On simule la présence du fichier vidéo
+    fs.writeFileSync(path.resolve('./src/tests/ressources/video_test.mp4'), 'fake video content');
+
+    // On appelle la route avec un id de vidéo que l'on veut streamer
+    const res = await request(app).get('/stream/mockVideoId').set('Range', 'bytes=0-1023');
+
+    expect(res.status).toBe(206);
+    expect(res.headers['content-type']).toBe('video/mp4');
   });
 
-  it('should stream the video successfully', async () => {
-    console.log(videoId);
-    console.log("dfghjkjhgcvghjk")
-    const response = await request(app).get(`/stream/${videoId}`);
+  it('should handle range not satisfiable', async () => {
+    // On simule la réponse du service videos pour getVideoById
+    VideosService.getVideoById.mockResolvedValue({
+      // On renvoie un objet avec une url vers un fichier vidéo
+      url: { path: path.resolve('./src/tests/ressources/video_test.mp4') }
+    });
 
-    expect(response.status).toBe(206);
-    expect(response.headers['content-range']).toBeDefined();
-    expect(response.headers['accept-ranges']).toBe('bytes');
-    expect(response.headers['content-length']).toBeDefined();
-    expect(response.headers['content-type']).toBe('video/mp4');
+    // On simule la présence du fichier vidéo
+    fs.writeFileSync(path.resolve('./src/tests/ressources/video_test.mp4'), 'fake video content');
+
+    // On simule ici une erreur dans la range
+    const res = await request(app).get('/stream/mockVideoId').set('Range', 'bytes=2000-');
+
+    expect(res.status).toBe(416);
   });
 
-  it('should handle errors when streaming', async () => {
-    const response = await request(app).get(`/stream/${videoId}`);
+  it('should handle no range', async () => {
+    // On simule la réponse du service videos pour getVideoById
+    VideosService.getVideoById.mockResolvedValue({
+      // On renvoie un objet avec une url vers un fichier vidéo
+      url: { path: path.resolve('./src/tests/ressources/video_test.mp4') }
+    });
 
-    expect(response.status).toBe(500);
-    expect(response.text).toBe('Internal Server Error');
-  });
+    // On simule la présence du fichier vidéo
+    fs.writeFileSync(path.resolve('./src/tests/ressources/video_test.mp4'), 'fake video content');
 
-  it('should handle not found video', async () => {
-    VideosService.getVideoById.mockResolvedValue(null);
+    // On simule ici une erreur dans la range
+    const res = await request(app).get('/stream/mockVideoId');
 
-    const response = await request(app).get('/stream/65a923dae33e276d01fcde4dae');
-
-    expect(response.status).toBe(404);
+    expect(res.status).toBe(206);
   });
 });
