@@ -5,6 +5,8 @@ import { IncomingHttpHeaders } from 'http';
 const VideosService = require('../services/videos.services')
 
 export async function streamVideo(req: Request, res: Response) {
+    /* #swagger.tags = ['Videos']
+      #swagger.description = 'streamVideo by Id' */
     const video = await VideosService.getVideoById(req.params.id)
     const filePath = video.url.path;
 
