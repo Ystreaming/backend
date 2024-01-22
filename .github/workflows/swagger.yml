@@ -22,7 +22,8 @@ jobs:
         npm install ts-node
         npm i
         npm run build:swagger
-        swagger-cli bundle ./documentation/swagger_output.json --outfile ./public/swagger.json --type json
+        cp ./documentation.swagger.json ./public/swagger.json
+        ls -la
         redoc-cli build ./public/swagger.json --output ./public/index.html
 
     - name: Deploy to GitHub Pages
