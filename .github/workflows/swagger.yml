@@ -19,8 +19,10 @@ jobs:
     - name: Generate Swagger UI
       run: |
         npm install -g swagger-cli redoc-cli
-        swagger-cli bundle ./documentation/swagger_output.json --outfile ./public/swagger.json --type json
-        redoc-cli build ./public/swagger.json --output ./public/index.html
+        npm install ts-node
+        npm i
+        npm run build:swagger
+        redoc-cli build ./documentation/swagger_output.json --output ./public/index.html
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
