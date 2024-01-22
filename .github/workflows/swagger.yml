@@ -18,6 +18,7 @@ jobs:
 
     - name: Generate Swagger UI
       run: |
+        npm run build:swagger
         npm install -g swagger-cli redoc-cli
         swagger-cli bundle ./documentation/swagger_output.json --outfile ./public/swagger.json --type json
         redoc-cli build ./public/swagger.json --output ./public/index.html
