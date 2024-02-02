@@ -188,6 +188,26 @@ describe('Channels API Endpoints', () => {
     });
   });
 
+  describe('GET /channels/user/:id', () => {
+    it('should get all channels by user', async () => {
+      const res = await request(app).get(`/channels/user/${userId}`).set('Authorization', `Bearer ${testAuthToken}`);
+
+      expect(res.statusCode).toEqual(200);
+    });
+
+    it('should return 204 if channel not found', async () => {
+      const res = await request(app).get(`/channels/user/6565fcf55c7d8a60ff6742cb`).set('Authorization', `Bearer ${testAuthToken}`);
+
+      expect(res.statusCode).toEqual(204);
+    });
+
+    it('should return 500', async () => {
+      const res = await request(app).get(`/channels/user/123`).set('Authorization', `Bearer ${testAuthToken}`);
+
+      expect(res.statusCode).toEqual(500);
+    });
+  });
+
   describe('GET /channels/search/:name', () => {
     it('should search a channel by name', async () => {
       const res = await request(app).get(`/channels/search/Test`).set('Authorization', `Bearer ${testAuthToken}`);
