@@ -66,7 +66,14 @@ function searchChannelByName(name: string, skip: number, limit: number) {
 
 function getChannelByUserId(id: string) {
     return ChannelModel.find({ idUser: id })
-        .populate('image');
+        .populate('image')
+        .populate({
+            path: 'idVideos',
+            populate: {
+                path: 'img',
+                model: 'Files',
+            }
+        })
 }
 
 function getChannelByCategoryId(id: string) {

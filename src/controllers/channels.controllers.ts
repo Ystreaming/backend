@@ -155,6 +155,22 @@ async function getLikeByChannelId(req: Request, res: Response) {
     }
 }
 
+async function getChannelByUserId(req: Request, res: Response) {
+    /* #swagger.tags = ['Channels']
+        #swagger.description = 'Endpoint to get channel by user id' */
+    try {
+        const channel = await ChannelService.getChannelByUserId(req.params.id);
+        if (!channel.length) {
+            res.status(204).json({ message: 'No channel found' });
+        } else {
+            res.status(200).json(channel);
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
 async function updateChannel(req: Request, res: Response) {
     /* #swagger.tags = ['Channels']
         #swagger.description = 'Endpoint to update channel by id' */
@@ -188,6 +204,7 @@ async function deleteChannel(req: Request, res: Response) {
 }
 
 module.exports = {
+    getChannelByUserId,
     getAllChannels,
     createChannel,
     getChannelById,

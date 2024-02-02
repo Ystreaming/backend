@@ -36,4 +36,7 @@ router.get('/view/:id', channelController.getViewByChannelId);
 
 router.get('/like/:id', channelController.getLikeByChannelId);
 
+// => /Channel/user/id
+router.get('/user/:id', channelController.getChannelByUserId);
+
 module.exports = router;
