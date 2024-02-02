@@ -37,7 +37,7 @@ app.use(express.json());
 app.use(cors());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerOutput));
 
-app.use('/Users/kingjone31/Desktop/backend/uploads/files', express.static('/Users/kingjone31/Desktop/backend/uploads/files'));
+app.use('/home/ubuntu/backend/uploads/files/', express.static('/home/ubuntu/backend/uploads/files/'));
 
 app.use('/users', UsersRoute);
 app.use('/roles', RolesRoute);
