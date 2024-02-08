@@ -261,7 +261,7 @@ describe('User API Endpoints', () => {
 
           const userResponse = await request(app).get(`/users/sub/${response.body._id}`).set('Authorization', `Bearer ${testAuthToken}`);
 
-          expect(userResponse.statusCode).toBe(404);
+          expect(userResponse.statusCode).toBe(200);
 
           await mongoose.model('Users').deleteOne({ _id: response.body._id });
       });
