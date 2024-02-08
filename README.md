@@ -29,7 +29,7 @@
     <a href="ystreaming.github.io/backend/"><strong>La documentation »</strong></a>
     <br />
     <br />
-    <a href="http://13.39.109.163:3000/">View Demo</a>
+    <a href="http://35.180.39.107:3000/">View Demo</a>
   </p>
 </div>
 
